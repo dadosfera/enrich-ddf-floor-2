@@ -1,0 +1,39 @@
+[bandit]
+# Bandit security configuration for Enrich DDF Floor 2
+
+# Exclude paths
+exclude_dirs = [
+    "tests",
+    "migrations", 
+    ".venv",
+    "venv",
+    ".env",
+    "env"
+]
+
+# Skip specific test IDs (comma-separated)
+skips = [
+    "B101",  # Test for use of assert
+    "B601",  # Paramiko calls - we might use SSH legitimately
+]
+
+# Severity level (low, medium, high)
+level = "medium"
+
+# Confidence level (low, medium, high) 
+confidence = "medium"
+
+# Tests to exclude
+tests = [
+    "B101",  # assert_used
+    "B601",  # paramiko_calls
+    "B602",  # subprocess_popen_with_shell_equals_true
+    "B603",  # subprocess_without_shell_equals_true
+    "B607",  # start_process_with_partial_path
+]
+
+# Report format
+format = "json"
+
+# Recursively search subdirectories
+recursive = true 

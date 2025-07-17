@@ -1,0 +1,412 @@
+{% extends "layout.html" %}
+
+{% block title %}NCM Enricher Design System{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/loading.css') }}">
+<style>
+  .tab-pane {
+    padding: 20px 0;
+  }
+  
+  .component-section {
+    margin-bottom: 40px;
+  }
+  
+  .component-title {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+  }
+  
+  .component-demo {
+    background-color: rgba(0, 0, 0, 0.03);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .demo-controls {
+    margin-bottom: 15px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  
+  .demo-box {
+    margin-top: 15px;
+    min-height: 200px;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    padding: 15px;
+  }
+  
+  .code-block {
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    padding: 15px;
+    margin: 10px 0;
+    font-family: monospace;
+    font-size: 0.9em;
+    white-space: pre-wrap;
+    color: #333;
+  }
+  
+  .transition-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .transition-item {
+    width: 100px;
+    height: 100px;
+    background-color: #6c757d;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .progress-container {
+    height: 20px;
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 15px;
+  }
+  
+  /* Dark mode adjustments */
+  [data-bs-theme="dark"] .code-block {
+    background-color: #212529;
+    color: #f8f9fa;
+  }
+  
+  [data-bs-theme="dark"] .component-demo {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+  
+  [data-bs-theme="dark"] .demo-box {
+    background-color: #343a40;
+    border-color: #495057;
+  }
+  
+  [data-bs-theme="dark"] .transition-item {
+    background-color: #495057;
+  }
+  
+  [data-bs-theme="dark"] .progress-container {
+    background-color: #343a40;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h1>NCM Enricher Design System</h1>
+  <p class="lead">Componentes de UI, animações e elementos de carregamento</p>
+
+  <nav class="my-4">
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <button class="nav-link active" id="loading-effects-tab" data-bs-toggle="tab" data-bs-target="#loading-effects" type="button" role="tab" aria-controls="loading-effects" aria-selected="true">Efeitos de Carregamento</button>
+      <button class="nav-link" id="transitions-tab" data-bs-toggle="tab" data-bs-target="#transitions" type="button" role="tab" aria-controls="transitions" aria-selected="false">Transições de Página</button>
+      <button class="nav-link" id="integration-guide-tab" data-bs-toggle="tab" data-bs-target="#integration-guide" type="button" role="tab" aria-controls="integration-guide" aria-selected="false">Guia de Integração</button>
+    </div>
+  </nav>
+  
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="loading-effects">
+      <div class="component-section">
+        <h3 class="component-title">Efeitos de Carregamento</h3>
+        
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>Spinner</h5>
+              </div>
+              <div class="card-body">
+                <p>Indicador de carregamento circular animado para processos de curta duração.</p>
+                <div class="component-demo">
+                  <div style="text-align: center;">
+                    <div class="spinner mb-3"></div>
+                    <p class="text-muted">Spinner padrão</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>Overlay de Carregamento</h5>
+              </div>
+              <div class="card-body">
+                <p>Overlay de página inteira para transições entre páginas.</p>
+                <div class="component-demo">
+                  <div class="demo-controls">
+                    <button class="btn btn-primary" id="btn-show-loading">Mostrar Overlay</button>
+                    <button class="btn btn-secondary" id="btn-hide-loading">Esconder Overlay</button>
+                  </div>
+                  <p class="text-muted">Clique no botão para mostrar o overlay de carregamento sobre toda a página.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>Efeito Shimmer</h5>
+              </div>
+              <div class="card-body">
+                <p>Efeito de carregamento para placeholders de conteúdo. Usado enquanto os resultados estão sendo carregados.</p>
+                <div class="component-demo">
+                  <div class="demo-controls">
+                    <button class="btn btn-primary" id="btn-show-search-shimmer">Mostrar Shimmer</button>
+                    <button class="btn btn-secondary" id="btn-hide-search-shimmer">Esconder Shimmer</button>
+                  </div>
+                  <div id="search-shimmer-container" class="demo-box">
+                    <!-- Shimmer será inserido aqui -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>Barra de Progresso</h5>
+              </div>
+              <div class="card-body">
+                <p>Barra de progresso para processos de longa duração.</p>
+                <div class="component-demo">
+                  <div class="demo-controls">
+                    <button class="btn btn-primary" id="btn-start-progress">Iniciar Progresso</button>
+                    <button class="btn btn-secondary" id="btn-reset-progress">Reiniciar</button>
+                  </div>
+                  <div class="progress-container">
+                    <div id="demo-progress-bar" class="progress-bar-value" style="width: 0%"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-pane fade" id="transitions">
+      <div class="component-section">
+        <h3 class="component-title">Efeitos de Transição de Página</h3>
+        
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>Fade-in e Slide-in</h5>
+              </div>
+              <div class="card-body">
+                <p>Efeitos de transição suaves para elementos de página.</p>
+                <div class="component-demo">
+                  <div class="demo-controls">
+                    <button class="btn btn-primary" id="btn-fade-in">Fade In</button>
+                    <button class="btn btn-info" id="btn-slide-in">Slide In</button>
+                    <button class="btn btn-success" id="btn-pulse">Pulse</button>
+                  </div>
+                  
+                  <div class="transition-items">
+                    <div class="transition-item">Item 1</div>
+                    <div class="transition-item">Item 2</div>
+                    <div class="transition-item">Item 3</div>
+                    <div class="transition-item">Item 4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header">
+                <h5>Stagger Animation</h5>
+              </div>
+              <div class="card-body">
+                <p>Animação sequencial com atraso entre cada elemento, criando um efeito em cascata.</p>
+                <div class="component-demo">
+                  <div class="demo-controls">
+                    <button class="btn btn-primary" id="btn-stagger">Stagger Animation</button>
+                  </div>
+                  
+                  <div class="transition-items">
+                    <div class="transition-item">Item 1</div>
+                    <div class="transition-item">Item 2</div>
+                    <div class="transition-item">Item 3</div>
+                    <div class="transition-item">Item 4</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tab-pane fade" id="integration-guide">
+      <div class="component-section">
+        <h3 class="component-title">Guia de Integração</h3>
+        
+        <h4>1. Inclusão de CSS e JavaScript</h4>
+        <div class="code-block">
+          &lt;!-- No head do seu layout --&gt;
+          &lt;link rel="stylesheet" href="/static/css/components/loading.css"&gt;
+          
+          &lt;!-- No final do body do seu layout --&gt;
+          &lt;script src="/static/js/components/loading.js"&gt;&lt;/script&gt;
+        </div>
+        
+        <h4 class="mt-4">2. Adicionando Shimmers para Carregamento</h4>
+        <div class="code-block">
+          &lt;!-- HTML no seu template --&gt;
+          &lt;div id="search-results-container"&gt;
+            &lt;!-- Os resultados serão inseridos aqui quando carregados --&gt;
+          &lt;/div&gt;
+          
+          &lt;script&gt;
+            // Quando a página carrega, mostrar o shimmer
+            document.addEventListener('DOMContentLoaded', function() {
+              const container = document.getElementById('search-results-container');
+              ShimmerPlaceholders.createSearchResults(container);
+              
+              // Simular carregamento (na vida real seria uma chamada AJAX)
+              setTimeout(function() {
+                // Substituir shimmer pelos resultados reais
+                container.innerHTML = 'Resultados carregados!';
+                
+                // Aplicar animação aos resultados
+                PageTransitions.fadeIn('#search-results-container');
+              }, 2000);
+            });
+          &lt;/script&gt;
+        </div>
+        
+        <h4 class="mt-4">3. Transições Entre Páginas</h4>
+        <div class="code-block">
+          &lt;!-- No seu layout principal --&gt;
+          &lt;script&gt;
+            // O LoadingManager já é inicializado automaticamente
+            // e intercepta cliques em links e submissões de formulários
+            
+            // Para mostrar o overlay manualmente:
+            // window.loadingManager.showLoading();
+            
+            // Para esconder o overlay manualmente:
+            // window.loadingManager.hideLoading();
+            
+            // Para casos especiais onde você não quer o overlay:
+            // Adicione o atributo data-no-loading aos links ou forms
+            // &lt;a href="/pagina" data-no-loading&gt;Link sem overlay&lt;/a&gt;
+          &lt;/script&gt;
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/components/loading.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Demo para shimmer de resultados
+    const searchShimmerContainer = document.getElementById('search-shimmer-container');
+    
+    document.getElementById('btn-show-search-shimmer').addEventListener('click', function() {
+      ShimmerPlaceholders.createSearchResults(searchShimmerContainer, 5);
+    });
+    
+    document.getElementById('btn-hide-search-shimmer').addEventListener('click', function() {
+      searchShimmerContainer.innerHTML = '';
+    });
+    
+    // Demo para efeitos de transição
+    document.getElementById('btn-fade-in').addEventListener('click', function() {
+      const items = document.querySelectorAll('.transition-item');
+      items.forEach(item => {
+        item.classList.remove('fade-in', 'slide-in', 'pulse');
+        void item.offsetWidth; // Force reflow
+        item.classList.add('fade-in');
+      });
+    });
+    
+    document.getElementById('btn-slide-in').addEventListener('click', function() {
+      const items = document.querySelectorAll('.transition-item');
+      items.forEach(item => {
+        item.classList.remove('fade-in', 'slide-in', 'pulse');
+        void item.offsetWidth; // Force reflow
+        item.classList.add('slide-in');
+      });
+    });
+    
+    document.getElementById('btn-stagger').addEventListener('click', function() {
+      PageTransitions.stagger('.transition-item', 'slide-in', 100);
+    });
+    
+    document.getElementById('btn-pulse').addEventListener('click', function() {
+      const items = document.querySelectorAll('.transition-item');
+      items.forEach(item => {
+        item.classList.remove('fade-in', 'slide-in', 'pulse');
+        void item.offsetWidth; // Force reflow
+        item.classList.add('pulse');
+      });
+    });
+    
+    // Demo para overlay de carregamento
+    document.getElementById('btn-show-loading').addEventListener('click', function() {
+      if (window.loadingManager) {
+        window.loadingManager.showLoading();
+      }
+    });
+    
+    document.getElementById('btn-hide-loading').addEventListener('click', function() {
+      if (window.loadingManager) {
+        window.loadingManager.hideLoading();
+      }
+    });
+    
+    // Demo para barra de progresso
+    const progressBar = document.getElementById('demo-progress-bar');
+    let progressInterval;
+    
+    document.getElementById('btn-start-progress').addEventListener('click', function() {
+      let width = 0;
+      progressBar.style.width = '0%';
+      
+      clearInterval(progressInterval);
+      progressInterval = setInterval(function() {
+        if (width >= 100) {
+          clearInterval(progressInterval);
+        } else {
+          width++;
+          progressBar.style.width = width + '%';
+        }
+      }, 20);
+    });
+    
+    document.getElementById('btn-reset-progress').addEventListener('click', function() {
+      clearInterval(progressInterval);
+      progressBar.style.width = '0%';
+    });
+  });
+</script>
+{% endblock %}

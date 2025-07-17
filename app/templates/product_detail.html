@@ -1,0 +1,198 @@
+{% extends "layout.html" %}
+
+{% block title %}NCM Product: {{ product.ncm_code }}{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/loading.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.browse_section', section_code=product.section_code) }}">Section {{ product.section_code }}</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.browse_chapter', chapter_code=product.chapter_code) }}">Chapter {{ product.chapter_code }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">NCM {{ product.ncm_code }}</li>
+            </ol>
+        </nav>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-dark">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <span class="badge rounded-pill bg-primary me-2">NCM</span>
+                        {{ product.ncm_code }}
+                    </h3>
+                    <div>
+                        <span class="badge rounded-pill bg-info">Section {{ product.section_code }}</span>
+                        <span class="badge rounded-pill bg-secondary">Chapter {{ product.chapter_code }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ product.description }}</h4>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Classification Details</h5>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>Section:</th>
+                                    <td>
+                                        <span class="badge bg-info">{{ product.section_code }}</span>
+                                        {{ product.section_description }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Chapter:</th>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ product.chapter_code }}</span>
+                                        {{ product.chapter_description }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>NCM Code:</th>
+                                    <td><code>{{ product.ncm_code }}</code></td>
+                                </tr>
+                                <tr>
+                                    <th>Status:</th>
+                                    <td>
+                                        {% if product.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Trade Information</h5>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>Unit of Measure:</th>
+                                    <td>{{ product.unit_measure or 'Not specified' }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Import Tax Rate:</th>
+                                    <td>
+                                        {% if product.import_tax_rate is not none %}
+                                            {{ product.import_tax_rate }}%
+                                        {% else %}
+                                            Not specified
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Export Tax Rate:</th>
+                                    <td>
+                                        {% if product.export_tax_rate is not none %}
+                                            {{ product.export_tax_rate }}%
+                                        {% else %}
+                                            Not specified
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Last Updated:</th>
+                                    <td>{{ product.updated_at }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <a href="{{ url_for('main.search') }}?q={{ product.ncm_code }}" class="btn btn-outline-secondary">
+                            <i data-feather="search"></i> Find Similar
+                        </a>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('main.product_import_stats', ncm_code=product.ncm_code) }}" class="btn btn-primary me-2">
+                            <i data-feather="bar-chart-2"></i> Import Statistics
+                        </a>
+                        <a href="{{ url_for('main.api_product', ncm_code=product.ncm_code) }}" class="btn btn-outline-info" target="_blank">
+                            <i data-feather="code"></i> View API Response
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h5>Product Description</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ product.description }}</p>
+                
+                <div class="alert alert-secondary mt-3">
+                    <i data-feather="info"></i> 
+                    <strong>NCM Classification:</strong> 
+                    This product belongs to Section {{ product.section_code }} 
+                    ({{ product.section_description }}) and Chapter {{ product.chapter_code }} 
+                    ({{ product.chapter_description }}).
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Apply fade-in effect to main content
+        if (window.PageTransitions) {
+            window.PageTransitions.fadeIn('.card');
+            
+            // Apply staggered animation to table rows
+            window.PageTransitions.stagger('tr', 'fade-in', 50);
+        }
+        
+        // Handle navigation to Import Statistics page with loading display
+        const importStatsLink = document.querySelector('a[href*="import-stats"]');
+        if (importStatsLink) {
+            importStatsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Show loading overlay
+                if (window.loadingManager) {
+                    window.loadingManager.showLoading();
+                }
+                
+                // Navigate after a short delay to show loading effect
+                setTimeout(function() {
+                    window.location.href = importStatsLink.getAttribute('href');
+                }, 300);
+            });
+        }
+        
+        // Handle navigation to other pages
+        document.querySelectorAll('.breadcrumb-item a').forEach(function(link) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Show loading overlay
+                if (window.loadingManager) {
+                    window.loadingManager.showLoading();
+                }
+                
+                // Navigate after a short delay
+                setTimeout(function() {
+                    window.location.href = link.getAttribute('href');
+                }, 200);
+            });
+        });
+    });
+</script>
+{% endblock %}

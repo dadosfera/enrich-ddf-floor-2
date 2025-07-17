@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% block title %}Web Scraper - NCM Data Enricher{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Web Scraper</h3>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Extract content from websites for analysis and enrichment of NCM data. Built with high-level extraction capabilities using trafilatura.</p>
+
+                    <div class="d-flex justify-content-end mb-3">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="cacheControlDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-cogs me-1"></i> Cache Controls
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cacheControlDropdown">
+                                <li><a class="dropdown-item" href="{{ url_for('main.cache_control', action='clear_scraper') }}">
+                                    <i class="fas fa-trash-alt me-1"></i> Clear Scraper Cache
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('main.cache_control', action='stats') }}">
+                                    <i class="fas fa-chart-bar me-1"></i> View Cache Statistics
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{{ url_for('main.cache_control', action='clear_all') }}">
+                                    <i class="fas fa-broom me-1"></i> Clear All Caches
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <form action="{{ url_for('main.web_scraper_extract') }}" method="post" class="mt-4">
+                        <div class="mb-3">
+                            <label for="url" class="form-label">Website URL</label>
+                            <input type="url" class="form-control" id="url" name="url" 
+                                   placeholder="https://example.com/product-page" required>
+                            <div class="form-text">Enter the URL of a website containing product information to extract.</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-download me-2"></i> Extract Content
+                            </button>
+                        </div>
+                    </form>
+
+                    {% if result %}
+                    <div class="mt-5">
+                        <h4>Extraction Results</h4>
+                        <div class="card">
+                            <div class="card-header {% if result.success %}bg-success{% else %}bg-danger{% endif %} text-white">
+                                <h5 class="mb-0">{{ result.url }}</h5>
+                            </div>
+                            <div class="card-body">
+                                {% if result.success %}
+                                    <h5>{{ result.title }}</h5>
+                                    {% if result.author %}
+                                    <p class="text-muted">Author: {{ result.author }} 
+                                    {% if result.date %}| Date: {{ result.date }}{% endif %}</p>
+                                    {% endif %}
+
+                                    <h6>Content ({{ result.content_length }} characters):</h6>
+                                    <div class="border p-3 bg-light overflow-auto" style="max-height: 400px;">
+                                        {{ result.content|safe }}
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <form action="{{ url_for('main.web_scraper_translate') }}" method="post">
+                                            <input type="hidden" name="content" value="{{ result.content }}">
+                                            <div class="row g-3 align-items-center">
+                                                <div class="col-auto">
+                                                    <label for="target_lang" class="form-label">Translate to:</label>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <select name="target_lang" id="target_lang" class="form-select">
+                                                        <option value="en" {% if g.lang == 'pt-br' %}selected{% endif %}>English</option>
+                                                        <option value="pt-br" {% if g.lang == 'en' %}selected{% endif %}>Portuguese</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <button type="submit" class="btn btn-success">
+                                                        <i class="fas fa-language me-2"></i> Translate
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-danger">
+                                        <h5>Extraction Failed</h5>
+                                        <p>{{ result.error }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if translated_content %}
+                    <div class="mt-5">
+                        <h4>Translated Content</h4>
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">Translation to {{ target_lang|upper }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="border p-3 bg-light overflow-auto" style="max-height: 400px;">
+                                    {{ translated_content|safe }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

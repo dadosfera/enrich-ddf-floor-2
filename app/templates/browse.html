@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}Browse NCM Sections and Chapters{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Browse NCM Classification</h1>
+        <p class="lead">
+            The Nomenclatura Comum do Mercosul (NCM) is organized into Sections and Chapters.
+            Select a section to explore its chapters and products.
+        </p>
+        
+        <div class="card">
+            <div class="card-header">
+                <h4>NCM Sections</h4>
+            </div>
+            <div class="card-body">
+                {% for section in sections %}
+                <div class="card mb-3">
+                    <div class="card-header bg-dark">
+                        <h5 class="mb-0">
+                            <a href="{{ url_for('main.browse_section', section_code=section.code) }}" class="text-decoration-none text-white d-flex justify-content-between align-items-center">
+                                <span>
+                                    <span class="badge rounded-pill bg-info me-2">{{ section.code }}</span>
+                                    {{ section.description }}
+                                </span>
+                                <span class="badge rounded-pill bg-secondary">{{ section.chapter_count }} chapters</span>
+                            </a>
+                        </h5>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

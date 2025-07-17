@@ -1,0 +1,247 @@
+{% extends 'layout.html' %}
+
+{% block title %}AI Translation - NCM Enricher DDF{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1>AI-Powered Technical Translation</h1>
+            <p class="lead">Specialized translation tool for technical NCM product descriptions with additional context awareness.</p>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">{% if current_lang == 'pt-br' %}Entrada de Texto{% else %}Text Input{% endif %}</h5>
+                </div>
+                <div class="card-body">
+                    <form id="translationForm">
+                        <div class="mb-3">
+                            <label for="sourceLanguage" class="form-label">{% if current_lang == 'pt-br' %}Idioma de Origem{% else %}Source Language{% endif %}</label>
+                            <select class="form-select" id="sourceLanguage" name="sourceLanguage">
+                                <option value="pt-br" {% if current_lang == 'pt-br' %}selected{% endif %}>Português (Brasil)</option>
+                                <option value="en" {% if current_lang == 'en' %}selected{% endif %}>English</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="targetLanguage" class="form-label">{% if current_lang == 'pt-br' %}Idioma de Destino{% else %}Target Language{% endif %}</label>
+                            <select class="form-select" id="targetLanguage" name="targetLanguage">
+                                <option value="en" {% if current_lang == 'pt-br' %}selected{% endif %}>English</option>
+                                <option value="pt-br" {% if current_lang == 'en' %}selected{% endif %}>Português (Brasil)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="textToTranslate" class="form-label">{% if current_lang == 'pt-br' %}Texto para Tradução{% else %}Text to Translate{% endif %}</label>
+                            <textarea class="form-control" id="textToTranslate" name="textToTranslate" rows="8" placeholder="{% if current_lang == 'pt-br' %}Digite ou cole o texto técnico aqui...{% else %}Type or paste technical text here...{% endif %}"></textarea>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary" id="translateButton">
+                                <i class="fas fa-language me-2"></i>
+                                {% if current_lang == 'pt-br' %}Traduzir{% else %}Translate{% endif %}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">{% if current_lang == 'pt-br' %}Resultado da Tradução{% else %}Translation Result{% endif %}</h5>
+                </div>
+                <div class="card-body">
+                    <div id="loadingTranslation" class="text-center d-none">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">{% if current_lang == 'pt-br' %}Processando tradução...{% else %}Processing translation...{% endif %}</p>
+                    </div>
+                    
+                    <div id="translationResult" class="translation-result">
+                        <div class="alert alert-info">
+                            {% if current_lang == 'pt-br' %}
+                                Os resultados da tradução aparecerão aqui. Este tradutor utiliza inteligência artificial para detectar e traduzir corretamente termos técnicos relacionados a produtos NCM.
+                            {% else %}
+                                Translation results will appear here. This translator uses artificial intelligence to detect and correctly translate technical terms related to NCM products.
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div id="technicalTerms" class="mt-4 d-none">
+                        <h6>{% if current_lang == 'pt-br' %}Termos Técnicos Detectados{% else %}Detected Technical Terms{% endif %}</h6>
+                        <div class="technical-terms-list">
+                            <div class="alert alert-secondary">
+                                <small>{% if current_lang == 'pt-br' %}Os termos técnicos específicos do NCM serão destacados aqui{% else %}NCM-specific technical terms will be highlighted here{% endif %}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">{% if current_lang == 'pt-br' %}Sobre a Tradução com IA{% else %}About AI Translation{% endif %}</h5>
+                </div>
+                <div class="card-body">
+                    {% if current_lang == 'pt-br' %}
+                        <p>Nossa ferramenta de tradução com IA foi projetada especificamente para lidar com textos técnicos relacionados à classificação NCM (Nomenclatura Comum do Mercosul) e produtos de importação/exportação.</p>
+                        
+                        <h6>Características:</h6>
+                        <ul>
+                            <li><strong>Reconhecimento de terminologia técnica</strong> - Identifica e preserva termos específicos da classificação NCM</li>
+                            <li><strong>Tradução contextual</strong> - Mantém o significado técnico correto em diferentes idiomas</li>
+                            <li><strong>Cache de traduções</strong> - Armazena traduções comuns para respostas mais rápidas e consistentes</li>
+                            <li><strong>Suporte para documentos extensos</strong> - Capaz de processar grandes volumes de texto técnico</li>
+                        </ul>
+                    {% else %}
+                        <p>Our AI translation tool is specifically designed to handle technical texts related to NCM (Mercosur Common Nomenclature) classification and import/export products.</p>
+                        
+                        <h6>Features:</h6>
+                        <ul>
+                            <li><strong>Technical terminology recognition</strong> - Identifies and preserves NCM-specific classification terms</li>
+                            <li><strong>Contextual translation</strong> - Maintains the correct technical meaning across languages</li>
+                            <li><strong>Translation caching</strong> - Stores common translations for faster and consistent responses</li>
+                            <li><strong>Support for extensive documents</strong> - Capable of processing large volumes of technical text</li>
+                        </ul>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const translationForm = document.getElementById('translationForm');
+        const translateButton = document.getElementById('translateButton');
+        const loadingTranslation = document.getElementById('loadingTranslation');
+        const translationResult = document.getElementById('translationResult');
+        const technicalTerms = document.getElementById('technicalTerms');
+        const technicalTermsList = document.querySelector('.technical-terms-list');
+        
+        translationForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Show loading indicator
+            loadingTranslation.classList.remove('d-none');
+            translationResult.innerHTML = '';
+            technicalTerms.classList.add('d-none');
+            translateButton.disabled = true;
+            
+            const sourceLanguage = document.getElementById('sourceLanguage').value;
+            const targetLanguage = document.getElementById('targetLanguage').value;
+            const textToTranslate = document.getElementById('textToTranslate').value;
+            
+            if (!textToTranslate.trim()) {
+                translationResult.innerHTML = `<div class="alert alert-warning">
+                    ${currentLang === 'pt-br' ? 'Por favor, digite algum texto para traduzir.' : 'Please enter some text to translate.'}
+                </div>`;
+                loadingTranslation.classList.add('d-none');
+                translateButton.disabled = false;
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/integrations/openai/technical-translation', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: textToTranslate,
+                        source_language: sourceLanguage,
+                        target_language: targetLanguage
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.translation) {
+                    // Display translation result
+                    const translationResult = document.getElementById('translationResult');
+                    translationResult.innerHTML = `
+                        <div class="bg-light p-3 rounded border">
+                            <h6 class="text-muted">
+                                ${currentLang === 'pt-br' ? 'Texto Traduzido' : 'Translated Text'}
+                            </h6>
+                            <div class="translated-content">
+                                ${data.translation.translation_result.text || data.translation.text || ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Check if there are technical terms detected
+                    if (data.translation.technical_terms && data.translation.technical_terms.length > 0) {
+                        technicalTerms.classList.remove('d-none');
+                        
+                        // Create technical terms badges
+                        let termsHTML = '';
+                        
+                        data.translation.technical_terms.forEach(term => {
+                            termsHTML += `
+                                <span class="badge bg-secondary me-2 mb-2 p-2">
+                                    ${term.original} → ${term.translated}
+                                </span>
+                            `;
+                        });
+                        
+                        technicalTermsList.innerHTML = termsHTML;
+                    } else {
+                        technicalTerms.classList.add('d-none');
+                    }
+                } else {
+                    translationResult.innerHTML = `
+                        <div class="alert alert-danger">
+                            ${currentLang === 'pt-br' ? 'Erro ao processar tradução: ' : 'Error processing translation: '} 
+                            ${data.message || 'Unknown error'}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Translation error:', error);
+                translationResult.innerHTML = `
+                    <div class="alert alert-danger">
+                        ${currentLang === 'pt-br' ? 'Erro ao comunicar com o servidor: ' : 'Error communicating with server: '} 
+                        ${error.message}
+                    </div>
+                `;
+            } finally {
+                loadingTranslation.classList.add('d-none');
+                translateButton.disabled = false;
+            }
+        });
+        
+        // Auto-select opposite language when one is changed
+        document.getElementById('sourceLanguage').addEventListener('change', function() {
+            const targetSelect = document.getElementById('targetLanguage');
+            if (this.value === 'pt-br') {
+                targetSelect.value = 'en';
+            } else {
+                targetSelect.value = 'pt-br';
+            }
+        });
+        
+        document.getElementById('targetLanguage').addEventListener('change', function() {
+            const sourceSelect = document.getElementById('sourceLanguage');
+            if (this.value === 'pt-br') {
+                sourceSelect.value = 'en';
+            } else {
+                sourceSelect.value = 'pt-br';
+            }
+        });
+    });
+    
+    // Global current language variable for JavaScript
+    const currentLang = '{{ current_lang }}';
+</script>
+{% endblock %}

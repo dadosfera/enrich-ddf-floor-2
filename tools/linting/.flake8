@@ -1,0 +1,47 @@
+[flake8]
+# Base flake8 configuration for Enrich DDF Floor 2
+max-line-length = 88
+max-complexity = 10
+exclude = 
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    .env,
+    env,
+    dist,
+    build,
+    *.egg-info,
+    .pytest_cache,
+    .mypy_cache,
+    migrations
+
+# Error codes to ignore
+ignore = 
+    # E203: whitespace before ':' (conflicts with black)
+    E203,
+    # W503: line break before binary operator (conflicts with black)
+    W503,
+    # F401: imported but unused (handled by isort/autoflake)
+    # F841: local variable assigned but never used
+    
+# Error codes to enforce
+select = 
+    E,  # pycodestyle errors
+    W,  # pycodestyle warnings  
+    F,  # pyflakes
+    C,  # mccabe complexity
+
+# Per-file ignores
+per-file-ignores =
+    __init__.py:F401
+    */migrations/*:E501,F401
+    tests/*:S101,S106
+    
+# Enable specific checks
+enable-extensions = 
+    G,  # flake8-logging-format
+    
+# Count errors and warnings
+count = True
+statistics = True 

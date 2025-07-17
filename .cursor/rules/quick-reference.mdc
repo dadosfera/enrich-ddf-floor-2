@@ -1,0 +1,146 @@
+# Quick Reference - Enrich DDF Floor 2
+
+## 🚀 Getting Started
+
+### Development Environment
+```bash
+# Start all services
+bash scripts/start-dev.sh --api --app
+
+# Check service status
+docker-compose ps
+
+# View logs
+docker-compose logs app
+```
+
+### Key Endpoints
+- **Application**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+- **Health Check**: http://localhost:8000/health
+- **Flower UI**: http://localhost:5555
+- **Prometheus**: http://localhost:9090
+
+## 📁 Project Structure
+
+### Core Files
+- **Main App**: [app/main.py](mdc:app/main.py) - FastAPI application entry point
+- **API Routes**: [app/api/v1/](mdc:app/api/v1/) - REST API endpoints
+- **Web Interface**: [app/web/](mdc:app/web/) - HTML templates and web routes
+- **Database Models**: [app/models/](mdc:app/models/) - SQLAlchemy models
+- **Background Tasks**: [app/tasks/](mdc:app/tasks/) - Celery tasks
+
+### Configuration
+- **Dependencies**: [pyproject.toml](mdc:pyproject.toml) - Poetry dependencies
+- **Docker Setup**: [Dockerfile](mdc:Dockerfile) - Container configuration
+- **Orchestration**: [docker-compose.yml](mdc:docker-compose.yml) - Service stack
+- **Development**: [scripts/start-dev.sh](mdc:scripts/start-dev.sh) - Dev environment
+
+## 🔧 Common Commands
+
+### Development
+```bash
+# Regenerate poetry lock
+rm -f poetry.lock && poetry lock
+
+# Rebuild containers
+docker-compose down && docker-compose up -d --build
+
+# Check logs
+docker-compose logs -f app
+
+# Access database
+docker-compose exec db psql -U postgres
+```
+
+### Testing
+```bash
+# Run tests
+pytest tests/
+
+# Run with coverage
+pytest --cov=app tests/
+
+# Run specific test
+pytest tests/test_api.py::test_health_check
+```
+
+### Database
+```bash
+# Run migrations
+alembic upgrade head
+
+# Create migration
+alembic revision --autogenerate -m "description"
+
+# Reset database
+docker-compose down && docker-compose up -d db
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+1. **Container won't start**: Check logs with `docker-compose logs app`
+2. **Database connection**: Verify PostgreSQL is running
+3. **API timeouts**: Check external API availability
+4. **Memory issues**: Monitor container resource usage
+
+### Debug Commands
+```bash
+# Check container health
+docker-compose ps
+
+# View real-time logs
+docker-compose logs -f app celery
+
+# Check Celery workers
+docker-compose exec app celery -A app.core.celery inspect active
+
+# Monitor Redis
+docker-compose exec redis redis-cli monitor
+```
+
+## 📊 Monitoring
+
+### Health Checks
+- **Application**: `GET /health` - Service health status
+- **Database**: Check PostgreSQL connectivity
+- **Redis**: Verify Redis connection
+- **Celery**: Monitor worker status
+
+### Metrics
+- **Prometheus**: http://localhost:9090 - Application metrics
+- **Flower**: http://localhost:5555 - Celery task monitoring
+- **API Performance**: Track response times and throughput
+
+## 🔒 Security
+
+### Environment Variables
+- **API Keys**: Store in environment variables
+- **Database Credentials**: Use secure connection strings
+- **JWT Secrets**: Configure secure JWT signing keys
+- **External APIs**: Secure API key management
+
+### Best Practices
+- **Input Validation**: Validate all user inputs
+- **Rate Limiting**: Implement API rate limiting
+- **Authentication**: Use JWT tokens for API access
+- **Data Encryption**: Encrypt sensitive data
+
+## 📈 Performance
+
+### Optimization Tips
+- **Caching**: Use Redis for frequently accessed data
+- **Async Operations**: Use async/await for I/O operations
+- **Database Queries**: Optimize with proper indexing
+- **Background Tasks**: Use Celery for long-running operations
+
+### Monitoring
+- **Response Times**: Target <500ms for 95th percentile
+- **Error Rates**: Monitor and alert on high error rates
+- **Resource Usage**: Track CPU and memory usage
+- **Queue Lengths**: Monitor Celery queue lengths
+description:
+globs:
+alwaysApply: false
+---

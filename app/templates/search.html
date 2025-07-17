@@ -1,0 +1,186 @@
+{% extends "layout.html" %}
+
+{% block title %}Search NCM Products{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/loading.css') }}">
+{% endblock %}
+
+{% block content %}
+<div id="search-page-content">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Search NCM Products</h1>
+            <p class="lead">Search for products by NCM code or description</p>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form action="{{ url_for('main.search') }}" method="GET" class="row g-3" id="search-form">
+                        <div class="col-md-10">
+                            <input type="text" class="form-control" id="q" name="q" 
+                                   placeholder="Enter NCM code or description (min. 3 characters)" 
+                                   value="{{ query }}" required minlength="3">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i data-feather="search"></i> Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        <div id="search-results-container">
+            {% if query %}
+                <div class="card search-results">
+                    <div class="card-header">
+                        <h5>Search Results for "{{ query }}"</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if results and results.get('items') %}
+                            <div class="table-responsive">
+                                <table class="table table-hover search-results-table">
+                                    <thead>
+                                        <tr>
+                                            <th>NCM Code</th>
+                                            <th>Description</th>
+                                            <th>Chapter</th>
+                                            <th>Section</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for product in results.get('items') %}
+                                        <tr class="search-result-row">
+                                            <td><code>{{ product.ncm_code }}</code></td>
+                                            <td>{{ product.description }}</td>
+                                            <td>{{ product.chapter_code }}</td>
+                                            <td>{{ product.section_code }}</td>
+                                            <td>
+                                                <a href="{{ url_for('main.product_detail', ncm_code=product.ncm_code) }}" 
+                                                   class="btn btn-sm btn-info">
+                                                    <i data-feather="eye"></i> View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-muted">Found {{ results.get('total', 0) }} result(s).</p>
+                        {% else %}
+                            <div class="alert alert-info">
+                                <i data-feather="info"></i> No products found matching "{{ query }}".
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-secondary">
+                    <i data-feather="help-circle"></i> Enter a search term to find NCM products.
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="mt-4">
+            <h5>Search Tips</h5>
+            <ul>
+                <li>Search by NCM code (full or partial): <code>8542</code>, <code>85423100</code></li>
+                <li>Search by product description: <code>integrated circuits</code>, <code>coffee</code></li>
+                <li>Searches require at least 3 characters</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/components/loading.js') }}"></script>
+<script>
+// Make sure loading.js is fully loaded before executing this script
+document.addEventListener('DOMContentLoaded', function() {
+  if (typeof ShimmerPlaceholders === 'undefined') {
+    console.error('ShimmerPlaceholders not loaded yet, trying to load it');
+    // Try loading it again
+    var loadingScript = document.createElement('script');
+    loadingScript.src = "{{ url_for('static', filename='js/components/loading.js') }}";
+    loadingScript.onload = initializeShimmers;
+    document.head.appendChild(loadingScript);
+  } else {
+    initializeShimmers();
+  }
+});
+
+function initializeShimmers() {
+    // Check for preloaded content on page load
+    (function checkPreloadedContent() {
+        const searchPageContent = document.getElementById('search-page-content');
+        const searchResultsContainer = document.getElementById('search-results-container');
+        
+        // Only apply if this is a fresh page load without search query
+        if (!window.location.search) {
+            try {
+                // Check if we have preloaded content from the previous page
+                const preloadedHtml = localStorage.getItem('preloaded_search_html');
+                if (preloadedHtml && searchResultsContainer) {
+                    // Show shimmer effect while the page initializes
+                    ShimmerPlaceholders.createSearchResults(searchResultsContainer, 5);
+                    
+                    // Clear localStorage
+                    localStorage.removeItem('preloaded_search_html');
+                }
+            } catch (err) {
+                console.error("Error accessing preloaded content:", err);
+            }
+        }
+    })();
+    
+    // Apply shimmer effect when no search results are available yet
+    const resultsContainer = document.getElementById('search-results-container');
+    const searchForm = document.getElementById('search-form');
+    
+    if (searchForm && !window.location.search) {
+        searchForm.addEventListener('submit', function() {
+            ShimmerPlaceholders.createSearchResults(resultsContainer, 5);
+        });
+    }
+    
+    // Apply fade-in animation to search results
+    if (window.PageTransitions) {
+        window.PageTransitions.fadeIn('.search-results');
+        
+        // Apply staggered animation to search result rows
+        window.PageTransitions.stagger('.search-result-row', 'slide-in', 30);
+    }
+    
+    // Handle search form submission
+    if (searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            // Show loading overlay when form is submitted
+            if (window.loadingManager) {
+                window.loadingManager.showLoading();
+            }
+            
+            // Show shimmer in the results container while loading
+            if (!e.target.q.value || e.target.q.value.length < 3) {
+                // Don't allow submission if query is too short
+                e.preventDefault();
+                alert('Please enter at least 3 characters for search');
+                if (window.loadingManager) {
+                    window.loadingManager.hideLoading();
+                }
+            }
+        });
+    }
+    
+    // Hide loading overlay when page is fully loaded
+    window.addEventListener('load', function() {
+        if (window.loadingManager) {
+            window.loadingManager.hideLoading();
+        }
+    });
+}
+</script>
+{% endblock %}

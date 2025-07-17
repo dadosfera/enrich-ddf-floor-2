@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block title %}About NCM Enricher DDF{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>About NCM Enricher DDF</h1>
+        <p class="lead">
+            A comprehensive tool for working with Brazilian Import/Export product classification data.
+        </p>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>What is NCM?</h4>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>Nomenclatura Comum do Mercosul (NCM)</strong> is the classification system
+                    used by Brazil and other Mercosur countries for import and export products.
+                </p>
+                <p>
+                    The NCM system is based on the Harmonized System (HS), which is an international 
+                    nomenclature for the classification of products developed by the World Customs Organization (WCO).
+                </p>
+                <p>
+                    The NCM code consists of 8 digits:
+                </p>
+                <ul>
+                    <li>The first 6 digits follow the Harmonized System (HS)</li>
+                    <li>The last 2 digits are Mercosur-specific subdivisions</li>
+                </ul>
+                <p>
+                    For example, in the NCM code <code>8542.31.00</code>:
+                </p>
+                <ul>
+                    <li>The first 2 digits (<code>85</code>) represent the chapter</li>
+                    <li>The next 2 digits (<code>42</code>) refine the classification within the chapter</li>
+                    <li>The next 2 digits (<code>31</code>) further refine the classification</li>
+                    <li>The last 2 digits (<code>00</code>) are the Mercosur-specific subdivisions</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Structure of NCM Classification</h4>
+            </div>
+            <div class="card-body">
+                <p>The NCM classification is organized hierarchically:</p>
+                
+                <div class="card bg-dark mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><i data-feather="layers"></i> Sections</h5>
+                        <p class="card-text">The NCM is divided into 21 sections that group similar products.</p>
+                    </div>
+                </div>
+                
+                <div class="card bg-dark mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><i data-feather="folder"></i> Chapters</h5>
+                        <p class="card-text">Each section contains multiple chapters (identified by the first 2 digits of the NCM code).</p>
+                    </div>
+                </div>
+                
+                <div class="card bg-dark">
+                    <div class="card-body">
+                        <h5 class="card-title"><i data-feather="box"></i> Products</h5>
+                        <p class="card-text">The most detailed level, identified by an 8-digit code.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h4>About This Application</h4>
+            </div>
+            <div class="card-body">
+                <p>
+                    The NCM Enricher DDF application provides easy access to NCM classification data
+                    for use in import/export operations, trade analysis, and customs compliance.
+                </p>
+                <p>
+                    <strong>Key features:</strong>
+                </p>
+                <ul>
+                    <li>Search NCM products by code or description</li>
+                    <li>Browse the NCM classification structure</li>
+                    <li>View detailed product information, including tax rates</li>
+                    <li>Access data through a RESTful API</li>
+                </ul>
+                <p>
+                    <strong>Data Source:</strong> The NCM data in this application is sourced from official
+                    Mercosur and Brazilian government publications.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

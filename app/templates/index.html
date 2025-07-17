@@ -1,0 +1,249 @@
+{% extends "layout.html" %}
+
+{% block title %}NCM Enricher DDF - Brazilian Import/Export Classification{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/loading.css') }}">
+{% endblock %}
+
+{% block content %}
+<div id="preloaded-search-template" style="display: none;">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Search NCM Products</h1>
+            <p class="lead">Search for products by NCM code or description</p>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form action="#" method="GET" class="row g-3">
+                        <div class="col-md-10 shimmer shimmer-rect"></div>
+                        <div class="col-md-2 shimmer shimmer-rect"></div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="search-results-shimmer">
+                <div class="shimmer shimmer-header"></div>
+                <div class="shimmer-table-header">
+                    <div class="shimmer shimmer-table-cell"></div>
+                    <div class="shimmer shimmer-table-cell"></div>
+                    <div class="shimmer shimmer-table-cell"></div>
+                    <div class="shimmer shimmer-table-cell"></div>
+                    <div class="shimmer shimmer-table-cell"></div>
+                </div>
+                
+                {% for i in range(5) %}
+                <div class="shimmer-table-row">
+                    <div class="shimmer shimmer-table-cell"></div>
+                    <div class="shimmer shimmer-table-cell"></div>
+                    <div class="shimmer shimmer-table-cell"></div>
+                    <div class="shimmer shimmer-table-cell"></div>
+                    <div class="shimmer shimmer-table-cell"></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="p-5 mb-4 bg-dark rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">NCM Enricher DDF</h1>
+                <p class="col-md-8 fs-4">
+                    Access and analyze Brazilian Import/Export NCM classification data with ease.
+                </p>
+                <p class="lead">
+                    The Nomenclatura Comum do Mercosul (NCM) is the classification system used by 
+                    Brazil and other Mercosur countries for import and export products.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('main.search') }}" id="search-products-btn" class="btn btn-primary btn-lg">
+                        <i data-feather="search"></i> Search Products
+                    </a>
+                    <a href="{{ url_for('main.browse') }}" id="browse-categories-btn" class="btn btn-outline-info btn-lg">
+                        <i data-feather="list"></i> Browse Categories
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h2 class="card-title"><i data-feather="box"></i></h2>
+                <h3 class="card-subtitle mb-2 text-info">{{ product_count }}</h3>
+                <p class="card-text">NCM Products</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h2 class="card-title"><i data-feather="layers"></i></h2>
+                <h3 class="card-subtitle mb-2 text-info">{{ section_count }}</h3>
+                <p class="card-text">Sections</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h2 class="card-title"><i data-feather="folder"></i></h2>
+                <h3 class="card-subtitle mb-2 text-info">{{ chapter_count }}</h3>
+                <p class="card-text">Chapters</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Quick Search</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('main.search') }}" method="GET" id="quick-search-form">
+                    <div class="mb-3">
+                        <label for="quickSearch" class="form-label">Enter NCM code or description</label>
+                        <input type="text" class="form-control" id="quickSearch" name="q" 
+                            placeholder="e.g., 85423100 or 'integrated circuits'" required minlength="3">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i data-feather="search"></i> Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4>API Access</h4>
+            </div>
+            <div class="card-body">
+                <p>Access NCM data programmatically through our API:</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-dark"><code>/api/product/&lt;ncm_code&gt;</code> - Get product by NCM code</li>
+                    <li class="list-group-item bg-dark"><code>/api/search?q=&lt;query&gt;</code> - Search products</li>
+                    <li class="list-group-item bg-dark"><code>/api/sections</code> - List all sections</li>
+                    <li class="list-group-item bg-dark"><code>/api/chapter/&lt;chapter_code&gt;</code> - Get chapter info</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Browse Sections</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for section in sections %}
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('main.browse_section', section_code=section.code) }}" class="text-decoration-none">
+                            <div class="card h-100 bg-dark">
+                                <div class="card-body">
+                                    <h5 class="card-title">Section {{ section.code }}</h5>
+                                    <p class="card-text text-truncate">{{ section.description }}</p>
+                                    <small class="text-muted">{{ section.chapter_count }} chapters</small>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/components/loading.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle navigation to Search page
+    const searchButton = document.getElementById('search-products-btn');
+    const quickSearchForm = document.getElementById('quick-search-form');
+    const preloadedSearchTemplate = document.getElementById('preloaded-search-template');
+    
+    if (searchButton) {
+        searchButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Show loading overlay
+            if (window.loadingManager) {
+                window.loadingManager.showLoading();
+            }
+            
+            // Cache the preloaded content in localStorage to make it available during page transition
+            if (preloadedSearchTemplate) {
+                try {
+                    localStorage.setItem('preloaded_search_html', preloadedSearchTemplate.innerHTML);
+                } catch (err) {
+                    console.error("Could not store preloaded template:", err);
+                }
+            }
+            
+            // Navigate to the search page after a short delay to show the loading effect
+            setTimeout(function() {
+                window.location.href = searchButton.getAttribute('href');
+            }, 300);
+        });
+    }
+    
+    if (quickSearchForm) {
+        quickSearchForm.addEventListener('submit', function(e) {
+            // Show loading overlay
+            if (window.loadingManager) {
+                window.loadingManager.showLoading();
+            }
+            
+            // Cache the search query and the preloaded template
+            if (preloadedSearchTemplate) {
+                try {
+                    localStorage.setItem('preloaded_search_html', preloadedSearchTemplate.innerHTML);
+                } catch (err) {
+                    console.error("Could not store preloaded template:", err);
+                }
+            }
+            
+            // Allow the form to submit normally
+        });
+    }
+    
+    // Handle navigation to Browse page
+    const browseButton = document.getElementById('browse-categories-btn');
+    if (browseButton) {
+        browseButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Show loading overlay
+            if (window.loadingManager) {
+                window.loadingManager.showLoading();
+            }
+            
+            // Navigate to the browse page after a short delay
+            setTimeout(function() {
+                window.location.href = browseButton.getAttribute('href');
+            }, 300);
+        });
+    }
+    
+    // Initialize general transitions
+    document.querySelectorAll('.card').forEach(function(card) {
+        card.classList.add('fade-in');
+    });
+});
+</script>
+{% endblock %}

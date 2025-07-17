@@ -1,0 +1,185 @@
+{% extends 'layout.html' %}
+
+{% block title %}Translation Tool - NCM Database{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1>Translation Tool</h1>
+            <p class="lead">Translate product descriptions and technical terms between Portuguese and English</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Source Text</span>
+                    <select id="source-language" class="form-select form-select-sm w-auto">
+                        <option value="auto">Auto-detect</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="en">English</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    <textarea id="source-text" class="form-control" rows="8" placeholder="Enter text to translate"></textarea>
+                </div>
+            </div>
+            <div class="d-grid">
+                <button id="translate-btn" class="btn btn-primary">Translate</button>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span>Translated Text</span>
+                    <select id="target-language" class="form-select form-select-sm w-auto">
+                        <option value="en">English</option>
+                        <option value="pt">Portuguese</option>
+                    </select>
+                </div>
+                <div class="card-body">
+                    <textarea id="target-text" class="form-control" rows="8" readonly placeholder="Translation will appear here"></textarea>
+                </div>
+            </div>
+            <div class="d-grid">
+                <button id="copy-btn" class="btn btn-outline-secondary">Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">Translation History</div>
+                <div class="card-body">
+                    <div id="history-container">
+                        <p class="text-muted text-center">Your translation history will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const translateBtn = document.getElementById('translate-btn');
+    const copyBtn = document.getElementById('copy-btn');
+    const sourceText = document.getElementById('source-text');
+    const targetText = document.getElementById('target-text');
+    const sourceLang = document.getElementById('source-language');
+    const targetLang = document.getElementById('target-language');
+    const historyContainer = document.getElementById('history-container');
+    
+    // Load history from localStorage
+    let translationHistory = JSON.parse(localStorage.getItem('translationHistory') || '[]');
+    updateHistoryDisplay();
+    
+    translateBtn.addEventListener('click', function() {
+        const text = sourceText.value.trim();
+        if (!text) return;
+        
+        translateBtn.disabled = true;
+        translateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Translating...';
+        
+        fetch('/api/translate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                text: text,
+                source_lang: sourceLang.value,
+                target_lang: targetLang.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('Translation error: ' + data.error);
+                return;
+            }
+            
+            targetText.value = data.translated_text;
+            
+            // Add to history
+            const historyItem = {
+                originalText: data.original_text,
+                translatedText: data.translated_text,
+                sourceLang: data.source_language,
+                targetLang: data.target_language,
+                timestamp: new Date().toISOString()
+            };
+            
+            translationHistory.unshift(historyItem);
+            if (translationHistory.length > 10) {
+                translationHistory.pop();
+            }
+            
+            localStorage.setItem('translationHistory', JSON.stringify(translationHistory));
+            updateHistoryDisplay();
+        })
+        .catch(error => {
+            console.error('Translation failed:', error);
+            alert('Translation failed. Please try again.');
+        })
+        .finally(() => {
+            translateBtn.disabled = false;
+            translateBtn.textContent = 'Translate';
+        });
+    });
+    
+    copyBtn.addEventListener('click', function() {
+        const text = targetText.value.trim();
+        if (!text) return;
+        
+        navigator.clipboard.writeText(text).then(() => {
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+            }, 2000);
+        }).catch(err => {
+            console.error('Failed to copy text:', err);
+        });
+    });
+    
+    function updateHistoryDisplay() {
+        if (translationHistory.length === 0) {
+            historyContainer.innerHTML = '<p class="text-muted text-center">Your translation history will appear here</p>';
+            return;
+        }
+        
+        let html = '<div class="list-group">';
+        translationHistory.forEach((item, index) => {
+            const date = new Date(item.timestamp);
+            const formattedDate = date.toLocaleString();
+            
+            html += `
+                <div class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">${formattedDate}</small>
+                        <span class="badge bg-primary">${item.sourceLang} → ${item.targetLang}</span>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Original:</strong></p>
+                            <p class="text-truncate">${item.originalText.substring(0, 100)}${item.originalText.length > 100 ? '...' : ''}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-1"><strong>Translation:</strong></p>
+                            <p class="text-truncate">${item.translatedText.substring(0, 100)}${item.translatedText.length > 100 ? '...' : ''}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        
+        historyContainer.innerHTML = html;
+    }
+});
+</script>
+{% endblock %}

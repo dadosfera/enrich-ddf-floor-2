@@ -1,0 +1,110 @@
+# Development Guidelines - Enrich DDF Floor 2
+
+## Code Style and Standards
+
+### Python Code Standards
+- **Line Length**: Maximum 79 characters (PEP 8 compliant)
+- **Import Order**: Use `isort` with black profile
+- **Formatting**: Use `black` with line length 88
+- **Type Hints**: Always use type hints for function parameters and return values
+- **Docstrings**: Use Google-style docstrings for all public functions
+
+### FastAPI Best Practices
+- **Async/Await**: Use async functions for I/O operations
+- **Pydantic Models**: Use Pydantic for request/response validation
+- **Dependency Injection**: Use FastAPI's dependency injection system
+- **Error Handling**: Implement comprehensive error handling with proper HTTP status codes
+
+### Database Patterns
+- **SQLAlchemy**: Use async SQLAlchemy with proper session management
+- **Migrations**: Use Alembic for database schema changes
+- **Connection Pooling**: Configure proper connection pooling for PostgreSQL
+- **Transactions**: Use database transactions for data consistency
+
+## Security Guidelines
+
+### Authentication & Authorization
+- **JWT Tokens**: Use secure JWT tokens with proper expiration
+- **Password Hashing**: Use bcrypt for password hashing
+- **API Keys**: Implement secure API key management
+- **Rate Limiting**: Implement rate limiting for API endpoints
+
+### Data Protection
+- **Environment Variables**: Use environment variables for sensitive configuration
+- **Encryption**: Encrypt sensitive data at rest and in transit
+- **LGPD Compliance**: Follow Brazilian data protection regulations
+- **Input Validation**: Validate all user inputs to prevent injection attacks
+
+## Performance Guidelines
+
+### API Performance
+- **Response Time**: Target <500ms for 95th percentile
+- **Database Queries**: Optimize queries with proper indexing
+- **Caching**: Use Redis for session and data caching
+- **Async Operations**: Use async/await for I/O-bound operations
+
+### Background Processing
+- **Celery Tasks**: Use Celery for long-running tasks
+- **Task Timeouts**: Set appropriate timeouts for background tasks
+- **Retry Logic**: Implement exponential backoff for failed tasks
+- **Monitoring**: Use Flower for Celery task monitoring
+
+## Testing Strategy
+
+### Test Coverage
+- **Unit Tests**: 90%+ coverage for business logic
+- **Integration Tests**: Test external API integrations
+- **API Tests**: Test all API endpoints with proper authentication
+- **Performance Tests**: Load testing for critical endpoints
+
+### Test Organization
+- **Test Files**: Place tests in `tests/` directory
+- **Fixtures**: Use pytest fixtures for test data
+- **Mocking**: Mock external dependencies in tests
+- **Database**: Use test database for integration tests
+
+## Deployment Guidelines
+
+### Docker Best Practices
+- **Multi-stage Builds**: Use multi-stage Dockerfile for production
+- **Security**: Run containers as non-root user
+- **Health Checks**: Implement proper health checks
+- **Resource Limits**: Set appropriate resource limits
+
+### Kubernetes Deployment
+- **Manifests**: Use proper Kubernetes manifests
+- **Secrets**: Use Kubernetes secrets for sensitive data
+- **Monitoring**: Implement Prometheus metrics
+- **Logging**: Use structured logging with proper levels
+
+## Error Handling
+
+### Application Errors
+- **Logging**: Use structured logging with appropriate levels
+- **Error Codes**: Implement consistent error codes
+- **User Messages**: Provide user-friendly error messages
+- **Debugging**: Include debug information in development
+
+### External API Integration
+- **Circuit Breakers**: Implement circuit breaker patterns
+- **Retry Logic**: Use exponential backoff for retries
+- **Fallbacks**: Implement fallback strategies for service failures
+- **Monitoring**: Monitor external API health and performance
+
+## Code Organization
+
+### Module Structure
+- **Separation of Concerns**: Keep business logic separate from API layer
+- **Dependency Injection**: Use dependency injection for services
+- **Configuration**: Centralize configuration management
+- **Constants**: Define constants in dedicated modules
+
+### File Naming
+- **Python Files**: Use snake_case for file names
+- **Classes**: Use PascalCase for class names
+- **Functions**: Use snake_case for function names
+- **Constants**: Use UPPER_SNAKE_CASE for constants
+description:
+globs:
+alwaysApply: false
+---

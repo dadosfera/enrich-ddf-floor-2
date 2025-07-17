@@ -1,0 +1,127 @@
+# API Integration Guidelines - Enrich DDF Floor 2
+
+## External API Integration Patterns
+
+### Service Architecture
+- **Base Client**: [app/core/api_client.py](mdc:app/core/api_client.py) - Base HTTP client with retry logic
+- **Rate Limiting**: Implement rate limiting for external API calls
+- **Circuit Breakers**: Use circuit breaker pattern for service resilience
+- **Caching**: Cache API responses to reduce external calls
+
+### Integration Services
+- **Brazilian APIs**: Serpro, BigDataCorp, Serasa integrations
+- **International APIs**: Apollo, PDL, Zero Bounce for contact enrichment
+- **Multi-country Support**: Argentina, Mexico, Colombia, Chile APIs
+- **Data Sources**: Portal da Transparência, government APIs
+
+## API Client Patterns
+
+### HTTP Client Configuration
+```python
+# Base client with retry and timeout
+class APIClient:
+    def __init__(self, base_url: str, api_key: str):
+        self.session = aiohttp.ClientSession(
+            timeout=aiohttp.ClientTimeout(total=30),
+            headers={"Authorization": f"Bearer {api_key}"}
+        )
+```
+
+### Error Handling
+- **HTTP Status Codes**: Handle all HTTP status codes appropriately
+- **Timeout Handling**: Implement proper timeout handling
+- **Retry Logic**: Use exponential backoff for transient failures
+- **Fallback Strategies**: Implement fallback to alternative data sources
+
+### Rate Limiting
+```python
+# Rate limiting decorator
+def rate_limit(calls: int, period: int):
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            # Implement rate limiting logic
+            return await func(*args, **kwargs)
+        return wrapper
+    return decorator
+```
+
+## Data Enrichment Services
+
+### Company Enrichment
+- **Serpro Integration**: Brazilian company data from Serpro API
+- **BigDataCorp**: Additional Brazilian company information
+- **International**: Company data for Argentina, Mexico, Colombia, Chile
+- **Data Validation**: Validate and clean company data
+
+### Contact Enrichment
+- **Apollo**: Contact discovery and verification
+- **PDL**: People Data Labs for contact information
+- **Zero Bounce**: Email validation and verification
+- **Data Quality**: Ensure data quality and accuracy
+
+### Product Classification
+- **NCM Codes**: Brazilian product classification codes
+- **CNAE Codes**: Brazilian economic activity codes
+- **International**: Product classification for other countries
+- **Machine Learning**: Use ML for automatic classification
+
+## API Response Handling
+
+### Data Transformation
+- **Normalization**: Normalize data from different sources
+- **Validation**: Validate data quality and completeness
+- **Enrichment**: Add derived fields and calculated values
+- **Formatting**: Ensure consistent data format
+
+### Error Recovery
+- **Partial Data**: Handle partial data from failed enrichments
+- **Default Values**: Provide sensible defaults for missing data
+- **Data Quality**: Flag low-quality or incomplete data
+- **User Feedback**: Provide clear feedback on enrichment results
+
+## Monitoring and Observability
+
+### API Health Monitoring
+- **Health Checks**: Monitor external API health
+- **Response Times**: Track API response times
+- **Error Rates**: Monitor error rates and types
+- **Availability**: Track API availability and uptime
+
+### Metrics and Logging
+- **Request Logging**: Log all external API requests
+- **Performance Metrics**: Track API performance metrics
+- **Error Tracking**: Log and track API errors
+- **Usage Analytics**: Monitor API usage patterns
+
+## Security and Compliance
+
+### API Security
+- **API Key Management**: Secure storage and rotation of API keys
+- **Request Signing**: Sign requests for authentication
+- **Data Encryption**: Encrypt sensitive data in transit
+- **Access Control**: Implement proper access controls
+
+### Compliance Requirements
+- **LGPD Compliance**: Follow Brazilian data protection laws
+- **Data Retention**: Implement proper data retention policies
+- **User Consent**: Handle user consent for data processing
+- **Data Minimization**: Only collect necessary data
+
+## Testing External APIs
+
+### Mock Testing
+- **API Mocks**: Create mocks for external APIs
+- **Test Data**: Use realistic test data
+- **Error Scenarios**: Test error handling scenarios
+- **Performance Testing**: Test API performance under load
+
+### Integration Testing
+- **Real API Testing**: Test with real APIs in staging
+- **Data Validation**: Validate data quality and accuracy
+- **Error Handling**: Test error handling and recovery
+- **Performance Monitoring**: Monitor API performance in tests
+description:
+globs:
+alwaysApply: false
+---

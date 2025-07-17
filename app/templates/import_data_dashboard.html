@@ -1,0 +1,271 @@
+{% extends "layout.html" %}
+
+{% block title %}Import Data Dashboard - NCM Enricher DDF{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Import Data Dashboard</h1>
+        <p class="lead">Analyze Brazilian import data by NCM classification</p>
+        
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Import Data Management</h4>
+                <div>
+                    <button type="button" class="btn btn-primary" id="loadImportDataBtn">
+                        <i data-feather="refresh-cw"></i> Load Import Data
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-secondary" id="importStatusAlert">
+                    <i data-feather="info"></i> Use the button above to load import data from the CSV file.
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card bg-dark mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title"><i data-feather="file-text"></i> Data Source</h5>
+                                <p class="card-text">Import data from CSV file: <code>IMP_2025.csv</code></p>
+                                <p class="small text-muted">Data includes month, NCM code, quantity, value information.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-dark mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title"><i data-feather="globe"></i> API Integration</h5>
+                                <p class="card-text">Integration with ComexStat API: <a href="https://api-comexstat.mdic.gov.br/docs" target="_blank">api-comexstat.mdic.gov.br</a></p>
+                                <p class="small text-muted">Provides additional information about NCM codes and import/export statistics.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Search Products with Import Data</h4>
+            </div>
+            <div class="card-body">
+                <form id="searchImportForm" class="row g-3">
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" id="importSearchQuery" 
+                               placeholder="Enter NCM code or description (min. 3 characters)" 
+                               required minlength="3">
+                    </div>
+                    <div class="col-md-2">
+                        <select class="form-select" id="searchYear">
+                            <option value="2025" selected>2025</option>
+                            <option value="2024">2024</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i data-feather="search"></i> Search
+                        </button>
+                    </div>
+                </form>
+                
+                <div id="searchImportResults" class="mt-4">
+                    <!-- Results will be displayed here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h4>Import Statistics Overview</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card bg-dark mb-3">
+                            <div class="card-header">Top Import Categories</div>
+                            <div class="card-body">
+                                <p class="card-text">Loading data...</p>
+                                <div id="topCategoriesChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-dark mb-3">
+                            <div class="card-header">Monthly Import Trends</div>
+                            <div class="card-body">
+                                <p class="card-text">Loading data...</p>
+                                <div id="monthlyTrendsChart"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Feather icons
+        feather.replace();
+        
+        // Setup the import data loading button
+        const loadImportDataBtn = document.getElementById('loadImportDataBtn');
+        const importStatusAlert = document.getElementById('importStatusAlert');
+        
+        loadImportDataBtn.addEventListener('click', function() {
+            // Disable button and show loading state
+            loadImportDataBtn.disabled = true;
+            loadImportDataBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+            
+            // Make API request to load import data
+            fetch('/admin/load-import-data')
+                .then(response => response.json())
+                .then(data => {
+                    // Update status alert
+                    if (data.status === 'success') {
+                        importStatusAlert.className = 'alert alert-success';
+                        importStatusAlert.innerHTML = '<i data-feather="check-circle"></i> ' + data.message;
+                    } else {
+                        importStatusAlert.className = 'alert alert-danger';
+                        importStatusAlert.innerHTML = '<i data-feather="alert-circle"></i> ' + data.message;
+                    }
+                    
+                    // Re-initialize Feather icons for the new alert content
+                    feather.replace();
+                })
+                .catch(error => {
+                    importStatusAlert.className = 'alert alert-danger';
+                    importStatusAlert.innerHTML = '<i data-feather="alert-circle"></i> Error: ' + error.message;
+                    feather.replace();
+                })
+                .finally(() => {
+                    // Re-enable button
+                    loadImportDataBtn.disabled = false;
+                    loadImportDataBtn.innerHTML = '<i data-feather="refresh-cw"></i> Load Import Data';
+                    feather.replace();
+                });
+        });
+        
+        // Setup search form
+        const searchImportForm = document.getElementById('searchImportForm');
+        const searchImportResults = document.getElementById('searchImportResults');
+        
+        searchImportForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const query = document.getElementById('importSearchQuery').value;
+            const year = document.getElementById('searchYear').value;
+            
+            if (!query || query.length < 3) {
+                alert('Please enter at least 3 characters for search.');
+                return;
+            }
+            
+            // Show loading state
+            searchImportResults.innerHTML = '<div class="text-center"><span class="spinner-border text-primary" role="status"></span><p>Searching...</p></div>';
+            
+            // Make API request to search products
+            fetch(`/api/search?q=${encodeURIComponent(query)}&year=${year}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Display search results
+                    if (data.results && data.results.length > 0) {
+                        let resultsHtml = `<h5>Found ${data.results.length} result(s) for "${query}"</h5>`;
+                        resultsHtml += '<div class="table-responsive"><table class="table table-hover">';
+                        resultsHtml += '<thead><tr><th>NCM Code</th><th>Description</th><th>Import Value</th><th>Import Weight</th><th>Action</th></tr></thead><tbody>';
+                        
+                        data.results.forEach(product => {
+                            const importStats = product.import_statistics || {};
+                            resultsHtml += `
+                                <tr>
+                                    <td><code>${product.ncm_code}</code></td>
+                                    <td>${product.description}</td>
+                                    <td>${importStats.total_fob_value ? '$' + importStats.total_fob_value.toLocaleString() : 'N/A'}</td>
+                                    <td>${importStats.total_weight_kg ? importStats.total_weight_kg.toLocaleString() + ' kg' : 'N/A'}</td>
+                                    <td>
+                                        <a href="/product/${product.ncm_code}/import-stats" class="btn btn-sm btn-info">
+                                            <i data-feather="bar-chart-2"></i> Statistics
+                                        </a>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        
+                        resultsHtml += '</tbody></table></div>';
+                        searchImportResults.innerHTML = resultsHtml;
+                    } else {
+                        searchImportResults.innerHTML = `<div class="alert alert-info"><i data-feather="info"></i> No products found matching "${query}".</div>`;
+                    }
+                    
+                    // Re-initialize Feather icons for the new content
+                    feather.replace();
+                })
+                .catch(error => {
+                    searchImportResults.innerHTML = `<div class="alert alert-danger"><i data-feather="alert-circle"></i> Error: ${error.message}</div>`;
+                    feather.replace();
+                });
+        });
+        
+        // Initialize placeholder charts
+        function initializePlaceholderCharts() {
+            // Top Categories Chart
+            const topCategoriesCtx = document.createElement('canvas');
+            document.getElementById('topCategoriesChart').appendChild(topCategoriesCtx);
+            
+            new Chart(topCategoriesCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Loading...'],
+                    datasets: [{
+                        label: 'Import Value (USD)',
+                        data: [0],
+                        backgroundColor: 'rgba(13, 202, 240, 0.5)',
+                        borderColor: 'rgba(13, 202, 240, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Monthly Trends Chart
+            const monthlyTrendsCtx = document.createElement('canvas');
+            document.getElementById('monthlyTrendsChart').appendChild(monthlyTrendsCtx);
+            
+            new Chart(monthlyTrendsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Loading...'],
+                    datasets: [{
+                        label: 'Import Value (USD)',
+                        data: [0],
+                        fill: false,
+                        borderColor: 'rgba(13, 202, 240, 1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize charts
+        initializePlaceholderCharts();
+    });
+</script>
+{% endblock %}

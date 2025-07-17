@@ -1,0 +1,204 @@
+{% extends "layout.html" %}
+
+{% block title %}Cache Statistics - NCM Data Enricher{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">Cache Statistics</h3>
+                    <div>
+                        <a href="{{ url_for('main.cache_control', action='clear_all') }}" class="btn btn-sm btn-light">
+                            <i class="fas fa-broom me-1"></i> Clear All Caches
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if message %}
+                    <div class="alert alert-{{ message_type|default('info') }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">NCM Data Cache</h5>
+                                        <a href="{{ url_for('main.cache_control', action='clear_ncm') }}" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash-alt me-1"></i> Clear
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Items
+                                            <span class="badge bg-primary rounded-pill">{{ stats.ncm_items|default(0) }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Size
+                                            <span class="badge bg-secondary rounded-pill">{{ stats.ncm_size|default('0 KB') }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Hit Rate
+                                            <span class="badge bg-success rounded-pill">{{ stats.ncm_hit_rate|default('0%') }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">ComexStat API Cache</h5>
+                                        <a href="{{ url_for('main.cache_control', action='clear_comexstat') }}" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash-alt me-1"></i> Clear
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Items
+                                            <span class="badge bg-primary rounded-pill">{{ stats.comexstat_items|default(0) }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Size
+                                            <span class="badge bg-secondary rounded-pill">{{ stats.comexstat_size|default('0 KB') }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Hit Rate
+                                            <span class="badge bg-success rounded-pill">{{ stats.comexstat_hit_rate|default('0%') }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Search Results Cache</h5>
+                                        <a href="{{ url_for('main.cache_control', action='clear_search') }}" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash-alt me-1"></i> Clear
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Items
+                                            <span class="badge bg-primary rounded-pill">{{ stats.search_items|default(0) }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Size
+                                            <span class="badge bg-secondary rounded-pill">{{ stats.search_size|default('0 KB') }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Hit Rate
+                                            <span class="badge bg-success rounded-pill">{{ stats.search_hit_rate|default('0%') }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card mb-4">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0">Web Scraper Cache</h5>
+                                        <a href="{{ url_for('main.cache_control', action='clear_scraper') }}" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash-alt me-1"></i> Clear
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <ul class="list-group">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Items
+                                            <span class="badge bg-primary rounded-pill">{{ stats.scraper_items|default(0) }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Size
+                                            <span class="badge bg-secondary rounded-pill">{{ stats.scraper_size|default('0 KB') }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            Hit Rate
+                                            <span class="badge bg-success rounded-pill">{{ stats.scraper_hit_rate|default('0%') }}</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">Cache Performance</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Cache Type</th>
+                                            <th>Total Requests</th>
+                                            <th>Hits</th>
+                                            <th>Misses</th>
+                                            <th>Hit Rate</th>
+                                            <th>Average Response Time</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>NCM Data</td>
+                                            <td>{{ stats.ncm_requests|default(0) }}</td>
+                                            <td>{{ stats.ncm_hits|default(0) }}</td>
+                                            <td>{{ stats.ncm_misses|default(0) }}</td>
+                                            <td>{{ stats.ncm_hit_rate|default('0%') }}</td>
+                                            <td>{{ stats.ncm_avg_time|default('0ms') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>ComexStat API</td>
+                                            <td>{{ stats.comexstat_requests|default(0) }}</td>
+                                            <td>{{ stats.comexstat_hits|default(0) }}</td>
+                                            <td>{{ stats.comexstat_misses|default(0) }}</td>
+                                            <td>{{ stats.comexstat_hit_rate|default('0%') }}</td>
+                                            <td>{{ stats.comexstat_avg_time|default('0ms') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Search Results</td>
+                                            <td>{{ stats.search_requests|default(0) }}</td>
+                                            <td>{{ stats.search_hits|default(0) }}</td>
+                                            <td>{{ stats.search_misses|default(0) }}</td>
+                                            <td>{{ stats.search_hit_rate|default('0%') }}</td>
+                                            <td>{{ stats.search_avg_time|default('0ms') }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Web Scraper</td>
+                                            <td>{{ stats.scraper_requests|default(0) }}</td>
+                                            <td>{{ stats.scraper_hits|default(0) }}</td>
+                                            <td>{{ stats.scraper_misses|default(0) }}</td>
+                                            <td>{{ stats.scraper_hit_rate|default('0%') }}</td>
+                                            <td>{{ stats.scraper_avg_time|default('0ms') }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

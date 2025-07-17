@@ -1,0 +1,159 @@
+{% extends 'layout.html' %}
+
+{% block title %}{{ _('Integrations Management') }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5 mb-3">{{ _('Data Source Integrations') }}</h1>
+            <p class="lead">{{ _('Manage external data source connections to enrich NCM product data') }}</p>
+        </div>
+    </div>
+
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">{{ _('Error loading integrations') }}</h4>
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">{{ _('Available Integrations') }}</h5>
+                    <span class="badge bg-primary">{{ integration_count or 0 }}</span>
+                </div>
+                <div class="card-body">
+                    {% if integrations %}
+                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                            {% for integration in integrations %}
+                                <div class="col">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ integration.name }}</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">{{ integration.id }}</h6>
+                                            <p class="card-text">{{ integration.description }}</p>
+                                            {% if integration.source_url %}
+                                                <p class="small text-muted">
+                                                    <strong>{{ _('Source URL') }}:</strong> 
+                                                    <a href="{{ integration.source_url }}" target="_blank" rel="noopener">
+                                                        {{ integration.source_url }}
+                                                    </a>
+                                                </p>
+                                            {% endif %}
+                                            <p class="small text-muted">
+                                                <strong>{{ _('Data Type') }}:</strong> {{ integration.data_type }}
+                                            </p>
+                                        </div>
+                                        <div class="card-footer d-flex justify-content-between align-items-center">
+                                            <button class="btn btn-sm btn-outline-primary" 
+                                                    data-integration-id="{{ integration.id }}"
+                                                    onclick="testConnection('{{ integration.id }}')">
+                                                {{ _('Test Connection') }}
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary"
+                                                    data-integration-id="{{ integration.id }}"
+                                                    onclick="fetchSampleData('{{ integration.id }}')">
+                                                {{ _('Fetch Sample') }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            {{ _('No integrations available. Check if integration modules are properly installed.') }}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">{{ _('Integration Results') }}</h5>
+                </div>
+                <div class="card-body">
+                    <div id="integration-results">
+                        <div class="alert alert-info">
+                            {{ _('Select an integration and action to see results here.') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function testConnection(integrationId) {
+        showLoading();
+        fetch(`/api/integrations/${integrationId}/test`)
+            .then(response => response.json())
+            .then(data => {
+                showResults(data);
+            })
+            .catch(error => {
+                showError(error);
+            });
+    }
+
+    function fetchSampleData(integrationId) {
+        showLoading();
+        fetch(`/api/integrations/${integrationId}/sample`)
+            .then(response => response.json())
+            .then(data => {
+                showResults(data);
+            })
+            .catch(error => {
+                showError(error);
+            });
+    }
+
+    function showLoading() {
+        document.getElementById('integration-results').innerHTML = `
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">${'{{ _("Loading...") }}'}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    function showResults(data) {
+        const resultsContainer = document.getElementById('integration-results');
+        
+        if (data.error) {
+            showError(data.error);
+            return;
+        }
+        
+        let html = '';
+        if (data.status === 'success') {
+            html = `<div class="alert alert-success">${'{{ _("Operation completed successfully!") }}'}</div>`;
+        } else {
+            html = `<div class="alert alert-warning">${'{{ _("Operation completed with warnings.") }}'}</div>`;
+        }
+        
+        html += `<div class="mt-3"><pre class="bg-light p-3 border rounded">${JSON.stringify(data, null, 2)}</pre></div>`;
+        resultsContainer.innerHTML = html;
+    }
+
+    function showError(error) {
+        document.getElementById('integration-results').innerHTML = `
+            <div class="alert alert-danger">
+                <h5>${'{{ _("Error") }}'}</h5>
+                <p>${error}</p>
+            </div>
+        `;
+    }
+</script>
+{% endblock %}

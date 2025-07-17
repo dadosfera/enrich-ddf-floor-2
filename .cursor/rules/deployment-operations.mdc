@@ -1,0 +1,159 @@
+# Deployment and Operations - Enrich DDF Floor 2
+
+## Docker Container Management
+
+### Container Architecture
+- **Multi-stage Builds**: [Dockerfile](mdc:Dockerfile) - Production-optimized container
+- **Service Orchestration**: [docker-compose.yml](mdc:docker-compose.yml) - Complete service stack
+- **Development Environment**: [scripts/start-dev.sh](mdc:scripts/start-dev.sh) - Local development setup
+
+### Service Stack
+- **Application**: FastAPI app with uvicorn server
+- **Background Processing**: Celery workers with Redis broker
+- **Database**: PostgreSQL with async SQLAlchemy
+- **Cache**: Redis for session and task storage
+- **Monitoring**: Prometheus metrics and Flower UI
+- **Queue Management**: Celery with Redis backend
+
+## Development Environment
+
+### Local Setup
+```bash
+# Start development environment
+bash scripts/start-dev.sh --api --app
+
+# Available services:
+# - FastAPI App: http://localhost:8000
+# - API Documentation: http://localhost:8000/docs
+# - Health Check: http://localhost:8000/health
+# - Flower UI: http://localhost:5555
+# - Prometheus: http://localhost:9090
+# - PostgreSQL: localhost:5432
+# - Redis: localhost:6379
+```
+
+### Environment Configuration
+- **Environment Variables**: Use `.env` files for local development
+- **Database Migrations**: Run Alembic migrations on startup
+- **Seed Data**: Load initial data for development
+- **Hot Reload**: Enable auto-reload for development
+
+## Production Deployment
+
+### Container Security
+- **Non-root User**: Run containers as non-root user
+- **Resource Limits**: Set appropriate CPU and memory limits
+- **Health Checks**: Implement proper health check endpoints
+- **Security Scanning**: Scan containers for vulnerabilities
+
+### Service Configuration
+- **Environment Variables**: Use Kubernetes secrets for sensitive data
+- **Database Connection**: Configure connection pooling
+- **Redis Configuration**: Set up Redis clustering for production
+- **Monitoring**: Configure Prometheus and Grafana
+
+## Monitoring and Observability
+
+### Application Metrics
+- **Health Checks**: `/health` endpoint for service health
+- **Prometheus Metrics**: Custom metrics for business KPIs
+- **Performance Monitoring**: Track response times and throughput
+- **Error Tracking**: Monitor error rates and types
+
+### Background Task Monitoring
+- **Celery Monitoring**: Flower UI for task monitoring
+- **Task Metrics**: Track task success/failure rates
+- **Queue Monitoring**: Monitor queue lengths and processing times
+- **Worker Health**: Monitor Celery worker health
+
+### Database Monitoring
+- **Connection Pool**: Monitor database connection pool usage
+- **Query Performance**: Track slow queries and optimization
+- **Database Health**: Monitor PostgreSQL health and performance
+- **Backup Monitoring**: Ensure regular database backups
+
+## Logging and Debugging
+
+### Logging Strategy
+- **Structured Logging**: Use JSON format for production logs
+- **Log Levels**: Configure appropriate log levels per environment
+- **Log Aggregation**: Centralize logs for analysis
+- **Error Tracking**: Track and alert on application errors
+
+### Debugging Tools
+- **Development Console**: Interactive debugging in development
+- **API Documentation**: Auto-generated API docs with examples
+- **Database Tools**: Database inspection and query tools
+- **Performance Profiling**: Profile application performance
+
+## Backup and Recovery
+
+### Data Backup Strategy
+- **Database Backups**: Regular PostgreSQL backups
+- **Configuration Backups**: Backup configuration files
+- **User Data**: Backup user-uploaded files and data
+- **Disaster Recovery**: Test recovery procedures regularly
+
+### Recovery Procedures
+- **Database Recovery**: Restore from backups
+- **Service Recovery**: Restart failed services
+- **Data Validation**: Validate data integrity after recovery
+- **Rollback Procedures**: Rollback to previous versions if needed
+
+## Performance Optimization
+
+### Application Performance
+- **Caching Strategy**: Implement Redis caching for frequently accessed data
+- **Database Optimization**: Optimize queries and add proper indexes
+- **Async Processing**: Use async/await for I/O operations
+- **CDN Integration**: Use CDN for static assets
+
+### Infrastructure Optimization
+- **Resource Allocation**: Optimize CPU and memory allocation
+- **Network Optimization**: Optimize network configuration
+- **Storage Optimization**: Use appropriate storage classes
+- **Auto-scaling**: Implement auto-scaling based on metrics
+
+## Security Operations
+
+### Access Control
+- **Authentication**: JWT-based authentication system
+- **Authorization**: Role-based access control
+- **API Security**: Rate limiting and input validation
+- **Data Encryption**: Encrypt sensitive data at rest and in transit
+
+### Security Monitoring
+- **Vulnerability Scanning**: Regular security scans
+- **Intrusion Detection**: Monitor for security threats
+- **Compliance Monitoring**: Ensure regulatory compliance
+- **Security Audits**: Regular security audits and reviews
+
+## Troubleshooting Guide
+
+### Common Issues
+- **Container Startup**: Check logs for startup errors
+- **Database Connection**: Verify database connectivity
+- **API Timeouts**: Check external API availability
+- **Memory Issues**: Monitor memory usage and leaks
+
+### Debugging Commands
+```bash
+# Check container status
+docker-compose ps
+
+# View application logs
+docker-compose logs app
+
+# Check database connectivity
+docker-compose exec db psql -U postgres
+
+# Monitor Redis
+docker-compose exec redis redis-cli
+
+# Check Celery workers
+docker-compose exec app celery -A app.core.celery inspect active
+```
+description:
+globs:
+alwaysApply: false
+---

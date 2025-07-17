@@ -1,0 +1,167 @@
+{% extends "layout_fastapi.html" %}
+
+{% block title %}Enrich DDF Floor 2 - Home{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="p-5 mb-4 bg-dark rounded-3">
+            <div class="container-fluid py-5">
+                <h1 class="display-5 fw-bold">Enrich DDF Floor 2</h1>
+                <p class="col-md-8 fs-4">
+                    Unified Data Enrichment Platform - Production Ready
+                </p>
+                <p class="lead">
+                    Complete solution for company enrichment, contact enrichment, and product classification with multi-country support.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="/search" class="btn btn-primary btn-lg">
+                        <i data-feather="search"></i> Search Products
+                    </a>
+                    <a href="/browse" class="btn btn-outline-info btn-lg">
+                        <i data-feather="list"></i> Browse Categories
+                    </a>
+                    <a href="/docs" class="btn btn-outline-success btn-lg">
+                        <i data-feather="book"></i> API Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h2 class="card-title"><i data-feather="users"></i></h2>
+                <h3 class="card-subtitle mb-2 text-info">{{ product_count }}</h3>
+                <p class="card-text">Products Enriched</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h2 class="card-title"><i data-feather="building"></i></h2>
+                <h3 class="card-subtitle mb-2 text-info">{{ section_count }}</h3>
+                <p class="card-text">Company Records</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h2 class="card-title"><i data-feather="mail"></i></h2>
+                <h3 class="card-subtitle mb-2 text-info">{{ chapter_count }}</h3>
+                <p class="card-text">Contact Profiles</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <h2 class="card-title"><i data-feather="globe"></i></h2>
+                <h3 class="card-subtitle mb-2 text-info">5+</h3>
+                <p class="card-text">Countries Supported</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4><i data-feather="search"></i> Quick Search</h4>
+            </div>
+            <div class="card-body">
+                <form action="/search" method="GET">
+                    <div class="mb-3">
+                        <label for="quickSearch" class="form-label">Search Companies, Contacts, or Products</label>
+                        <input type="text" class="form-control" id="quickSearch" name="q" 
+                            placeholder="e.g., company name, email, or product code" required minlength="3">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i data-feather="search"></i> Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4><i data-feather="cpu"></i> API Features</h4>
+            </div>
+            <div class="card-body">
+                <p>Access our enrichment APIs programmatically:</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-dark">
+                        <code>/api/v1/companies/enrich</code> - Company enrichment
+                    </li>
+                    <li class="list-group-item bg-dark">
+                        <code>/api/v1/contacts/enrich</code> - Contact enrichment
+                    </li>
+                    <li class="list-group-item bg-dark">
+                        <code>/api/v1/products/classify</code> - Product classification
+                    </li>
+                    <li class="list-group-item bg-dark">
+                        <code>/api/v1/auth/login</code> - Authentication
+                    </li>
+                </ul>
+                <div class="mt-3">
+                    <a href="/docs" class="btn btn-outline-success">
+                        <i data-feather="book"></i> View Documentation
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4><i data-feather="activity"></i> System Status</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Platform Features</h5>
+                        <ul class="list-unstyled">
+                            <li><span class="badge bg-success me-2">✅</span> Authentication & Authorization</li>
+                            <li><span class="badge bg-success me-2">✅</span> Database Models</li>
+                            <li><span class="badge bg-success me-2">✅</span> Web Interface</li>
+                            <li><span class="badge bg-warning me-2">🔄</span> Company Enrichment APIs</li>
+                            <li><span class="badge bg-warning me-2">🔄</span> Contact Enrichment APIs</li>
+                            <li><span class="badge bg-warning me-2">🔄</span> Product Classification</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Integrations</h5>
+                        <ul class="list-unstyled">
+                            <li><span class="badge bg-secondary me-2">⚙️</span> Apollo API</li>
+                            <li><span class="badge bg-secondary me-2">⚙️</span> People Data Labs</li>
+                            <li><span class="badge bg-secondary me-2">⚙️</span> ZeroBounce</li>
+                            <li><span class="badge bg-secondary me-2">⚙️</span> LinkedIn Crawler</li>
+                            <li><span class="badge bg-secondary me-2">⚙️</span> Dark Web Scanner</li>
+                            <li><span class="badge bg-secondary me-2">⚙️</span> NCM Classification</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize feature icons
+    feather.replace();
+});
+</script>
+{% endblock %} 

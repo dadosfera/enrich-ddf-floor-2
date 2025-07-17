@@ -1,0 +1,352 @@
+{% extends "layout.html" %}
+
+{% block title %}Import Statistics: {{ product.ncm_code }} - {{ product.description }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.import_data_dashboard') }}">Import Data</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.product_detail', ncm_code=product.ncm_code) }}">{{ product.ncm_code }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Import Statistics</li>
+            </ol>
+        </nav>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-dark">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0">
+                        <span class="badge rounded-pill bg-primary me-2">NCM</span>
+                        {{ product.ncm_code }}
+                    </h3>
+
+<div id="apiErrorAlert" class="alert alert-danger d-none">
+    <i data-feather="alert-circle"></i> <strong>API Error:</strong> <span id="apiErrorMessage"></span>
+    <hr>
+    <div class="small">
+        <strong>Troubleshooting tips:</strong>
+        <ul>
+            <li>The ComexStat API may be temporarily unavailable</li>
+            <li>Try selecting a different year (2023 recommended)</li>
+            <li>Some NCM codes may not have data available</li>
+        </ul>
+    </div>
+</div>
+
+                    <div>
+                        <span class="badge rounded-pill bg-info">Section {{ product.section_code }}</span>
+                        <span class="badge rounded-pill bg-secondary">Chapter {{ product.chapter_code }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ product.description }}</h4>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <h5>Classification Details</h5>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>Section:</th>
+                                    <td>
+                                        <span class="badge bg-info">{{ product.section_code }}</span>
+                                        {{ product.section_description }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Chapter:</th>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ product.chapter_code }}</span>
+                                        {{ product.chapter_description }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>NCM Code:</th>
+                                    <td><code>{{ product.ncm_code }}</code></td>
+                                </tr>
+                                <tr>
+                                    <th>Unit Measure:</th>
+                                    <td>{{ product.unit_measure or 'Not specified' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Tax Information</h5>
+                        <table class="table">
+                            <tbody>
+                                <tr>
+                                    <th>Import Tax Rate:</th>
+                                    <td>
+                                        {% if product.import_tax_rate is not none %}
+                                            {{ product.import_tax_rate }}%
+                                        {% else %}
+                                            Not specified
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Export Tax Rate:</th>
+                                    <td>
+                                        {% if product.export_tax_rate is not none %}
+                                            {{ product.export_tax_rate }}%
+                                        {% else %}
+                                            Not specified
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Status:</th>
+                                    <td>
+                                        {% if product.is_active %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Last Updated:</th>
+                                    <td>{{ product.updated_at }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Import Statistics</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if product.import_statistics %}
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="card text-center bg-dark h-100">
+                                        <div class="card-body">
+                                            <h2 class="card-title"><i data-feather="dollar-sign"></i></h2>
+                                            <h3 class="card-subtitle mb-2 text-info">
+                                                ${{ '{:,.2f}'.format(product.import_statistics.total_fob_value) }}
+                                            </h3>
+                                            <p class="card-text">Total FOB Value</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card text-center bg-dark h-100">
+                                        <div class="card-body">
+                                            <h2 class="card-title"><i data-feather="package"></i></h2>
+                                            <h3 class="card-subtitle mb-2 text-info">
+                                                {{ '{:,.2f}'.format(product.import_statistics.total_weight_kg) }} kg
+                                            </h3>
+                                            <p class="card-text">Total Weight</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card text-center bg-dark h-100">
+                                        <div class="card-body">
+                                            <h2 class="card-title"><i data-feather="truck"></i></h2>
+                                            <h3 class="card-subtitle mb-2 text-info">
+                                                ${{ '{:,.2f}'.format(product.import_statistics.total_freight_value) }}
+                                            </h3>
+                                            <p class="card-text">Total Freight Value</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card text-center bg-dark h-100">
+                                        <div class="card-body">
+                                            <h2 class="card-title"><i data-feather="shield"></i></h2>
+                                            <h3 class="card-subtitle mb-2 text-info">
+                                                ${{ '{:,.2f}'.format(product.import_statistics.total_insurance_value) }}
+                                            </h3>
+                                            <p class="card-text">Total Insurance Value</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <h5>Price per Kilogram</h5>
+                                <div class="progress" style="height: 25px;">
+                                    {% set price_per_kg = product.import_statistics.total_fob_value / product.import_statistics.total_weight_kg if product.import_statistics.total_weight_kg > 0 else 0 %}
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: {{ min(price_per_kg * 5, 100) }}%;" aria-valuenow="{{ price_per_kg }}" aria-valuemin="0" aria-valuemax="20">
+                                        ${{ '{:.2f}'.format(price_per_kg) }}/kg
+                                    </div>
+                                </div>
+                                <small class="text-muted">Average price per kilogram (FOB value divided by weight)</small>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info">
+                                <i data-feather="info"></i> No import statistics available for this product.
+                                <a href="{{ url_for('main.load_import_data') }}" class="alert-link">Load import data</a> to see statistics.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Monthly Import Data</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if product.monthly_statistics %}
+                            <div id="monthlyStatsChart" style="height: 300px;"></div>
+                        {% else %}
+                            <div class="alert alert-info">
+                                <i data-feather="info"></i> No monthly statistics available for this product.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h4>ComexStat API Data</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <button class="btn btn-primary" id="fetchApiDataBtn">
+                                <i data-feather="globe"></i> Fetch API Data
+                            </button>
+                            <a href="{{ url_for('main.api_product', ncm_code=product.ncm_code) }}" class="btn btn-outline-info" target="_blank">
+                                <i data-feather="code"></i> View API Response
+                            </a>
+                        </div>
+                        
+                        <div id="apiDataResults">
+                            <div class="alert alert-secondary">
+                                <i data-feather="help-circle"></i> Click the "Fetch API Data" button to retrieve additional information from the ComexStat API.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Feather icons
+        feather.replace();
+        
+        {% if product.monthly_statistics %}
+        // Initialize monthly statistics chart
+        const monthlyStatsCtx = document.createElement('canvas');
+        document.getElementById('monthlyStatsChart').appendChild(monthlyStatsCtx);
+        
+        const monthlyData = {{ product.monthly_statistics|tojson }};
+        const months = Object.keys(monthlyData).sort();
+        const values = months.map(month => monthlyData[month].total_fob_value);
+        const weights = months.map(month => monthlyData[month].total_weight_kg);
+        
+        new Chart(monthlyStatsCtx, {
+            type: 'bar',
+            data: {
+                labels: months.map(month => {
+                    const [year, m] = month.split('-');
+                    return `${year}-${m}`;
+                }),
+                datasets: [
+                    {
+                        label: 'Import Value (USD)',
+                        data: values,
+                        backgroundColor: 'rgba(13, 202, 240, 0.5)',
+                        borderColor: 'rgba(13, 202, 240, 1)',
+                        borderWidth: 1,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Weight (kg)',
+                        data: weights,
+                        type: 'line',
+                        fill: false,
+                        borderColor: 'rgba(255, 193, 7, 1)',
+                        tension: 0.1,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Import Value (USD)'
+                        }
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        position: 'right',
+                        grid: {
+                            drawOnChartArea: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Weight (kg)'
+                        }
+                    }
+                }
+            }
+        });
+        {% endif %}
+        
+        // Setup API data fetch button
+        const fetchApiDataBtn = document.getElementById('fetchApiDataBtn');
+        const apiDataResults = document.getElementById('apiDataResults');
+        
+        fetchApiDataBtn.addEventListener('click', function() {
+            // Disable button and show loading state
+            fetchApiDataBtn.disabled = true;
+            fetchApiDataBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...';
+            
+            // Make API request to get data
+            fetch(`/api/comexstat/ncm/{{ product.ncm_code }}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Format and display API data
+                    if (data && Object.keys(data).length > 0) {
+                        let html = '<div class="table-responsive"><table class="table table-hover">';
+                        html += '<thead><tr><th>Property</th><th>Value</th></tr></thead><tbody>';
+                        
+                        for (const [key, value] of Object.entries(data)) {
+                            html += `<tr><td>${key}</td><td>${JSON.stringify(value)}</td></tr>`;
+                        }
+                        
+                        html += '</tbody></table></div>';
+                        apiDataResults.innerHTML = html;
+                    } else {
+                        apiDataResults.innerHTML = '<div class="alert alert-info"><i data-feather="info"></i> No data available from the API for this NCM code.</div>';
+                    }
+                    
+                    // Re-initialize Feather icons
+                    feather.replace();
+                })
+                .catch(error => {
+                    apiDataResults.innerHTML = `<div class="alert alert-danger"><i data-feather="alert-circle"></i> Error fetching API data: ${error.message}</div>`;
+                    feather.replace();
+                })
+                .finally(() => {
+                    // Re-enable button
+                    fetchApiDataBtn.disabled = false;
+                    fetchApiDataBtn.innerHTML = '<i data-feather="globe"></i> Fetch API Data';
+                    feather.replace();
+                });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,73 @@
+# Enrich DDF Floor 2 - Project Structure Guide
+
+## Main Entry Points
+
+The main application entry point is [app/main.py](mdc:app/main.py), which creates and configures the FastAPI application with:
+- API routes from [app/api/v1/router.py](mdc:app/api/v1/router.py)
+- Web interface from [app/web/routes.py](mdc:app/web/routes.py)
+- Health check endpoint at `/health`
+
+## Core Architecture
+
+### Application Structure
+- **FastAPI App**: [app/main.py](mdc:app/main.py) - Main application with CORS, static files, and route mounting
+- **API Layer**: [app/api/v1/](mdc:app/api/v1/) - REST API endpoints organized by resource
+- **Web Interface**: [app/web/](mdc:app/web/) - HTML templates and web routes
+- **Core Modules**: [app/core/](mdc:app/core/) - Configuration, logging, and Celery setup
+- **Background Tasks**: [app/tasks/](mdc:app/tasks/) - Celery tasks for enrichment and processing
+
+### Key Configuration Files
+- **Dependencies**: [pyproject.toml](mdc:pyproject.toml) - Poetry dependencies and project metadata
+- **Docker Setup**: [Dockerfile](mdc:Dockerfile) - Multi-stage container with Poetry
+- **Orchestration**: [docker-compose.yml](mdc:docker-compose.yml) - Services: app, celery, flower, redis, postgres, prometheus
+
+### Development Environment
+- **Start Script**: [scripts/start-dev.sh](mdc:scripts/start-dev.sh) - Development environment startup
+- **Database**: PostgreSQL with async SQLAlchemy models
+- **Cache**: Redis for session and task storage
+- **Monitoring**: Prometheus metrics and Flower for Celery monitoring
+
+## Service Architecture
+
+### API Endpoints (v1)
+- **Authentication**: `/api/v1/auth/` - JWT-based auth with login, register, refresh
+- **Companies**: `/api/v1/companies/` - Company enrichment and management
+- **Contacts**: `/api/v1/contacts/` - Contact enrichment and management  
+- **Products**: `/api/v1/products/` - Product classification with NCM/CNAE codes
+
+### Background Processing
+- **Celery Tasks**: [app/core/celery.py](mdc:app/core/celery.py) - Task queue configuration
+- **Enrichment Tasks**: [app/tasks/enrichment.py](mdc:app/tasks/enrichment.py) - Data enrichment
+- **Processing Tasks**: [app/tasks/data_processing.py](mdc:app/tasks/data_processing.py) - Data processing
+- **Notifications**: [app/tasks/notifications.py](mdc:app/tasks/notifications.py) - User notifications
+
+### Multi-Country Support
+The platform supports data enrichment for multiple countries:
+- **Brazil**: Serpro, BigDataCorp, Serasa integrations
+- **Argentina, Mexico, Colombia, Chile**: Regional API integrations
+- **Contact APIs**: Zero Bounce, Apollo, PDL integrations
+
+## Development Workflow
+
+### Starting the Application
+```bash
+# Start all services
+bash scripts/start-dev.sh --api --app
+
+# Available endpoints:
+# - FastAPI App: http://localhost:8000
+# - API Docs: http://localhost:8000/docs
+# - Health Check: http://localhost:8000/health
+# - Flower UI: http://localhost:5555
+# - Prometheus: http://localhost:9090
+```
+
+### Key Directories
+- **Models**: [app/models/](mdc:app/models/) - SQLAlchemy database models
+- **Templates**: [app/templates/](mdc:app/templates/) - HTML templates for web interface
+- **Static**: [app/static/](mdc:app/static/) - CSS, JS, and static assets
+- **Config**: [config/](mdc:config/) - Prometheus and application configuration
+description:
+globs:
+alwaysApply: false
+---

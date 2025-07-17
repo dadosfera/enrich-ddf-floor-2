@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% block title %}Browse Section: {{ section.code }} - {{ section.description }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('main.browse') }}">Browse</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Section {{ section.code }}</li>
+            </ol>
+        </nav>
+        
+        <div class="card mb-4">
+            <div class="card-header bg-dark">
+                <h3 class="mb-0">
+                    <span class="badge rounded-pill bg-info me-2">Section {{ section.code }}</span>
+                    {{ section.description }}
+                </h3>
+            </div>
+            <div class="card-body">
+                <p class="lead">This section contains the following chapters:</p>
+                
+                <div class="row">
+                    {% for chapter in section.chapters %}
+                    <div class="col-md-6 mb-3">
+                        <a href="{{ url_for('main.browse_chapter', chapter_code=chapter.code) }}" class="text-decoration-none">
+                            <div class="card h-100 bg-dark">
+                                <div class="card-body">
+                                    <h5 class="card-title">Chapter {{ chapter.code }}</h5>
+                                    <p class="card-text text-truncate">{{ chapter.description }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

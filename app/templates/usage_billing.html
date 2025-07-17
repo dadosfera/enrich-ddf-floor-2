@@ -1,0 +1,341 @@
+{% extends "layout.html" %}
+
+{% block title %}Usage & Billing - NCM Enricher DDF{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Usage & Billing</h1>
+        <p class="lead">Track your API usage and billing information</p>
+        
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>Current Usage Summary</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card bg-dark h-100">
+                            <div class="card-body text-center">
+                                <h2 class="display-5 text-info">3,291</h2>
+                                <h5>Enrichment Credits</h5>
+                                <div class="progress mt-3">
+                                    <div class="progress-bar bg-info" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">65%</div>
+                                </div>
+                                <small class="text-muted">3,291 of 5,000 included credits used</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-dark h-100">
+                            <div class="card-body text-center">
+                                <h2 class="display-5 text-success">147</h2>
+                                <h5>AI Credits</h5>
+                                <div class="progress mt-3">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 29%;" aria-valuenow="29" aria-valuemin="0" aria-valuemax="100">29%</div>
+                                </div>
+                                <small class="text-muted">147 of 500 included credits used</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-dark h-100">
+                            <div class="card-body text-center">
+                                <h2 class="display-5 text-warning">9</h2>
+                                <h5>Days Remaining</h5>
+                                <div class="progress mt-3">
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100">30%</div>
+                                </div>
+                                <small class="text-muted">Current billing period ends May 2, 2025</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Usage Breakdown</h4>
+                    </div>
+                    <div class="card-body">
+                        <ul class="nav nav-tabs" id="usageTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="enrichment-tab" data-bs-toggle="tab" data-bs-target="#enrichment" type="button" role="tab" aria-controls="enrichment" aria-selected="true">Enrichment</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="ai-tab" data-bs-toggle="tab" data-bs-target="#ai" type="button" role="tab" aria-controls="ai" aria-selected="false">AI</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="api-tab" data-bs-toggle="tab" data-bs-target="#api" type="button" role="tab" aria-controls="api" aria-selected="false">API</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content pt-3" id="usageTabsContent">
+                            <div class="tab-pane fade show active" id="enrichment" role="tabpanel" aria-labelledby="enrichment-tab">
+                                <div id="enrichmentChart" style="height: 300px;"></div>
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Type</th>
+                                                <th>Credits Used</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Apr 23, 2025</td>
+                                                <td>Import Data Processing</td>
+                                                <td>125</td>
+                                                <td>Processed 580 NCM codes from Import2025.csv</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Apr 22, 2025</td>
+                                                <td>ComexStat API</td>
+                                                <td>246</td>
+                                                <td>Batch enrichment from API</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Apr 21, 2025</td>
+                                                <td>NCM Data Update</td>
+                                                <td>418</td>
+                                                <td>Monthly data refresh</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="ai" role="tabpanel" aria-labelledby="ai-tab">
+                                <div id="aiChart" style="height: 300px;"></div>
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Model</th>
+                                                <th>Credits Used</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Apr 23, 2025</td>
+                                                <td>GPT-4</td>
+                                                <td>15</td>
+                                                <td>Product description generation</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Apr 20, 2025</td>
+                                                <td>Claude-3</td>
+                                                <td>32</td>
+                                                <td>Import data analysis</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Apr 18, 2025</td>
+                                                <td>GPT-4</td>
+                                                <td>28</td>
+                                                <td>Regulatory compliance analysis</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="api" role="tabpanel" aria-labelledby="api-tab">
+                                <div id="apiChart" style="height: 300px;"></div>
+                                <div class="table-responsive mt-3">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Endpoint</th>
+                                                <th>Requests</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Apr 23, 2025</td>
+                                                <td>/api/comexstat/health</td>
+                                                <td>8</td>
+                                                <td><span class="badge bg-success">Success</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Apr 23, 2025</td>
+                                                <td>/api/comexstat/ncm</td>
+                                                <td>42</td>
+                                                <td><span class="badge bg-success">Success</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Apr 21, 2025</td>
+                                                <td>/api/comexstat/comex/imports</td>
+                                                <td>128</td>
+                                                <td><span class="badge bg-success">Success</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Current Plan</h4>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Professional Plan</h5>
+                        <div class="d-flex justify-content-between align-items-center my-3">
+                            <span>Monthly Price:</span>
+                            <span class="fw-bold">$79.99/month</span>
+                        </div>
+                        
+                        <h6 class="mt-4">Included in your plan:</h6>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-dark">
+                                Enrichment Credits
+                                <span class="badge bg-primary rounded-pill">5,000</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-dark">
+                                AI Credits
+                                <span class="badge bg-primary rounded-pill">500</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-dark">
+                                ComexStat API
+                                <span class="badge bg-success">Included</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center bg-dark">
+                                API Rate Limit
+                                <span class="badge bg-primary">1,000/hour</span>
+                            </li>
+                        </ul>
+                        
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-primary">Manage Billing</button>
+                            <button class="btn btn-outline-info">Upgrade Plan</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Additional Resources</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action bg-dark">
+                                <i data-feather="file-text" class="me-2"></i> Usage Documentation
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action bg-dark">
+                                <i data-feather="help-circle" class="me-2"></i> Billing FAQ
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action bg-dark">
+                                <i data-feather="mail" class="me-2"></i> Contact Support
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action bg-dark">
+                                <i data-feather="download" class="me-2"></i> Export Usage Report
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Feather icons
+        feather.replace();
+        
+        // Initialize usage charts
+        initializeUsageCharts();
+    });
+    
+    function initializeUsageCharts() {
+        // Enrichment Chart
+        const enrichmentCtx = document.createElement('canvas');
+        document.getElementById('enrichmentChart').appendChild(enrichmentCtx);
+        
+        new Chart(enrichmentCtx, {
+            type: 'line',
+            data: {
+                labels: ['Apr 17', 'Apr 18', 'Apr 19', 'Apr 20', 'Apr 21', 'Apr 22', 'Apr 23'],
+                datasets: [{
+                    label: 'Enrichment Credits Used',
+                    data: [325, 410, 290, 380, 418, 246, 125],
+                    borderColor: 'rgba(13, 202, 240, 1)',
+                    backgroundColor: 'rgba(13, 202, 240, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // AI Chart
+        const aiCtx = document.createElement('canvas');
+        document.getElementById('aiChart').appendChild(aiCtx);
+        
+        new Chart(aiCtx, {
+            type: 'line',
+            data: {
+                labels: ['Apr 17', 'Apr 18', 'Apr 19', 'Apr 20', 'Apr 21', 'Apr 22', 'Apr 23'],
+                datasets: [{
+                    label: 'AI Credits Used',
+                    data: [12, 28, 18, 32, 22, 20, 15],
+                    borderColor: 'rgba(25, 135, 84, 1)',
+                    backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // API Chart
+        const apiCtx = document.createElement('canvas');
+        document.getElementById('apiChart').appendChild(apiCtx);
+        
+        new Chart(apiCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Apr 17', 'Apr 18', 'Apr 19', 'Apr 20', 'Apr 21', 'Apr 22', 'Apr 23'],
+                datasets: [{
+                    label: 'API Requests',
+                    data: [42, 78, 56, 91, 128, 86, 50],
+                    backgroundColor: 'rgba(13, 110, 253, 0.5)',
+                    borderColor: 'rgba(13, 110, 253, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+</script>
+{% endblock %}
