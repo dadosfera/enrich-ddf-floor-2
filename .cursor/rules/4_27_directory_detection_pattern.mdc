@@ -1,0 +1,15 @@
+---
+description: USE WHEN working on tasks related to ### Directory Detection Pattern
+globs:
+alwaysApply: false
+---
+
+# ### Directory Detection Pattern
+```bash
+# Standard directory verification sequence
+echo "=== Directory Context Verification ==="
+echo "Current directory: $(pwd)"
+echo "Git root: $(git rev-parse --show-toplevel 2>/dev/null || echo 'Not in git repository')"
+echo "Home directory: $HOME"
+echo "Project directory: ${PRJ_DIR:-'Not set'}"
+```

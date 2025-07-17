@@ -1,0 +1,9 @@
+---
+description: USE WHEN working on tasks related to path handling
+globs:
+alwaysApply: false
+---
+
+# Path Handling
+
+- Use absolute paths from config; config overrides script-derived paths.

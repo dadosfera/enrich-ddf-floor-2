@@ -1,0 +1,23 @@
+---
+description: USE WHEN working on tasks related to restricted folder usage
+globs:
+alwaysApply: false
+---
+
+# Restricted Folder Usage
+
+Agents may **request explicit authorization** from the user (or `arbiter` AI) to edit any *restricted* config/build file (e.g., `vite.config.ts`, `Dockerfile`, deployment YAML). When permission is granted, update the *real* file directly—do **not** create a clone.
+
+If the file remains locked, stage your suggested patch under `/restricted/` as described below.
+
+**What to store**
+- `<filename>.proposal` – a full replacement snippet or patch diff.
+- `README.md` or `<filename>.instructions.md` – human-readable steps explaining how to apply the patch and any post-merge tasks (tests to rerun, secrets to rotate, etc.).
+
+**Workflow**
+1. Generate the proposal file and instructions under `/restricted/`.
+2. Run `run.sh --dry-run --env=dev --platform=<platform>` to ensure the patch compiles/lints.
+3. Notify the user (or the `arbiter` merge AI) with the proposal path and summary.
+4. Once approved, **merge the changes into the real file and delete the proposal**. `/restricted/` must stay clean.
+
+**Never run production code directly from `/restricted/`.** It is a staging area only.

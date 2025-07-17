@@ -1,0 +1,10 @@
+---
+description: USE WHEN working on tasks related to streamlit config sync
+globs:
+alwaysApply: false
+---
+
+# Streamlit & Config Sync
+
+- `config/config.yaml` authoritative; scripts generate `.streamlit/config.toml`, `.env`, etc.
+- Secrets via env scripts or platform secret store.

@@ -1,0 +1,12 @@
+---
+description: USE WHEN working on tasks related to ### Pre-Command Directory Verification
+globs:
+alwaysApply: false
+---
+
+# ### Pre-Command Directory Verification
+When an AI agent receives a directory-dependent command:
+1. **Verify Current Context**: Execute `pwd` and log result
+2. **Validate Target Directory**: Check if target directory exists
+3. **Log Detection Process**: Record directory detection attempts
+4. **Provide Clear Feedback**: Inform about detected directory context

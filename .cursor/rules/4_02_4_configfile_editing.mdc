@@ -1,0 +1,11 @@
+---
+description: USE WHEN working on tasks related to ### 4  Config‑File Editing
+globs:
+alwaysApply: false
+---
+
+# ### 4  Config‑File Editing
+
+* Allowed tools: `sed`/`awk`, middleware scripts, automation (`config_sync`).
+* Single source of truth: `config/config.yaml` → derive other configs.
+* Commit msgs: `<scope>: <imperative>` (e.g., `build: switch to redis cache`).

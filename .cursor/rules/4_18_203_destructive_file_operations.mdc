@@ -1,0 +1,28 @@
+---
+description: USE WHEN working on tasks related to ### 20.3 Destructive File Operations
+globs:
+alwaysApply: false
+---
+
+# ### 20.3 Destructive File Operations
+
+AI agents are prohibited from performing destructive file operations (such as overwriting or deleting files) on sensitive or critical files without explicit user authorization **and** a backup mechanism.
+
+*   **Affected Files**: This rule applies to, but is not limited to:
+    *   Environment files (`.env.*`, `.env`)
+    *   Configuration files (`config.yaml`, `settings.json`, etc.)
+    *   Files listed in `.gitignore`.
+
+*   **Prohibited Commands**: Commands like `cp`, `mv`, `> file`, and `rm` that can result in data loss are subject to this rule when targeting the files listed above.
+
+*   **Authorization and Backup Procedure**:
+    1.  Before executing a destructive file command, the agent must inform the user of the potential impact.
+    2.  The agent must receive explicit user authorization.
+    3.  The agent **must** create a backup of the target file before proceeding. The backup should be named with a `.bak` or timestamped extension (e.g., `.env.bak`, `.env.2023-10-27T10-00-00.bak`).
+    4.  After the operation, the agent should inform the user about the backup created.
+
+**Example**:
+If asked to run `cp .env.example .env`, the agent must first:
+1.  Ask for permission: "This command will overwrite the existing `.env` file. Are you sure you want to proceed?"
+2.  If approved, create a backup: `cp .env .env.bak`
+3.  Then, execute the command: `cp .env.example .env`

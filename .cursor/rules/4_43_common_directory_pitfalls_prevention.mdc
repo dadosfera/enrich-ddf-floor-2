@@ -1,0 +1,32 @@
+---
+description: USE WHEN working on tasks related to ### Common Directory Pitfalls Prevention
+globs:
+alwaysApply: false
+---
+
+# ### Common Directory Pitfalls Prevention
+- **Never assume**: Don't assume current directory is project root
+- **Always validate**: Check directory existence before operations
+- **Multiple fallbacks**: Use several methods for directory detection
+- **Clear error messages**: Provide specific error information
+- **Log everything**: Record all directory detection attempts
+
+## Exceptions and Flexibility
+- Some long-running processes may require special handling
+- Always consult project-specific guidelines
+- When in doubt, break commands into smaller, more manageable steps
+
+## Comprehensive Reference
+For complete AI agent terminal handling guidelines, see:
+**docs-fera**: `git:dadosfera/docs-fera/guides/ai_agent_terminal_handling.md`
+
+This external guide provides:
+- Detailed CLI tool configurations
+- Platform-specific optimizations
+- Advanced troubleshooting scenarios
+- Real-world implementation examples
+
+## Enforcement
+- Integrate these guidelines into CI/CD pipelines
+- Use linting and static analysis tools to detect potential issues
+- Regularly review and update command execution practices

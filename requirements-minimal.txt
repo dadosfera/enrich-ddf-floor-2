@@ -1,0 +1,5 @@
+# Minimal working dependencies
+fastapi>=0.100.0
+uvicorn[standard]>=0.20.0
+pytest>=7.0.0
+httpx>=0.20.0 

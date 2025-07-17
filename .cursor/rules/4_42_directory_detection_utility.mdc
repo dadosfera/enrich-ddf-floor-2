@@ -1,0 +1,29 @@
+---
+description: USE WHEN working on tasks related to ### Directory Detection Utility
+globs:
+alwaysApply: false
+---
+
+# ### Directory Detection Utility
+```bash
+detect_project_directory() {
+    local potential_dirs=(
+        "$PRJ_DIR"
+        "$(git rev-parse --show-toplevel 2>/dev/null)"
+        "$(pwd)"
+        "$HOME/local_repos/$(basename $(pwd))"
+    )
+
+    echo "🔍 Detecting project directory..."
+    for dir in "${potential_dirs[@]}"; do
+        if [ -n "$dir" ] && [ -d "$dir" ]; then
+            echo "✅ Project directory detected: $dir"
+            echo "$dir"
+            return 0
+        fi
+    done
+
+    echo "❌ ERROR: Could not detect project directory" >&2
+    return 1
+}
+```

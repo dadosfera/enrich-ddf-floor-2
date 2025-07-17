@@ -1,0 +1,11 @@
+---
+description: USE WHEN creating new files or refactoring code to prevent duplication and ensure code reuse
+globs:
+alwaysApply: false
+---
+
+# Avoid Duplication
+
+- Search first; extend or parametrize existing run/start/app/server scripts.
+- If splitting >1000 LOC, refactor shared logic into modules or imported sub-scripts—**never clone or fork scripts**.
+- Avoid introducing any `*-copy.*`, `*-partial.*`, `*-backup.*`, or `*-fragment.*` artifacts. These rules are covered in full in section 17.

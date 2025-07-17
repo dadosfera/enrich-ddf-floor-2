@@ -1,0 +1,15 @@
+---
+description: USE WHEN working on tasks related to ### 18  Dry‑Run First
+globs:
+alwaysApply: false
+---
+
+# ### 18  Dry‑Run First
+
+* Destructive scripts **must** support `--dry-run` / `--plan`:
+
+  1. List files touched.
+  2. Echo commands.
+  3. Exit 0 if safe, non‑0 if conflicts.
+  4. Write dry‑run output to file log.
+* Run real mode only when dry‑run is clean.

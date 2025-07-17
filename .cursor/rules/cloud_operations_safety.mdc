@@ -1,0 +1,135 @@
+# Cloud Operations Safety Rule
+
+## Priority
+P1 (Critical): Must always be followed
+
+## When to Use This Rule
+**USE WHEN:**
+- Executing any cloud resource management operations
+- Running scripts that modify AWS, Azure, GCP, or Oracle Cloud resources
+- Performing deployment, deletion, or modification of cloud infrastructure
+- Working with production environments or critical resources
+- Executing Terraform, CloudFormation, or infrastructure-as-code operations
+
+## Core Principle
+**ALWAYS use --dry-run or equivalent safety checks before executing destructive cloud operations**
+
+## Rule Statement
+AI agents must implement dry-run validation for ALL cloud operations before executing actual changes. This includes but is not limited to resource creation, modification, deletion, and configuration changes.
+
+## Implementation Requirements
+
+### 1. Mandatory Dry-Run Pattern
+Before any cloud operation, agents must:
+- Execute the operation with `--dry-run` flag or equivalent
+- Review and validate the dry-run output
+- Confirm the operation will affect only intended resources
+- Document what would be changed
+- Wait for explicit user approval before proceeding
+
+### 2. Required Safety Checks
+**For AWS Operations:**
+- Use `--dry-run` for applicable AWS CLI commands
+- Use `terraform plan` before `terraform apply`
+- Use `aws cloudformation validate-template` before deployment
+- Use `--no-execute-changeset` for CloudFormation changesets
+
+**For Terraform Operations:**
+- Always run `terraform plan` before `terraform apply`
+- Use `terraform plan -out=plan.tfplan` for review
+- Validate with `terraform validate` before planning
+
+**For Kubernetes Operations:**
+- Use `--dry-run=client` or `--dry-run=server`
+- Use `kubectl diff` to preview changes
+- Use `--validate=true` for resource validation
+
+**For Database Operations:**
+- Use `--dry-run` for schema changes
+- Preview migrations before applying
+- Use read-only mode for validation queries
+
+### 3. Prohibited Operations Without Dry-Run
+**NEVER execute these without dry-run validation:**
+- Resource deletion (EC2, RDS, S3, etc.)
+- Security group modifications
+- IAM policy changes
+- Network configuration changes
+- Production environment modifications
+- Cost-generating resource creation
+
+### 4. Dry-Run Validation Process
+```
+1. EXECUTE: Run operation with --dry-run flag
+2. REVIEW: Analyze what would be changed
+3. VALIDATE: Confirm only intended resources affected
+4. DOCUMENT: Log the planned changes
+5. APPROVE: Get explicit user confirmation
+6. EXECUTE: Only then run the actual operation
+```
+
+## Examples
+
+### ✅ GOOD: Safe Cloud Operation
+```bash
+# Step 1: Dry-run first
+aws ec2 terminate-instances --instance-ids i-1234567890abcdef0 --dry-run
+
+# Step 2: Review output and confirm
+echo "Dry-run completed. Instance i-1234567890abcdef0 would be terminated."
+echo "Proceed with actual termination? (y/N)"
+read -r proceed
+
+# Step 3: Execute only after confirmation
+if [[ "$proceed" =~ ^[Yy]$ ]]; then
+    aws ec2 terminate-instances --instance-ids i-1234567890abcdef0
+fi
+```
+
+### ❌ BAD: Unsafe Cloud Operation
+```bash
+# Direct execution without dry-run
+aws ec2 terminate-instances --instance-ids i-1234567890abcdef0
+```
+
+### ✅ GOOD: Terraform Safety
+```bash
+# Always plan first
+terraform plan -out=plan.tfplan
+
+# Review the plan
+terraform show plan.tfplan
+
+# Apply only after review
+terraform apply plan.tfplan
+```
+
+## Exception Handling
+- If dry-run is not available, use equivalent safety measures
+- For read-only operations, dry-run is not required
+- Emergency situations require explicit user authorization
+- Document any exceptions with justification
+
+## Enforcement
+- Pre-commit hooks validate dry-run usage in scripts
+- Code review must verify dry-run implementation
+- CI/CD pipelines must include dry-run validation
+- Automated testing must include dry-run scenarios
+
+## Benefits
+- Prevents accidental resource deletion
+- Reduces operational errors
+- Improves change management
+- Enhances security practices
+- Reduces costs from unintended changes
+
+## Related Rules
+- `4_16_dry_run_first` - General dry-run practices
+- `absolute_path_handling` - Path safety in cloud operations
+- `4_09_logging_observability` - Logging cloud operations
+
+This rule ensures all cloud operations are performed safely with proper validation and user confirmation.
+description:
+globs:
+alwaysApply: false
+---

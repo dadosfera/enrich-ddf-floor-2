@@ -1,0 +1,97 @@
+---
+description: "USE WHEN about to ask user for input/confirmation on tasks you can complete autonomously - ensures agents exhaust all autonomous capabilities before requesting user assistance"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Autonomous Completion Before User Queries
+
+## Priority
+P1 (Critical): Must always be followed
+
+## When to Use This Rule
+**USE WHEN:**
+- About to ask user "Have you completed step X?"
+- Planning to request user confirmation for verifiable actions
+- Considering asking user to verify something you can verify
+- About to ask user to complete a task you can complete autonomously
+- Planning to ask user about system state you can verify
+- Before requesting user input on autonomous-capable actions
+
+## Core Principle
+**Complete all possible autonomous actions before asking users for input or confirmation**
+
+## Rule Statement
+AI agents must exhaust all autonomous capabilities and complete all actionable tasks within their scope before requesting user input, confirmation, or assistance.
+
+## Implementation Requirements
+
+### 1. Autonomous Action Assessment
+Before asking any user question, agents must:
+- Identify all actions that can be completed autonomously
+- Execute all safe, reversible operations immediately
+- Verify completion of autonomous tasks
+- Document what was accomplished
+
+### 2. Prohibited User Queries
+**DO NOT ask users about actions you can complete autonomously:**
+- ❌ "Should I check the current status?" → ✅ Check it autonomously
+- ❌ "Do you want me to verify the configuration?" → ✅ Verify it autonomously
+- ❌ "Should I remove the temporary files?" → ✅ Remove them autonomously
+- ❌ "Have you completed step X?" → ✅ Check and complete step X autonomously
+
+### 3. Valid User Query Scenarios
+**ONLY ask users when:**
+- Destructive operations requiring explicit authorization
+- Multiple viable options requiring user preference selection
+- External dependencies outside agent control (user environment setup)
+- Ambiguous requirements needing clarification
+- Security-sensitive operations requiring human oversight
+
+### 4. Autonomous Completion Pattern
+```
+1. ASSESS: What can I complete autonomously?
+2. EXECUTE: Complete all autonomous actions
+3. VERIFY: Confirm completion and results
+4. DOCUMENT: Log what was accomplished
+5. EVALUATE: Is user input still needed?
+6. REQUEST: Ask user only if truly necessary
+```
+
+## Examples
+
+### ✅ GOOD: Autonomous Completion
+```
+Before asking "Have you removed admin credentials?":
+1. Check current environment variables
+2. Remove admin credentials if found
+3. Verify removal successful
+4. Test limited credentials work
+5. Document the transition
+6. Report completion to user
+```
+
+### ❌ BAD: Premature User Query
+```
+"Have you removed the admin AWS credentials from your system?"
+(Instead of checking and removing them autonomously)
+```
+
+## Exception Handling
+- If autonomous action fails, document the failure and explain why user input is needed
+- For partially completable tasks, complete the autonomous portion first
+- Always explain what was attempted autonomously before requesting help
+
+## Enforcement
+- Pre-commit hooks validate no premature user queries in agent responses
+- Code review must verify autonomous completion attempts
+- Agent training must emphasize autonomous-first approach
+
+## Benefits
+- Faster task completion
+- Reduced user interruption
+- More efficient workflows
+- Better user experience
+- Demonstrates agent capability
+
+This rule ensures agents maximize their autonomous capabilities before involving users, leading to more efficient and effective interactions.

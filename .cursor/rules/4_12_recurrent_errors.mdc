@@ -1,0 +1,10 @@
+---
+description: USE WHEN working on tasks related to recurrent errors
+globs:
+alwaysApply: false
+---
+
+# Recurrent Errors
+
+- Collect full error list via lint/strict compile; avoid fix-run-repeat.
+- Add inline notes near failing code.

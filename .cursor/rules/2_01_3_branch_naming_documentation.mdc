@@ -1,0 +1,23 @@
+---
+description: USE WHEN working on tasks related to ### 3  Branch Naming & Documentation
+globs:
+alwaysApply: false
+---
+
+# ### 3  Branch Naming & Documentation
+
+1. **Pattern**
+
+   ```
+   {role}-{level}-{platform}-{vNo}-{objective}-{baseSHA}
+   ```
+
+   * role: `agent` | `assistant` | `arbiter` (merge‑conflict AI)
+   * level: `minion` (read‑only AI) | `boss` (human maintainer)
+   * platform: `replit`, `cursor`, `dadosfera`, …
+   * vNo: numeric iteration (`0`, `1`, …)
+   * objective: kebab‑case goal (`merge-prev`, `deploy`, …)
+   * baseSHA: first 7 chars of commit or `unknown`
+   * **Limit ≤ 60 chars** to stay Git‑safe.
+2. Document branch purpose atop `README.md` (or linked doc).
+3. For every changed block add a *why* comment; if many, put a multi‑line summary at file end.

@@ -1,0 +1,13 @@
+---
+description: USE WHEN working on tasks related to ### 2  Folder‑Structure Discipline
+globs:
+alwaysApply: false
+---
+
+# ### 2  Folder‑Structure Discipline
+
+* **Nothing new** goes in the project root (`./`).
+* Follow `/_dev/docs/project_structure.md` (or propose one and stick to it).
+* `config/` now stores **all environment & platform descriptors** (YAML/TOML/JSON). No separate `multi_env/` folder is used.
+* `workflow_tasks/scripts/` – `workflow_tasks` stores reusable tooling, while `scripts` contains project‑specific logic.
+* Update `_dev/docs/index.md` **and** append an entry to `logs/move.log` after every add or move.

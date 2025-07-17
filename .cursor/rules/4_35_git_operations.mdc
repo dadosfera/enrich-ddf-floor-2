@@ -1,0 +1,10 @@
+---
+description: USE WHEN working on tasks related to ### Git Operations
+globs:
+alwaysApply: false
+---
+
+# ### Git Operations
+- Always use `--no-pager` or pipe to `cat`
+- Limit log and diff outputs
+- Prevent hanging on large repositories

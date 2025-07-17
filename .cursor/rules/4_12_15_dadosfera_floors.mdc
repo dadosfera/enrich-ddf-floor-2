@@ -1,0 +1,12 @@
+---
+description: USE WHEN working on tasks related to ### 15  Dadosfera Floors
+globs:
+alwaysApply: false
+---
+
+# ### 15  Dadosfera Floors
+
+* 0 - Mock‑up
+* 1 - Prototype (Streamlit)
+* 2 - Scalable frameworks; partial tests. **If `require` in Floor 2 JS, refactor to ES modules.**
+* 3 - Prod‑grade; TypeScript, full tests, pre‑commit. **If non‑TS in Floor 3, fail CI.**

@@ -1,0 +1,35 @@
+---
+description: USE WHEN working on tasks related to ### Basic Template with Directory Verification
+globs:
+alwaysApply: false
+---
+
+# ### Basic Template with Directory Verification
+```bash
+# === ENHANCED SAFE COMMAND TEMPLATE ===
+echo "=== Starting [OPERATION_NAME] ==="
+
+# 1. Directory Context Verification
+echo "📍 Directory Context:"
+echo "  Current: $(pwd)"
+echo "  Git root: $(git rev-parse --show-toplevel 2>/dev/null || echo 'Not in git repo')"
+echo "  Home: $HOME"
+
+# 2. Pre-execution validation
+if [ ! -d "$TARGET_DIR" ]; then
+    echo "❌ Target directory does not exist: $TARGET_DIR"
+    exit 1
+fi
+
+# 3. Execute with safety measures
+echo "🚀 Executing command..."
+timeout [TIME] [COMMAND] [SAFE_FLAGS] 2>&1 | head -[LIMIT]
+
+# 4. Result reporting
+if [ $? -eq 0 ]; then
+    echo "✅ [OPERATION_NAME] completed successfully"
+else
+    echo "❌ [OPERATION_NAME] failed"
+    echo "📍 Final directory: $(pwd)"
+fi
+```

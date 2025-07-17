@@ -1,0 +1,11 @@
+---
+alwaysApply: true
+---
+# ### Critical CLI Tools Requiring Pagination Flags
+- **Git Operations**: Always use `--no-pager` or pipe to `cat`
+- **GitHub CLI**: Use `--limit N` for list commands
+- **AWS CLI**: Use `--max-items N` and `--page-size N`
+- **Kubernetes**: Use `--limit N` for resource listings
+- **Docker**: Use `--format` for structured output
+
+## Output Sanitization

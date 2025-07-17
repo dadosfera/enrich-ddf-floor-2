@@ -1,0 +1,15 @@
+---
+description: USE WHEN working on tasks related to ### 6  Environment & Platform Configs (`config/`)
+globs:
+alwaysApply: false
+---
+
+# ### 6  Environment & Platform Configs (`config/`)
+
+* Each YAML/TOML/JSON file in **`config/`** defines one env‑platform combo (e.g., `dev.replit.yaml`, `prd.aws.yaml`).
+
+* `run.sh` reads the chosen descriptor via `--env` and `--platform`, then performs build, test, deploy, or setup.
+
+* Multi‑language projects (Node frontend, Python backend, etc.) are orchestrated by **one** `run.sh` entry point or clearly named helpers inside `scripts/`—never extra top‑level run files.
+
+* Shared utilities stay in **`workflow_tasks/`**; never duplicate them.

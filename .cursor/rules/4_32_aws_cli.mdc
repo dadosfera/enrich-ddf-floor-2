@@ -1,0 +1,10 @@
+---
+description: USE WHEN working on tasks related to ### AWS CLI
+globs:
+alwaysApply: false
+---
+
+# ### AWS CLI
+- `aws s3 ls --max-items 50`
+- `aws ec2 describe-instances --max-items 20 --output json`
+- `aws logs describe-log-groups --limit 10`

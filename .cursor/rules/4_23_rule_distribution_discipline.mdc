@@ -1,0 +1,53 @@
+---
+description: ALWAYS APPLY - Prevents direct editing of platform rule directories, enforces proper rule distribution workflow
+globs: .clinerules/**/*,.cursor/rules/**/*,rules/**/*
+alwaysApply: true
+priority: P1
+enforcement: strict
+---
+
+# Rule Distribution Discipline for Cursor Platform
+
+## Priority
+P1 (Critical): Must always be followed
+
+## Scope
+Applies to all rule management operations in Cursor platform context
+
+## Core Principle
+**NEVER edit rules directly in platform-specific directories**
+
+## Prohibited Directories
+- `.clinerules/` - Cline platform rules
+- `.cursor/rules/` - Cursor platform rules
+- `rules/dadosfera/` - Dadosfera platform rules
+- `rules/cline/` - Generated Cline rules
+- `rules/cursor/` - Generated Cursor rules
+
+## Authorized Workflow
+
+### Step 1: Edit Canonical Sources
+**Allowed Locations**:
+- `pre-prompts/` - Canonical markdown rule definitions
+- `rules/json/` - JSON rule specifications
+- `schemas/` - Rule schemas and validation
+
+### Step 2: Use Distribution Scripts
+**Required Commands**:
+- `scripts/extract_from_source.sh` - Extract and distribute rules
+- `scripts/generate_complete_clinerules.sh` - Generate Cline rules
+- `scripts/optimize_cursor_rules.sh` - Generate Cursor rules
+
+### Step 3: Validate Distribution
+**Validation Commands**:
+- `tests/test_workflow_integrity.sh` - Test workflow consistency
+- `tests/validate_cross_platform_consistency.sh` - Validate platform sync
+
+## Emergency Override
+**Authorization Required**: Explicit user permission with justification
+**Documentation**: Must log override reason and restoration plan
+
+## Enforcement Mechanisms
+- Pre-commit hooks prevent direct edits to prohibited directories
+- CI/CD validation checks rule distribution discipline
+- Automated logging of all rule modification attempts

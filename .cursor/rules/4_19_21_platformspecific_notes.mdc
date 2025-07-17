@@ -1,0 +1,37 @@
+---
+description: USE WHEN working on tasks related to ### 21  Platform‑Specific Notes
+globs:
+alwaysApply: false
+---
+
+# ### 21  Platform‑Specific Notes
+
+* **Replit** – keep `.replit` tiny; it should do *only*:
+
+  ```toml
+  run = "bash run.sh --env=dev --platform=replit --fast"
+  ```
+
+  Debug failed builds with:
+
+  ```bash
+  cat /run/replit/env/error
+  ```
+
+  Override `<forbidden_changes>` only when the user explicitly grants permission.
+
+* **Cursor** – invoke:
+
+  ```bash
+  bash run.sh --env=dev --platform=cursor --fast
+  ```
+
+  Do not create symlinks for moves or renames; update files directly.
+
+* **Dadosfera Orchest** – production pipelines use:
+
+  ```bash
+  bash run.sh --env=prd --platform=dadosfera --full
+  ```
+
+  All moves/renames must be physical; no symlinks. Ensure Orchest YAML stays in `config/` and is referenced by `run.sh`.
