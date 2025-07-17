@@ -1,0 +1,11 @@
+---
+description: USE WHEN working on tasks related to ### Kubernetes (kubectl)
+globs:
+alwaysApply: false
+---
+
+# ### Kubernetes (kubectl)
+- `kubectl get pods --limit 20 --no-headers`
+- `kubectl get services -o json | jq '.items[0:10]'`
+
+## Recommended Practices

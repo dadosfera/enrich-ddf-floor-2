@@ -1,0 +1,10 @@
+---
+description: USE WHEN working on tasks related to ### Service Startups
+globs:
+alwaysApply: false
+---
+
+# ### Service Startups
+- Use `--headless` mode for GUI applications
+- Set specific ports to avoid conflicts
+- Implement quick startup validation

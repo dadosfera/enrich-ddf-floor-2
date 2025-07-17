@@ -1,0 +1,11 @@
+---
+description: USE WHEN working on tasks related to ### 10  Avoid Duplication
+globs:
+alwaysApply: false
+---
+
+# ### 10  Avoid Duplication
+
+* Search first; extend or parametrize existing run/start/app/server scripts.
+* If splitting >1000 LOC, refactor shared logic into modules or imported sub-scripts—**never clone or fork scripts**.
+* Avoid introducing any `*-copy.*`, `*-partial.*`, `*-backup.*`, or `*-fragment.*` artifacts. These rules are covered in full in section 17.

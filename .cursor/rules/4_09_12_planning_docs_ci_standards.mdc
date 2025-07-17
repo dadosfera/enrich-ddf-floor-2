@@ -1,0 +1,11 @@
+---
+description: USE WHEN working on tasks related to ### 12  Planning, Docs & CI Standards
+globs:
+alwaysApply: false
+---
+
+# ### 12  Planning, Docs & CI Standards
+
+* Phases → epics → tasks; statuses (`to do`, `in progress`, `backlog`, `done`, `blocked`).
+* Docs in `_dev/docs/`; auto‑update after merges/deploys.
+* PR checklist: lint/format pass, tests green, docs updated, no duplicate run scripts.

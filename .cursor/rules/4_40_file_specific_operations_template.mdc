@@ -1,0 +1,23 @@
+---
+description: USE WHEN working on tasks related to ### File-Specific Operations Template
+globs:
+alwaysApply: false
+---
+
+# ### File-Specific Operations Template
+```bash
+# For file operations requiring directory validation
+echo "=== File Operation: [OPERATION_NAME] ==="
+
+# Validate source and destination
+[ -f "$SOURCE" ] || { echo "❌ Source file not found: $SOURCE"; exit 1; }
+[ -d "$(dirname "$DEST")" ] || { echo "❌ Destination directory not found: $(dirname "$DEST")"; exit 1; }
+
+# Execute with logging
+echo "📁 Source: $SOURCE"
+echo "📁 Destination: $DEST"
+timeout [TIME] [COMMAND] "$SOURCE" "$DEST" 2>&1 | head -[LIMIT]
+echo "✅ File operation completed"
+```
+
+## AI Agent Directory Rules

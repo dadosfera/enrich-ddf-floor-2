@@ -1,0 +1,13 @@
+---
+description: USE WHEN working on tasks related to ### 4. Directory Context Safety
+globs:
+alwaysApply: false
+---
+
+# ### 4. Directory Context Safety
+- Always verify current working directory before command execution
+- Validate target directories exist before performing operations
+- Use absolute paths to prevent relative path confusion
+- Implement directory detection fallbacks for robustness
+
+## Directory Context Verification

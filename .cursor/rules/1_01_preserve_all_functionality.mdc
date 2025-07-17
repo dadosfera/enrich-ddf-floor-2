@@ -1,0 +1,11 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# Preserve All Functionality
+
+- Never remove or weaken existing features, logs, classes, functions, shell commands, or behavior.
+- Refactor only when it delivers **0 feature loss** and 100% parity or improvement.
+- Replacement code must replicate and enhance the old one while keeping backward compatibility.

@@ -1,0 +1,24 @@
+---
+description: USE WHEN working on tasks related to ### 5  Central `run.sh` Interface
+globs:
+alwaysApply: false
+---
+
+# ### 5  Central `run.sh` Interface
+
+* A **single** `run.sh` at project root (or in `scripts/`) orchestrates every action.
+* Mandatory flags:
+
+  * `--env=<dev|staging|prd|...>` – which environment config in `config/` to load.
+  * `--platform=<dadosfera|replit|cursor|docker|aws>` – choose deployment platform logic.
+  * `--setup` – perform one‑time setup tasks (install deps, init DB, etc.).
+  * `--turbo` / `--fast` / `--full` – runtime depth (skip non‑essentials → quick feedback → full pipeline).
+  * Optional `--tolerant`, `--verbose`, `--debug` as listed in §13.
+* `.replit` must do **nothing** except:
+
+  ```toml
+  run = "bash run.sh --env=dev --platform=replit --fast"
+  ```
+
+  No build logic or secrets here.
+* **No extra run/start/main/server scripts** elsewhere—extend `run.sh` with flags instead of cloning it.

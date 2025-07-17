@@ -1,0 +1,9 @@
+---
+description: "Header for all Cursor rules"
+globs: ["**"]
+alwaysApply: true
+---
+
+# Cursor Rules Header
+
+This file provides a global header for all Cursor rules.

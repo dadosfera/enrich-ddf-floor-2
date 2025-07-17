@@ -1,0 +1,30 @@
+---
+description: USE WHEN working on tasks related to ### Environment Variable Validation
+globs:
+alwaysApply: false
+---
+
+# ### Environment Variable Validation
+- Validate `PRJ_DIR` and `HOME` before use
+- Implement fallback mechanisms for directory detection
+- Handle cases where git root cannot be determined
+
+```bash
+# Validate home directory
+if [ -z "$HOME" ] || [ ! -d "$HOME" ]; then
+    HOME=$(eval echo ~$USER)
+fi
+
+# Validate project directory
+if [ -z "$PRJ_DIR" ] || [ ! -d "$PRJ_DIR" ]; then
+    # Attempt to find project root
+    PRJ_DIR=$(git rev-parse --show-toplevel 2>/dev/null)
+
+    # Fallback to current directory if no git root found
+    if [ -z "$PRJ_DIR" ]; then
+        PRJ_DIR=$(pwd)
+    fi
+fi
+```
+
+## Pagination Control

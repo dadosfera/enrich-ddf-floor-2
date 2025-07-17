@@ -1,0 +1,17 @@
+---
+description: USE WHEN working on tasks related to ### 9  File‑Lifecycle Discipline
+globs:
+alwaysApply: false
+---
+
+# ### 9  File‑Lifecycle Discipline
+
+| Action            | Rule                                                                                                                                         |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Copy**          | Duplicate without deleting the original. Rare; use meaningful names.                                                                         |
+| **Move / Rename** | Physically relocate/rename **and update every reference project‑wide**. **No symlinks.** Run unit/integration tests *before and after* move. |
+| **Delete**        | Grep/find all references, update/remove them, then delete the file. *Delete never keeps a wrapper.*                                          |
+| **Deprecate**     | Only when external consumers require stability. Provide a lightweight forwarder, open a migration task, and schedule removal.                |
+| **Force Delete**  | Only after proving no critical refs remain.                                                                                                  |
+
+**Symlinks** – never as a shortcut to avoid moves/renames. Permitted only for genuine multi‑path needs and must be documented. Package‑manager‑generated symlinks (`node_modules/.bin`) are fine.

@@ -1,0 +1,17 @@
+---
+description: USE WHEN working on tasks related to minimize new files
+globs:
+alwaysApply: false
+---
+
+# Minimize New Files
+
+- Prefer extra flags over new scripts. Common flags include:
+- `--turbo`: skip optional pre/post tasks for fastest run
+- `--fast`: skip tests but still run core build/logic
+- `--full`: full pipeline including lint, test, deploy, etc.
+- `--tolerant`: suppress non-blocking warnings or missing dependencies during bootstrap
+- `--verbose` / `--quiet`: control verbosity
+- `--debug`: include debug output/logs
+
+If splitting, orchestrate via a master script, document, ensure linting.

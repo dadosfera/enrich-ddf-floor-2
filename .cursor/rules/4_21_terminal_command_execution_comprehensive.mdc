@@ -1,0 +1,405 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# 🚨 CRITICAL TERMINAL COMMAND EXECUTION SAFETY
+
+## P0 MANDATORY RULES TO PREVENT COMMAND BLOCKING AND HANGING
+
+### IMMEDIATE COMMAND LIMITS
+- **NEVER** chain more than 2 commands with `&&` operators
+- **NEVER** run commands longer than 200 characters (strict enforcement)
+- **ALWAYS** use separate tool calls for verification steps
+- **MANDATORY** timeout for commands that could run > 10 seconds
+- **MAXIMUM** 3 pipe operations per command
+- **MAXIMUM** 2 conditional operators per command
+
+### RED FLAG PATTERNS - STOP AND USE MULTIPLE TOOL CALLS:
+- Multiple `echo` statements with `&&` chains
+- Commands mixing execution + verification + formatting
+- Any command with more than 2 `&&` operators
+- Commands that combine work + status reporting
+- Comprehensive verification commands with multiple steps
+
+### SAFE COMMAND PATTERN:
+```bash
+# ✅ GOOD: Simple, focused command
+timeout 30 command_to_execute
+
+# ✅ GOOD: Simple chain (max 2 operations)
+timeout 30 command1 && timeout 30 command2
+
+# ❌ BAD: Complex chain that can hang
+echo "starting" && command1 && echo "done" && command2 && echo "finished"
+
+# ❌ BAD: Verification mixed with execution
+python -m ruff check . && echo "✅ RUFF PASSED" && flake8 . && echo "✅ FLAKE8 PASSED"
+```
+
+### COMMAND COMPLEXITY LIMITS
+- **Maximum command length**: 200 characters
+- **Maximum chained operations**: 2 (`cmd1 && cmd2` is absolute limit)
+- **Verification steps**: Always use separate tool calls
+- **Status reporting**: Use separate tool calls, never inline echo chains
+- **Complex workflows**: Break into 3+ separate tool calls minimum
+
+### MULTI-COMMAND LINE SEPARATORS
+- **Use `;` (sequential)** - Commands run one after another regardless of success
+- **Use `|` (pipe)** - Output of first command feeds into second
+- **NO hidden separators** - Never use `&&` for more than 2 commands
+- **NEVER concatenate** multiple commands without proper separators
+
+## USE .TMP SCRIPTS FOR COMPLEX OPERATIONS
+When you need to run complex operations:
+1. Create a script in `.tmp/` directory
+2. Name it with timestamp: `temp_script_YYYYMMDD_HHMMSS.sh`
+3. Run the script with timeout
+4. Clean up after execution
+
+Example:
+```bash
+# Create temp script
+edit_file .tmp/find_issues.sh "script content"
+
+# Run with timeout
+timeout 10 bash .tmp/find_issues.sh
+
+# Clean up
+delete_file .tmp/find_issues.sh
+```
+
+## TIMEOUT MANAGEMENT
+
+### MANDATORY TIMEOUT ENFORCEMENT
+**Every terminal command MUST use a timeout. Commands without timeout are strictly prohibited.**
+- If a command cannot be safely timed out, explicit user authorization is required.
+- This applies to all shell, script, and tool invocations, including background jobs.
+
+### TIMEOUT GUIDELINES BY OPERATION TYPE
+| Operation Type | Timeout | Example |
+|---|---|---|
+| **Quick checks** | 5-10s | `timeout 5s docker --version` |
+| **File operations** | 10-30s | `timeout 30s cp large_file dest/` |
+| **Network calls** | 15-30s | `timeout 30s curl -s https://api.example.com` |
+| **Build operations** | 60-300s | `timeout 300s npm run build` |
+| **Deploy operations** | 300-600s | `timeout 600s aws cloudformation deploy` |
+| **Long running** | Background | `is_background=true` for servers/watch |
+
+### PROGRESSIVE TIMEOUT STRATEGY
+- Start with shorter timeouts, increase if needed
+- Command-specific timeouts with recovery actions
+- Use `timeout` command for all potentially long-running operations
+- Recovery action mapping: Each timeout has specific recovery procedures
+
+## ASYNC COMMAND EXECUTION FOR LONG-RUNNING OPERATIONS
+
+### WHEN TO USE ASYNC PATTERN
+For commands requiring >60 seconds:
+- **Long-running deployments** (CloudFormation, Terraform, model downloads)
+- **Build processes** (Docker builds, npm install, compilation)
+- **Infrastructure operations** (instance creation, volume operations)
+- **Data processing** (large file operations, model training)
+
+### ASYNC EXECUTION PATTERN
+```bash
+# 1. Start command in background
+deployment_pid=$(nohup scripts/deploy.sh > .tmp/deployment.log 2>&1 & echo $!)
+echo $deployment_pid > .tmp/deployment.pid
+
+# 2. Continue with parallel tasks
+timeout 30s validate_configs.sh
+timeout 30s check_dependencies.sh
+
+# 3. Check status periodically
+check_deployment_status() {
+    local pid=$(cat .tmp/deployment.pid 2>/dev/null)
+    if [[ -n "$pid" ]]; then
+        if kill -0 "$pid" 2>/dev/null; then
+            echo "⏳ Deployment still running (PID: $pid)"
+            return 1  # Still running
+        else
+            echo "✅ Deployment completed (PID: $pid)"
+            return 0  # Completed
+        fi
+    fi
+}
+
+# 4. Wait with progress updates
+wait_for_deployment() {
+    local max_wait=1800  # 30 minutes
+    local wait_time=0
+    local check_interval=30
+
+    while [[ $wait_time -lt $max_wait ]]; do
+        if check_deployment_status; then
+            return 0
+        fi
+        sleep $check_interval
+        wait_time=$((wait_time + check_interval))
+    done
+    return 1
+}
+```
+
+## DIRECTORY CONTEXT SAFETY
+
+### CRITICAL DIRECTORY SAFETY RULES
+- **Never assume current directory**: Always verify with `pwd` and `git rev-parse --show-toplevel`
+- **Validate before operations**: Check directory existence before file operations
+- **Use absolute paths**: Convert relative paths to absolute when possible
+- **Log directory context**: Always log detected directories for traceability
+
+### DIRECTORY DETECTION PATTERN
+```bash
+# Standard directory verification sequence
+echo "=== Directory Context Verification ==="
+echo "Current directory: $(pwd)"
+echo "Git root: $(git rev-parse --show-toplevel 2>/dev/null || echo 'Not in git repository')"
+echo "Home directory: $HOME"
+echo "Project directory: ${PRJ_DIR:-'Not set'}"
+```
+
+### ENVIRONMENT VARIABLE VALIDATION
+```bash
+# Validate home directory
+if [ -z "$HOME" ] || [ ! -d "$HOME" ]; then
+    HOME=$(eval echo ~$USER)
+fi
+
+# Validate project directory
+if [ -z "$PRJ_DIR" ] || [ ! -d "$PRJ_DIR" ]; then
+    PRJ_DIR=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [ -z "$PRJ_DIR" ]; then
+        PRJ_DIR=$(pwd)
+    fi
+fi
+```
+
+## OUTPUT CONTROL AND PAGINATION
+
+### CRITICAL CLI TOOLS REQUIRING PAGINATION FLAGS
+- **Git Operations**: Always use `--no-pager` or pipe to `cat`
+- **GitHub CLI**: Use `--limit N` for list commands
+- **AWS CLI**: Use `--max-items N` and `--page-size N`
+- **Kubernetes**: Use `--limit N` for resource listings
+- **Docker**: Use `--format` for structured output
+
+### OUTPUT SANITIZATION
+- Filter emojis before JSON parsing: `sed 's/[^\x00-\x7F]//g'`
+- Use `--no-color` flags to prevent ANSI escape sequences
+- Prefer `--output json` over human-readable formats
+- Sanitize output for log file compatibility
+
+### CLI-SPECIFIC GUIDELINES
+```bash
+# GitHub CLI (gh)
+timeout 30 gh issue list --limit 10 --json number,title,state
+timeout 30 gh pr list --limit 5 --json number,title,headRefName
+
+# AWS CLI
+timeout 30 aws s3 ls --max-items 50 --no-paginate --no-cli-pager
+timeout 30 aws ec2 describe-instances --max-items 20 --output json
+
+# Kubernetes (kubectl)
+timeout 30 kubectl get pods --limit 20 --no-headers
+timeout 30 kubectl get services -o json | jq '.items[0:10]'
+```
+
+## BACKGROUND PROCESS SAFETY
+
+### ENHANCED BACKGROUND PROCESS GUIDELINES
+- **Strict background mode guidelines**: Only for continuous processes (servers, watchers)
+- **Process monitoring**: Verify background processes are actually running
+- **Health checks**: Implement verification after background startup
+- **Graceful shutdown**: Always provide ways to stop background processes
+- Use background mode (`is_background=true`) judiciously
+- Implement short timeouts for service startups
+- Avoid blocking main thread with long-running processes
+
+### BACKGROUND PROCESS MANAGEMENT
+```bash
+# ✅ GOOD: Use background flag for long-running processes
+# (In tool calls, set is_background=true)
+
+# ✅ GOOD: Quick validation with timeout
+timeout 5s service_status_check
+
+# ❌ BAD: Long-running commands without background mode
+npm run dev  # This will hang the terminal
+```
+
+## STUCK PROCESS RECOVERY PROTOCOLS
+
+### IMMEDIATE RECOVERY ACTIONS
+- **Kill stuck processes**: `pkill -f "process_name"` or `kill -9 PID`
+- **Clear terminal**: `clear` or `reset` to restore terminal state
+- **Check process tree**: `ps aux | grep "process_name"` to identify stuck processes
+- **Resource cleanup**: Free up memory and file descriptors
+
+### PREVENTION STRATEGIES
+- **Health checks**: Verify processes are running correctly
+- **Process monitoring**: Track process state and resource usage
+- **Resource limits**: Set memory and CPU limits to prevent exhaustion
+- **Circuit breakers**: Implement for repeated failures
+
+### RECOVERY COMMAND TEMPLATES
+```bash
+# Pattern 1: Simple command with timeout and output limiting
+timeout 30 command | head -100
+
+# Pattern 2: Background process with verification
+command & sleep 2 && ps aux | grep command
+
+# Pattern 3: Command with fallback options
+command || fallback_command
+
+# Pattern 4: Safe file operations with existence checks
+[ -f "$file" ] && command "$file"
+
+# Pattern 5: Network operations with retry logic
+for i in {1..3}; do timeout 30 command && break || sleep $i; done
+```
+
+## AI AGENT PRE-EXECUTION CHECKLIST
+**BEFORE executing ANY terminal command, AI agents MUST verify:**
+- [ ] **Timeout present**: Every command has a timeout (5s-300s depending on operation)
+- [ ] **Output limited**: Use head/tail/limit to prevent overwhelming output
+- [ ] **Error handling**: Command has fallback or error handling
+- [ ] **Directory verified**: Current directory is correct if needed
+- [ ] **Non-interactive**: No prompts that could hang (use --yes, --force, etc.)
+- [ ] **Background appropriately**: Long-running commands use is_background=true
+
+**ENFORCEMENT**: Commands failing this checklist are PROHIBITED.
+
+## MANDATORY SAFETY PATTERNS
+
+### 1. TIMEOUT ALL EXTERNAL COMMANDS
+```bash
+# ✅ GOOD: Always use timeout
+timeout 30s npm run build
+timeout 10s aws sts get-caller-identity --no-paginate --no-cli-pager
+timeout 5s docker --version
+timeout 60s kubectl get pods --limit 20
+
+# ❌ BAD: No timeout - STRICTLY PROHIBITED
+npm run build
+aws sts get-caller-identity
+kubectl get pods
+```
+
+### 2. SAFE COMMAND CHAINING WITH PROPER SEPARATORS
+```bash
+# ✅ GOOD: Sequential execution with semicolons
+timeout 30s echo "Step 1"; timeout 30s echo "Step 2"
+
+# ✅ GOOD: Simple chain (max 2 operations)
+timeout 30s echo "Step 1" && timeout 30s echo "Step 2"
+
+# ✅ GOOD: Pipe operations
+timeout 30s git log --oneline | head -10
+
+# ❌ BAD: Complex chains with potential hanging points
+npm install && npm run build && npm test && deploy.sh
+```
+
+### 3. OUTPUT CONTROL
+```bash
+# ✅ GOOD: Limit output to prevent overwhelming
+timeout 30s npm run build 2>&1 | head -20
+timeout 10s git log --oneline -10
+timeout 15s kubectl get pods --limit 20
+
+# ❌ BAD: Unlimited output can cause issues
+npm run build
+git log
+kubectl get pods
+```
+
+### 4. ERROR HANDLING
+```bash
+# ✅ GOOD: Handle errors explicitly
+if timeout 30s npm run build > /dev/null 2>&1; then
+    echo "✅ Build successful"
+else
+    echo "❌ Build failed"
+    exit 1
+fi
+
+# ❌ BAD: No error handling
+npm run build
+```
+
+### 5. NON-INTERACTIVE MODE
+```bash
+# ✅ GOOD: Force non-interactive operation
+timeout 30s aws cloudformation deploy --no-cli-pager --no-paginate
+timeout 30s npm install --yes --no-audit --no-fund
+timeout 30s apt-get install -y package-name
+
+# ❌ BAD: Interactive prompts can hang
+aws cloudformation deploy
+npm install
+apt-get install package-name
+```
+
+## COMMAND-SPECIFIC SAFETY
+
+### NETWORK COMMANDS
+- `curl`: Always use `--max-time 30` and `--connect-timeout 10`
+- `wget`: Use `--timeout=30` and `--tries=3`
+- `ping`: Limit packet count with `-c 5`
+
+### PACKAGE MANAGERS
+- `npm install`: Use `--no-audit --no-fund --yes` with timeout
+- `pip install`: Use `--quiet --timeout 30` with timeout
+- `apt-get`: Use `-y` flag with timeout
+
+### CLOUD CLI TOOLS
+- `aws`: Always use `--no-paginate --no-cli-pager --output json` with timeout
+- `kubectl`: Use `--timeout=30s` flag with timeout
+- `docker`: Use timeout for potentially slow operations
+
+### GIT OPERATIONS
+- `git clone`: Use `--depth=1` for faster clones with timeout
+- `git pull`: Use timeout to prevent hanging on auth
+- `git push`: Use timeout and handle auth issues
+
+## AI AGENT SPECIFIC RULES
+
+1. **Never assume commands complete quickly**
+2. **Always provide fallback error messages**
+3. **Use parallel execution when possible**
+4. **Limit output to essential information**
+5. **Provide clear status indicators**
+6. **MANDATORY: Timeout must be present in every command**
+7. **MANDATORY: Use non-interactive flags for all CLI tools**
+8. **MANDATORY: Use proper command separators (`;` or `|`) instead of complex `&&` chains**
+
+## ENHANCED ERROR PREVENTION CHECKLIST
+
+1. ✅ Use timeout for all potentially long-running commands
+2. ✅ Limit command output
+3. ✅ Prevent interactive prompts
+4. ✅ Implement error handling
+5. ✅ Use background mode selectively
+6. ✅ Set specific ports
+7. ✅ Use headless modes when applicable
+8. ✅ **Verify current directory context before execution**
+9. ✅ **Validate target directories exist before operations**
+10. ✅ **Use absolute paths when possible**
+11. ✅ **Log directory detection process**
+12. ✅ **Implement directory detection fallbacks**
+13. ✅ **Use .tmp scripts for complex operations**
+14. ✅ **Never chain more than 2 commands**
+15. ✅ **Keep commands under 200 characters**
+16. ✅ **Use proper separators: `;` (sequential) or `|` (pipe)**
+
+## ENFORCEMENT
+- Integrate these guidelines into CI/CD pipelines
+- Use linting and static analysis tools to detect potential issues
+- Regularly review and update command execution practices
+- **TIMEOUT IS NOT OPTIONAL** - Every command must have a timeout
+- **COMMANDS FAILING SAFETY CHECKLIST ARE PROHIBITED**
+- **PROPER SEPARATORS ARE MANDATORY** - No hidden separators allowed

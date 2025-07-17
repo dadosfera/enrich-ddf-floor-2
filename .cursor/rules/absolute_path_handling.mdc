@@ -1,0 +1,51 @@
+---
+description: USE WHEN working with file paths, home directories, or credential management to ensure proper absolute path handling and prevent security violations
+globs:
+alwaysApply: false
+---
+
+# Absolute Path Handling and Home Directory Discipline
+
+## Critical Security Rule
+- **NEVER** create or reference `~/.oci` inside the project directory
+- **NEVER** use `./~/.oci` or `PRJ_DIR/~/.oci` - this is a security risk
+- `~/.oci` **must always** resolve to the user's actual home directory
+
+## Platform-Specific Examples
+
+### macOS Environment
+- ❌ **WRONG**: `/Users/luismartins/local_repos/deployer-ddf-mod-open-llms/~/.oci`
+- ✅ **CORRECT**: `/Users/luismartins/.oci`
+- ✅ Good: `cat "$HOME/.oci/config"`
+- ❌ Bad: `cat "$PRJ_DIR/.oci/config"` or `cat ".oci/config"` from the project root
+- ❌ Bad: `cat "./~/.oci/config"` or `cat "~/.oci/config"` from project directory
+
+### dadosfera/orchest Environment
+- ❌ **WRONG**: `/workspace/deployer-ddf-mod-open-llms/~/.oci`
+- ✅ **CORRECT**: `/home/orchest/.oci`
+- ✅ Good: `cat "$HOME/.oci/config"`
+- ❌ Bad: `cat "$PRJ_DIR/.oci/config"` or `cat ".oci/config"` from the project root
+- ❌ Bad: `cat "./~/.oci/config"` or `cat "~/.oci/config"` from project directory
+
+## Rule
+- **Never** confuse the project directory (`PRJ_DIR`) with the user's home directory (`HOME`).
+- When referencing files or directories that should be in the user's home, always resolve the absolute path using `$HOME` or equivalent, **never** relative to the project directory.
+- When in doubt, use `pwd`, `echo $HOME`, and `git rev-parse --show-toplevel` to verify your current context.
+- **Always use absolute paths** for critical configuration, credential, or state files.
+- If a script or process is unsure about the correct location, it must log a warning and halt until the path is verified.
+
+## Enforcement
+- Any script or automation that manipulates or checks `~/.oci` or similar home-based files **must**:
+  1. Resolve `$HOME` using the OS environment, not project-relative logic.
+  2. Log the resolved path before performing operations.
+  3. Refuse to proceed if `$HOME/.oci` is not a directory or is confused with the project root.
+  4. **CRITICAL**: Check for and report any `~/.oci` directories inside the project directory as security violations.
+
+## Security Violation Detection
+- **macOS**: If `/Users/luismartins/local_repos/deployer-ddf-mod-open-llms/~/.oci` exists, this is a security violation
+- **dadosfera/orchest**: If `/workspace/deployer-ddf-mod-open-llms/~/.oci` exists, this is a security violation
+- The correct path should always be `$HOME/.oci`
+- Any credentials in the project directory should be moved to the user's home directory
+
+## Rationale
+Mixing up the home directory and project directory can lead to credential leaks, failed authentication, and broken automation. This rule ensures robust, portable, and secure path handling for all environments.

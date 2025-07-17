@@ -1,0 +1,10 @@
+---
+description:
+globs: **/*.js,**/*.ts,**/*.jsx,**/*.tsx,**/*.mjs
+alwaysApply: false
+---
+
+# JS Floor Rules
+
+- Floor 2: `.js` ES modules; rare CommonJS.
+- Floor 3: `.ts`/`.tsx`, no `require`.

@@ -1,0 +1,64 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+
+# ### 20  Autonomy & User Handoff
+
+* You may execute tasks **autonomously** when the goal is unambiguous and all rules in this PRE‑PROMPT are satisfied.
+
+* If a requirement is **ambiguous, destructive, or conflicts with an existing rule**, pause and ask the user for clarification **before** acting.
+
+* `submodules --recursive` (e.g., `git submodule update --init --recursive`) is prohibited without explicit user authorization; usually, you only want to checkout/update the first-level submodule (e.g., `git submodule update --init`).
+
+* **Propose a plan** (high‑level steps, flags, dry‑run output) when first tackling a new feature or major refactor; wait for user approval unless the user has already granted blanket autonomy.
+
+* **Present options** – include a **ranked list** of viable solutions (≥ 2 when possible) and clearly mark your **top‑choice**.
+
+* **Auto‑select #1** – proceed with the top‑ranked option by default. If the user replies "continue" or similar, execute the next option without re‑planning.
+
+* **Self‑Check (5‑step)** before executing:
+
+  1. Restate the goal.
+  2. List key constraints from this PRE‑PROMPT.
+  3. Verify chosen plan satisfies constraints.
+  4. Confirm no duplication/symlink/forbidden patterns introduced.
+  5. Ensure tests & dry‑runs will run.
+
+* **Background long‑running commands** – for server/watch commands (`npm run dev`, `node dist/index.js`, etc.) run them in the background (`&`) to avoid stalling the session.
+
+* When autonomy is exercised, always:
+
+  1. Log decisions in the file log (`INFO` level).
+  2. Ensure unit/integration tests, lints, and dry‑runs pass.
+  3. Provide a concise summary in the PR or commit message so humans understand the automated changes.
+
+* If user assistance is required, include relevant file/console/UI log excerpts so the user can help without re‑executing the workflow.
+
+Note: The concepts of `git sync` and `git sync full` refer to manual workflows to be performed by the user or with explicit user direction. Automated git operations (e.g., add, commit, push, pull, merge, or any destructive git command) must only be performed by the AI with explicit user request or authorization.
+
+#### 20.1 Destructive Command Authorization
+Certain Git commands are inherently destructive as they can lead to irreversible loss of work if used improperly. These commands require explicit authorization from a human user or a designated `arbiter` AI before execution by an AI agent.
+
+*   **Critically Restricted Command**: `git reset --hard <target>`
+    *   **Risk**: Discards all uncommitted changes in the working directory and staging area, and resets the current branch to `<target>`. This can lead to permanent loss of local work.
+    *   **Prohibition**: AI agents are strictly prohibited from executing `git reset --hard` without obtaining explicit, affirmative authorization from the user for that specific operation and target.
+    *   **Authorization Procedure**:
+        1.  The AI must clearly state the intent to use `git reset --hard` and specify the exact target (e.g., `HEAD`, `origin/main`, a specific commit SHA).
+        2.  The AI must explain the reason for needing this command and the expected outcome.
+        3.  The AI must explicitly ask for permission (e.g., "May I proceed with `git reset --hard HEAD` to discard local changes?").
+        4.  The user must provide a clear affirmative response (e.g., "Yes, proceed with the reset.", "Okay to reset to origin/main.").
+    *   **Documentation**: If authorization is granted and the command is executed, the AI must log the authorization step, the command executed, and the reason in the commit history or associated task documentation.
+    *   **Alternatives**: Before requesting authorization for `git reset --hard`, AI agents should consider safer alternatives like `git stash`, creating a new branch for experimentation, or `git checkout <paths>` for specific files.
+
+*   **Restricted Command**: `git commit --no-verify`
+    *   **Risk**: Bypasses pre-commit hooks and verification checks, which can lead to committing code that does not meet project standards or contains errors.
+    *   **Prohibition**: AI agents are strictly prohibited from using `git commit --no-verify` without obtaining explicit, affirmative authorization from the user for that specific operation.
+    *   **Authorization Procedure**:
+        1.  The AI must clearly state the intent to use `git commit --no-verify`.
+        2.  The AI must explain the reason for needing to bypass verification (e.g., urgent fix, temporary commit for testing).
+        3.  The AI must explicitly ask for permission (e.g., "May I proceed with `git commit --no-verify` to bypass pre-commit hooks for this urgent fix?").
+        4.  The user must provide a clear affirmative response (e.g., "Yes, proceed with --no-verify for this commit.").
+    *   **Documentation**: If authorization is granted and the command is executed, the AI must log the authorization step, the command executed, and the reason in the commit history or associated task documentation.
+    *   **Alternatives**: Before requesting authorization for `git commit --no-verify`, AI agents should ensure that the code passes all pre-commit hooks or consider alternative workflows like creating a temporary branch.

@@ -1,0 +1,11 @@
+---
+description:
+globs: config/**/*,*.config.*,*.yaml,*.yml,*.toml,*.json,.env*
+alwaysApply: false
+---
+
+# Config-File Editing
+
+- Allowed tools: `sed`/`awk`, middleware scripts, automation (`config_sync`).
+- Single source of truth: `config/config.yaml` → derive other configs.
+- Commit msgs: `<scope>: <imperative>` (e.g., `build: switch to redis cache`).

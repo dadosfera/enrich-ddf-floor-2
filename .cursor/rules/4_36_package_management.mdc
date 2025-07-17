@@ -1,0 +1,10 @@
+---
+description: USE WHEN working on tasks related to ### Package Management
+globs:
+alwaysApply: false
+---
+
+# ### Package Management
+- Use timeouts for installations
+- Disable unnecessary interactions (e.g., `--no-audit`, `--no-fund`)
+- Set explicit peer dependency handling

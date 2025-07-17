@@ -1,0 +1,10 @@
+---
+description: USE WHEN working on tasks related to ### 17  NO "Simplified / Stand‑alone / Partial / Backup" Clones
+globs:
+alwaysApply: false
+---
+
+# ### 17  NO "Simplified / Stand‑alone / Partial / Backup" Clones
+
+* Never commit files named `*-simplified.*`, `*-fixed.*`, `*-standalone.*`, `*-partial.*`, `*-fragment.*`, `*-backup.*`.
+* Experiment in `/tmp/` or a throw‑away branch, port fixes to the real file, delete scratch copies.

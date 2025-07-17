@@ -1,0 +1,11 @@
+---
+description: USE WHEN working on tasks related to ### Critical Directory Safety Rules
+globs:
+alwaysApply: false
+---
+
+# ### Critical Directory Safety Rules
+- **Never assume current directory**: Always verify with `pwd` and `git rev-parse --show-toplevel`
+- **Validate before operations**: Check directory existence before file operations
+- **Use absolute paths**: Convert relative paths to absolute when possible
+- **Log directory context**: Always log detected directories for traceability

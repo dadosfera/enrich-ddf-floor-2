@@ -1,0 +1,10 @@
+---
+description: USE WHEN working on tasks related to ### GitHub CLI (gh)
+globs:
+alwaysApply: false
+---
+
+# ### GitHub CLI (gh)
+- `gh issue list --limit 10 --json number,title,state`
+- `gh pr list --limit 5 --json number,title,headRefName`
+- `gh repo list --limit 20 --json name,description`

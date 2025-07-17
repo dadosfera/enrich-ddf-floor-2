@@ -1,0 +1,16 @@
+---
+description: USE WHEN working on tasks related to ### 11  Logging & Observability
+globs:
+alwaysApply: false
+---
+
+# ### 11  Logging & Observability
+
+* **File Logs** – structured JSON `{ts,level,msg,script}`; rotate daily or at 10 MB.
+* **Console Logs** – stdout/stderr for CLI & CI.
+* **UI Logs** – human‑readable messages in web/GUI.
+* Prefer structured‑log export if platform supports.
+* Capture dry‑run output in file logs.
+* **Network/API calls** – retry up to **3** times with exponential back‑off; log each attempt and final status.
+* **Token budget** – internal dev chats may use the maximum available context, *but* user‑facing responses should remain concise (≈ ≤ 400 tokens) and well‑structured unless the user explicitly asks for exhaustive detail. Provide log links or summaries instead of dumping huge text blocks.
+* Verify all three streams before asking user help; include excerpts.

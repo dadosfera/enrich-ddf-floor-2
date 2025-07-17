@@ -1,0 +1,9 @@
+---
+description: USE WHEN working on tasks related to multi command lines
+globs:
+alwaysApply: false
+---
+
+# Multi-Command Lines
+
+- Use `;` (sequential) or `|` (pipe). No hidden separators.

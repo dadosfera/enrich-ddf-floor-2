@@ -1,0 +1,53 @@
+---
+description: USE WHEN working on tasks related to ### File Operation Safety
+globs:
+alwaysApply: false
+---
+
+# ### File Operation Safety
+- **Copy Operations**: Verify source and destination directories exist
+- **Move Operations**: Validate paths and update references project-wide
+- **Delete Operations**: Confirm directory context before deletion
+- **Path-dependent Commands**: Always use absolute paths or verify relative context
+
+#### File Operation Template
+```bash
+# Verify directories before file operations
+if [ ! -d "$(dirname "$SOURCE_PATH")" ]; then
+    echo "❌ Source directory does not exist: $(dirname "$SOURCE_PATH")"
+    exit 1
+fi
+
+if [ ! -d "$(dirname "$DEST_PATH")" ]; then
+    echo "❌ Destination directory does not exist: $(dirname "$DEST_PATH")"
+    exit 1
+fi
+```
+
+## Timeout Guidelines
+
+| Command Type | Recommended Timeout | Rationale |
+|-------------|---------------------|-----------|
+| npm install | 60-120 seconds | Package downloads |
+| npm run build | 30-60 seconds | Build processes |
+| git clone | 30-60 seconds | Repository size |
+| pip install | 30-60 seconds | Package downloads |
+| Service starts | 5-10 seconds | Quick validation |
+| Status checks | 3-5 seconds | Should be instant |
+
+## Enhanced Error Prevention Checklist
+
+1. ✅ Use timeout for all potentially long-running commands
+2. ✅ Limit command output
+3. ✅ Prevent interactive prompts
+4. ✅ Implement error handling
+5. ✅ Use background mode selectively
+6. ✅ Set specific ports
+7. ✅ Use headless modes when applicable
+8. ✅ **Verify current directory context before execution**
+9. ✅ **Validate target directories exist before operations**
+10. ✅ **Use absolute paths when possible**
+11. ✅ **Log directory detection process**
+12. ✅ **Implement directory detection fallbacks**
+
+## Enhanced Safe Command Template

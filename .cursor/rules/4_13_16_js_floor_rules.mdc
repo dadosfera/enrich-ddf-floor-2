@@ -1,0 +1,10 @@
+---
+description: USE WHEN working on tasks related to ### 16  JS Floor Rules
+globs:
+alwaysApply: false
+---
+
+# ### 16  JS Floor Rules
+
+* Floor 2: `.js` ES modules; rare CommonJS.
+* Floor 3: `.ts`/`.tsx`, no `require`.

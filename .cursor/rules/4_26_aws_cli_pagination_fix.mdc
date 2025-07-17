@@ -1,0 +1,197 @@
+# AWS CLI Pagination Fix - Critical Terminal Safety
+
+## Priority
+P1 (Critical): Prevents terminal hanging and command failures
+
+## When to Use This Rule
+**USE WHEN:**
+- Executing any AWS CLI commands in terminal
+- Getting "head: |: No such file or directory" errors
+- Commands hang indefinitely waiting for pager input
+- Experiencing AWS CLI output truncation issues
+
+## Core Problem
+AWS CLI uses a pager by default, causing commands to hang or show errors in automated environments:
+```
+head: |: No such file or directory
+head: cat: No such file or directory
+```
+
+## Mandatory Solution Pattern
+
+### 1. **ALWAYS Set AWS_PAGER Before AWS Commands**
+```bash
+# ✅ REQUIRED: Disable pager before any AWS CLI command
+export AWS_PAGER=""
+aws sts get-caller-identity
+```
+
+### 2. **Alternative Methods (When Environment Cannot Be Set)**
+```bash
+# Method 1: Use --no-cli-pager flag
+aws sts get-caller-identity --no-cli-pager
+
+# Method 2: Pipe to cat
+aws sts get-caller-identity | cat
+```
+
+### 3. **Shell Detection and Auto-Fix**
+```bash
+# Check for problematic pager settings
+if [[ "$PAGER" == *"head"* ]] || [[ "$PAGER" == *"|"* ]]; then
+    echo "WARNING: Problematic PAGER detected: $PAGER"
+    unset PAGER
+    export AWS_PAGER=""
+fi
+```
+
+## Critical Implementation Rules
+
+### Before ANY AWS CLI Command:
+1. **Set AWS_PAGER=""** in the shell session
+2. **Test with simple command first**: `aws sts get-caller-identity`
+3. **Verify output is not truncated or hanging**
+
+### For AI Agents - Mandatory Pattern:
+```bash
+# === AWS CLI SAFETY PATTERN ===
+# STEP 1: Always set AWS_PAGER first
+export AWS_PAGER=""
+
+# STEP 2: Test basic connectivity
+aws sts get-caller-identity
+
+# STEP 3: Proceed with AWS operations only if test succeeds
+aws cloudformation describe-stacks --stack-name my-stack
+```
+
+## Troubleshooting Common Scenarios
+
+### Scenario 1: Terminal Hangs
+**Symptoms:** Command never returns, cursor waits indefinitely
+**Fix:**
+```bash
+# Kill hanging process (Ctrl+C), then:
+export AWS_PAGER=""
+unset PAGER
+# Retry command
+```
+
+### Scenario 2: Head/Cat Errors
+**Symptoms:** `head: |: No such file or directory`
+**Root Cause:** PAGER set to `head -n 10000 | cat`
+**Fix:**
+```bash
+unset PAGER
+export AWS_PAGER=""
+```
+
+### Scenario 3: Output Truncation
+**Symptoms:** JSON responses cut off, incomplete data
+**Fix:**
+```bash
+export AWS_PAGER=""
+# Use --max-items for large responses
+aws ec2 describe-instances --max-items 20
+```
+
+## Environment Configuration
+
+### Permanent Fix for Shell Sessions:
+```bash
+# Add to .bashrc/.zshrc:
+export AWS_PAGER=""
+export AWS_DEFAULT_OUTPUT="json"
+export AWS_DEFAULT_REGION="us-east-1"
+```
+
+### Project .env File:
+```bash
+# AWS CLI Configuration
+AWS_PAGER=""
+AWS_DEFAULT_OUTPUT="json"
+AWS_DEFAULT_REGION="us-east-1"
+```
+
+## AI Agent Implementation Checklist
+
+Before executing AWS CLI commands, AI agents MUST:
+
+1. ✅ **Set AWS_PAGER=""**
+2. ✅ **Unset problematic PAGER if detected**
+3. ✅ **Test with aws sts get-caller-identity**
+4. ✅ **Use timeouts for network-dependent commands**
+5. ✅ **Use --max-items for potentially large responses**
+
+## Prevention Commands
+
+### Shell Environment Cleanup:
+```bash
+# Clean problematic environment variables
+unset PAGER
+export AWS_PAGER=""
+export AWS_DEFAULT_OUTPUT="json"
+
+# Test environment
+aws sts get-caller-identity
+echo "AWS CLI Environment: OK"
+```
+
+### Validation Script:
+```bash
+validate_aws_cli_environment() {
+    # Check for problematic settings
+    if [[ -n "$PAGER" ]] && [[ "$PAGER" == *"|"* ]]; then
+        echo "❌ Problematic PAGER detected: $PAGER"
+        unset PAGER
+    fi
+
+    # Set safe AWS CLI settings
+    export AWS_PAGER=""
+    export AWS_DEFAULT_OUTPUT="json"
+
+    # Test AWS CLI
+    if aws sts get-caller-identity >/dev/null 2>&1; then
+        echo "✅ AWS CLI environment validated"
+        return 0
+    else
+        echo "❌ AWS CLI test failed"
+        return 1
+    fi
+}
+```
+
+## Error Examples to Watch For
+
+### ❌ These errors indicate pagination problems:
+- `head: |: No such file or directory`
+- `head: cat: No such file or directory`
+- Commands hanging indefinitely
+- Truncated JSON output
+- `Unable to locate credentials` (can be pagination-related)
+
+### ✅ Success indicators:
+- Commands return immediately
+- Complete JSON responses
+- No pipe-related error messages
+- Consistent command behavior
+
+## Integration with Deployment Scripts
+
+All deployment scripts MUST include this pattern:
+```bash
+#!/bin/bash
+# === AWS CLI SAFETY HEADER ===
+export AWS_PAGER=""
+unset PAGER 2>/dev/null || true
+
+# Validate AWS CLI works
+if ! aws sts get-caller-identity >/dev/null 2>&1; then
+    echo "❌ AWS CLI not working - check credentials"
+    exit 1
+fi
+
+# Continue with deployment...
+```
+
+This rule is based on actual issues experienced during deployment and documented in `docs/guides/aws_cli.md`.

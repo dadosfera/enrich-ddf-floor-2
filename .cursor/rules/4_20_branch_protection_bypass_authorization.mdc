@@ -1,0 +1,35 @@
+---
+description: USE WHEN working on tasks related to branch protection bypass authorization
+globs:
+alwaysApply: false
+---
+
+# Branch Protection Bypass Authorization
+
+This rule enables autonomous branch protection bypass and PR merging when the user has explicitly authorized it and has the necessary administrative privileges. Based on real implementation experience, this guide provides both successful strategies and common pitfalls to avoid.
+
+### Authorization Steps
+1. **Get Current User Information**: `GITHUB_USERNAME=$(gh api user | jq -r '.login')`
+2. **Get Repository Information Dynamically**: `REPO_INFO=$(gh repo view --json owner,name)`
+3. **Add User to Bypass List**: Update branch protection settings to include current user in bypass allowances
+4. **Handle Existing PRs**: Check for existing PRs that need to be merged
+5. **Execute Merge**: Use admin privileges to merge PRs bypassing protection rules
+
+### Critical Warnings
+- **CRITICAL**: Users without proper authorization cannot bypass branch protection rules in the Dadosfera organization
+- **Requirement**: Only users with explicit administrative privileges and organizational approval can modify branch protection settings
+- **Verification**: Ensure user has the necessary organizational permissions before attempting bypass operations
+- **Consequence**: Unauthorized bypass attempts will fail and may trigger security alerts
+
+### Usage in Cline Rules
+This rule activates when:
+1. User explicitly authorizes bypass operations
+2. `USER_AUTHORIZATION_BYPASS_BRANCH_PROTECTION=true` is set in `.env`
+3. User has administrative privileges on the repository
+4. PR merge operations are required
+
+The AI can then autonomously:
+- Add users to bypass lists
+- Merge PRs using administrative privileges
+- Clean up branches after merge
+- Update branch protection settings as needed

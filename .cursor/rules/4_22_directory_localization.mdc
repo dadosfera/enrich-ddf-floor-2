@@ -1,0 +1,107 @@
+---
+description: USE WHEN working on tasks related to directory localization
+globs:
+alwaysApply: false
+---
+
+# Directory Localization and Identification
+
+## Principles of Directory Management
+
+### Home and Project Directory Identification
+
+1. **Always Verify Current Context**
+   - Never assume the current working directory is the project or home directory
+   - Use multiple verification methods:
+     ```bash
+     # Check home directory
+     echo $HOME
+
+     # Check current project directory
+     pwd
+
+     # Verify project root (look for specific markers)
+     git rev-parse --show-toplevel
+     ```
+
+2. **Environment Variable Best Practices**
+   - Explicitly set and validate `PRJ_DIR` and `HOME` environment variables
+   - Provide fallback mechanisms for directory identification
+   - Example validation script:
+     ```bash
+     # Validate home directory
+     if [ -z "$HOME" ] || [ ! -d "$HOME" ]; then
+         HOME=$(eval echo ~$USER)
+     fi
+
+     # Validate project directory
+     if [ -z "$PRJ_DIR" ] || [ ! -d "$PRJ_DIR" ]; then
+         # Attempt to find project root
+         PRJ_DIR=$(git rev-parse --show-toplevel 2>/dev/null)
+
+         # Fallback to current directory if no git root found
+         if [ -z "$PRJ_DIR" ]; then
+             PRJ_DIR=$(pwd)
+         fi
+     fi
+     ```
+
+3. **Logging and Traceability**
+   - Always log the detected home and project directories
+   - Provide clear error messages if directories cannot be determined
+
+4. **Absolute Path Preference**
+   - Prefer absolute paths over relative paths
+   - Convert relative paths to absolute paths before processing
+
+### Common Pitfalls to Avoid
+
+- Do not rely on a single method of directory detection
+- Always have multiple fallback mechanisms
+- Validate directory existence before performing operations
+- Log and handle directory detection failures gracefully
+
+### Implementation Guidelines
+
+- Create a utility function/script for robust directory detection
+- Include comprehensive error handling
+- Provide clear, informative error messages
+- Log all directory detection attempts
+
+### Example Utility Function
+
+```bash
+detect_project_directory() {
+    local potential_dirs=(
+        "$PRJ_DIR"
+        "$(git rev-parse --show-toplevel 2>/dev/null)"
+        "$(pwd)"
+        "$HOME/local_repos/$(basename $(pwd))"
+    )
+
+    for dir in "${potential_dirs[@]}"; do
+        if [ -n "$dir" ] && [ -d "$dir" ]; then
+            echo "$dir"
+            return 0
+        fi
+    done
+
+    echo "ERROR: Could not detect project directory" >&2
+    return 1
+}
+```
+
+### AI Agent Interaction Rules
+
+- When a directory operation is requested, always:
+  1. Verify the current working directory
+  2. Validate the target directory
+  3. Log the directory detection process
+  4. Provide clear feedback about the detected directory
+
+### Rationale
+
+Robust directory management prevents:
+- Accidental file operations in wrong directories
+- Loss of context during complex workflows
+- Inconsistent behavior across different environments

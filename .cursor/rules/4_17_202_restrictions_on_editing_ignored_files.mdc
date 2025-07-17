@@ -1,0 +1,18 @@
+---
+description: USE WHEN working on tasks related to ### 20.2 Restrictions on Editing Ignored Files
+globs:
+alwaysApply: false
+---
+
+# ### 20.2 Restrictions on Editing Ignored Files
+AI agents are strictly prohibited from editing or modifying any files listed in `.cursorignore` or `.dadosferaignore`. These files are protected to prevent unintended changes by automated processes.
+
+*   **Read-Only Access**: AI agents are permitted to read the contents of files listed in `.cursorignore` or `.dadosferaignore` using non-destructive commands such as `cat` or similar tools for viewing file contents.
+*   **Prohibition on Editing**: Any operation that would alter the content, metadata, or permissions of these ignored files (e.g., using editors like `vim`, `nano`, or commands like `echo` to overwrite content) is not allowed without explicit user authorization.
+*   **Authorization Procedure**: If an AI agent believes a change to an ignored file is necessary, it must:
+    1. Clearly state the need to edit the specific file and explain the purpose of the change.
+    2. Request explicit permission from the user (e.g., "May I edit the file listed in `.cursorignore` to update a configuration?").
+    3. Wait for affirmative user consent before proceeding with any modifications.
+*   **Documentation**: If authorization is granted, the AI must log the authorization step, the specific changes made, and the reason for the edit in the commit history or associated task documentation.
+
+This rule ensures that sensitive or protected files remain unchanged by AI agents unless explicitly authorized by a human user.
