@@ -68,9 +68,11 @@ class TestCompanyMutationTests:
     def test_company_creation_with_empty_data(self, client: TestClient):
         """Test company creation with empty data."""
         response = client.post("/api/v1/companies", json={})
-        assert response.status_code == 200  # Current implementation accepts empty data
+        assert (
+            response.status_code == 400
+        )  # API correctly rejects empty data due to DB constraints
         data = response.json()
-        assert data["status"] == "created"
+        assert "detail" in data
 
     def test_company_creation_with_special_characters(self, client: TestClient):
         """Test company creation with special characters in data."""
@@ -210,9 +212,11 @@ class TestProductMutationTests:
     def test_product_creation_with_empty_data(self, client: TestClient):
         """Test product creation with empty data."""
         response = client.post("/api/v1/products", json={})
-        assert response.status_code == 200  # Current implementation accepts empty data
+        assert (
+            response.status_code == 400
+        )  # API correctly rejects empty data due to DB constraints
         data = response.json()
-        assert data["status"] == "created"
+        assert "detail" in data
 
     def test_product_creation_with_numeric_data(self, client: TestClient):
         """Test product creation with various numeric values."""

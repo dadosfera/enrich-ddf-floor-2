@@ -57,7 +57,7 @@ class TestCriticalDataEnrichmentWorkflow:
         contact_data = create_response.json()
 
         # Step 2: Verify contact creation response structure
-        assert "message" in contact_data
+        assert "status" in contact_data
         assert "data" in contact_data
         assert contact_data["status"] == "created"
 

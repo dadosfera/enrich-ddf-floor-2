@@ -18,6 +18,9 @@ addopts = "--strict-markers --tb=short --cov=main --cov-report=term-missing --co
 filterwarnings = [
     "ignore::DeprecationWarning"
 ]
+markers = [
+    "asyncio: marks tests as async (deselect with '-m \"not asyncio\"')"
+]
 
 # === OPTIMIZED LINTER CONFIGURATIONS ===
 
