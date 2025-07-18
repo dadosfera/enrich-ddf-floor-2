@@ -12,8 +12,8 @@ from typing import Any, Dict, List
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.orm import Session
 from sqlalchemy import text
+from sqlalchemy.orm import Session
 
 from config import settings
 from database.connection import Base, engine, get_db
@@ -211,6 +211,6 @@ if __name__ == "__main__":
             reload=settings.debug,
             log_level=settings.log_level.lower(),
         )
-    except Exception as e:
+    except Exception:
         logger.exception("Failed to start server")
         raise

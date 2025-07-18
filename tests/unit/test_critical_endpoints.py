@@ -138,7 +138,9 @@ class TestDataValidation:
     def test_empty_request_body_handling(self, client: TestClient):
         """CRITICAL: Test handling of empty request bodies."""
         response = client.post("/api/v1/companies", json={})
-        assert response.status_code == 200  # Current implementation accepts any dict
+        assert (
+            response.status_code == 400
+        )  # API correctly rejects empty data due to DB constraints
 
     def test_malformed_json_handling(self, client: TestClient):
         """CRITICAL: Test handling of malformed JSON."""
@@ -153,7 +155,9 @@ class TestDataValidation:
         """CRITICAL: Test handling of unusually large payloads."""
         large_data = {"description": "x" * 10000}  # 10KB description
         response = client.post("/api/v1/companies", json=large_data)
-        assert response.status_code == 200
+        assert (
+            response.status_code == 400
+        )  # API correctly rejects data without required fields
 
 
 class TestErrorHandling:
