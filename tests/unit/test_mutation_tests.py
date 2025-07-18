@@ -9,6 +9,7 @@ These tests verify that the system correctly handles various mutation scenarios:
 """
 
 import uuid
+
 from fastapi.testclient import TestClient
 
 
@@ -19,7 +20,7 @@ class TestCompanyMutationTests:
         """Test company creation with minimal required data."""
         unique_id = str(uuid.uuid4())[:8]
         company_data = {"name": f"Minimal Co {unique_id}"}
-        
+
         response = client.post("/api/v1/companies", json=company_data)
         assert response.status_code == 200
         data = response.json()
@@ -41,7 +42,7 @@ class TestCompanyMutationTests:
             "phone": "+1-555-123-4567",
             "email": f"contact@full-{unique_id}.com",
         }
-        
+
         response = client.post("/api/v1/companies", json=company_data)
         assert response.status_code == 200
         data = response.json()
@@ -53,12 +54,12 @@ class TestCompanyMutationTests:
         """Test company creation with duplicate domain (should fail)."""
         unique_id = str(uuid.uuid4())[:8]
         domain = f"duplicate-{unique_id}.com"
-        
+
         # First creation should succeed
         company_data_1 = {"name": f"First Co {unique_id}", "domain": domain}
         response_1 = client.post("/api/v1/companies", json=company_data_1)
         assert response_1.status_code == 200
-        
+
         # Second creation with same domain should fail
         company_data_2 = {"name": f"Second Co {unique_id}", "domain": domain}
         response_2 = client.post("/api/v1/companies", json=company_data_2)
@@ -79,7 +80,7 @@ class TestCompanyMutationTests:
             "domain": f"special-{unique_id}.com",
             "description": "Company with special chars: !@#$%^&*()_+-=[]{}|;':\",./<>?",
         }
-        
+
         response = client.post("/api/v1/companies", json=company_data)
         assert response.status_code == 200
         data = response.json()
@@ -97,7 +98,7 @@ class TestContactMutationTests:
             "last_name": "Doe",
             "email": f"john.doe-{unique_id}@example.com",
         }
-        
+
         response = client.post("/api/v1/contacts", json=contact_data)
         assert response.status_code == 200
         data = response.json()
@@ -119,7 +120,7 @@ class TestContactMutationTests:
             "twitter_url": f"https://twitter.com/janesmith{unique_id}",
             "company_id": 1,  # Assuming company exists
         }
-        
+
         response = client.post("/api/v1/contacts", json=contact_data)
         assert response.status_code == 200
         data = response.json()
@@ -130,7 +131,7 @@ class TestContactMutationTests:
         """Test contact creation with duplicate email (should fail)."""
         unique_id = str(uuid.uuid4())[:8]
         email = f"duplicate-{unique_id}@example.com"
-        
+
         # First creation should succeed
         contact_data_1 = {
             "first_name": "First",
@@ -139,7 +140,7 @@ class TestContactMutationTests:
         }
         response_1 = client.post("/api/v1/contacts", json=contact_data_1)
         assert response_1.status_code == 200
-        
+
         # Second creation with same email should fail
         contact_data_2 = {
             "first_name": "Second",
@@ -163,7 +164,7 @@ class TestContactMutationTests:
             "email": f"jose.garcia-{unique_id}@example.com",
             "job_title": "Développeur Senior",
         }
-        
+
         response = client.post("/api/v1/contacts", json=contact_data)
         assert response.status_code == 200
         data = response.json()
@@ -177,7 +178,7 @@ class TestProductMutationTests:
         """Test product creation with minimal required data."""
         unique_id = str(uuid.uuid4())[:8]
         product_data = {"name": f"Minimal Product {unique_id}"}
-        
+
         response = client.post("/api/v1/products", json=product_data)
         assert response.status_code == 200
         data = response.json()
@@ -198,7 +199,7 @@ class TestProductMutationTests:
             "price": 999.99,
             "currency": "USD",
         }
-        
+
         response = client.post("/api/v1/products", json=product_data)
         assert response.status_code == 200
         data = response.json()
@@ -221,7 +222,7 @@ class TestProductMutationTests:
             "price": 0.01,
             "currency": "EUR",
         }
-        
+
         response = client.post("/api/v1/products", json=product_data)
         assert response.status_code == 200
         data = response.json()
@@ -235,7 +236,7 @@ class TestConcurrentMutationTests:
         """Test creating multiple companies concurrently."""
         unique_id = str(uuid.uuid4())[:8]
         responses = []
-        
+
         for i in range(5):
             company_data = {
                 "name": f"Concurrent Co {unique_id}-{i}",
@@ -243,7 +244,7 @@ class TestConcurrentMutationTests:
             }
             response = client.post("/api/v1/companies", json=company_data)
             responses.append(response)
-        
+
         # All should succeed
         for response in responses:
             assert response.status_code == 200
@@ -253,7 +254,7 @@ class TestConcurrentMutationTests:
         """Test creating multiple contacts concurrently."""
         unique_id = str(uuid.uuid4())[:8]
         responses = []
-        
+
         for i in range(5):
             contact_data = {
                 "first_name": f"Contact{i}",
@@ -262,7 +263,7 @@ class TestConcurrentMutationTests:
             }
             response = client.post("/api/v1/contacts", json=contact_data)
             responses.append(response)
-        
+
         # All should succeed
         for response in responses:
             assert response.status_code == 200
@@ -272,7 +273,7 @@ class TestConcurrentMutationTests:
         """Test creating multiple products concurrently."""
         unique_id = str(uuid.uuid4())[:8]
         responses = []
-        
+
         for i in range(5):
             product_data = {
                 "name": f"Concurrent Product {unique_id}-{i}",
@@ -280,7 +281,7 @@ class TestConcurrentMutationTests:
             }
             response = client.post("/api/v1/products", json=product_data)
             responses.append(response)
-        
+
         # All should succeed
         for response in responses:
             assert response.status_code == 200
@@ -304,34 +305,33 @@ class TestErrorHandlingMutationTests:
         """Test handling of large payloads in mutation requests."""
         unique_id = str(uuid.uuid4())[:8]
         large_description = "x" * 10000  # Very large description
-        
+
         company_data = {
             "name": f"Large Co {unique_id}",
             "description": large_description,
         }
-        
+
         response = client.post("/api/v1/companies", json=company_data)
         assert response.status_code in [200, 400, 413]  # Accept various outcomes
 
     def test_invalid_field_types(self, client: TestClient):
         """Test handling of invalid field types in mutation requests."""
-        unique_id = str(uuid.uuid4())[:8]
-        
+
         # Test with invalid field types
         invalid_data = {
             "name": 123,  # Should be string
             "email": True,  # Should be string
             "price": "not_a_number",  # Should be number
         }
-        
+
         # Test with companies
         response = client.post("/api/v1/companies", json=invalid_data)
         assert response.status_code in [200, 400, 422]  # Accept various outcomes
-        
+
         # Test with contacts
         response = client.post("/api/v1/contacts", json=invalid_data)
         assert response.status_code in [200, 400, 422]  # Accept various outcomes
-        
+
         # Test with products
         response = client.post("/api/v1/products", json=invalid_data)
-        assert response.status_code in [200, 400, 422]  # Accept various outcomes 
+        assert response.status_code in [200, 400, 422]  # Accept various outcomes
