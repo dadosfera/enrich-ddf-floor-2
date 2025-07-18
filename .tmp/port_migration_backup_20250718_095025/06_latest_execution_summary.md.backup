@@ -13,7 +13,7 @@
 1. **✅ Fix App Startup Issues**
    - Resolved `main-simple.py` file not found errors
    - Fixed multiprocessing errors in uvicorn
-   - Application now starts successfully on port ${APP_PORT:-8247}
+   - Application now starts successfully on port 8000
 
 2. **✅ Fix Linter Problems**
    - Resolved 5 linting errors (4 path handling, 1 unused argument)
@@ -74,7 +74,7 @@
 ## 📊 CURRENT STATUS
 
 ### ✅ Operational Status
-- **Application**: ✅ Running on http://localhost:${APP_PORT:-8247}
+- **Application**: ✅ Running on http://localhost:8000
 - **Database**: ✅ Connected and healthy
 - **Health Check**: ✅ Responding correctly
 - **Linting**: ✅ All issues resolved
@@ -149,7 +149,7 @@ source venv/bin/activate && python main.py
 source venv/bin/activate && ruff check . --fix
 
 # Test health endpoint
-curl -s http://localhost:${APP_PORT:-8247}/health
+curl -s http://localhost:8000/health
 
 # Run tests
 source venv/bin/activate && pytest -v --cov=.

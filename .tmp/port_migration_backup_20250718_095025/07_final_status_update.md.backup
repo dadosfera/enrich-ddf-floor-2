@@ -2,7 +2,7 @@
 
 ## 📅 Status Date: 2024-07-17
 **Overall Status**: ✅ **OPERATIONAL** - Core functionality working, tests need updates  
-**App Status**: ✅ **RUNNING** - Successfully on http://localhost:${APP_PORT:-8247}  
+**App Status**: ✅ **RUNNING** - Successfully on http://localhost:8000  
 **Linting Status**: ✅ **CLEAN** - All issues resolved  
 **Database Status**: ✅ **HEALTHY** - Connected and functional  
 
@@ -13,7 +13,7 @@
 ### 🚀 Application Startup
 - **✅ Fixed**: `main-simple.py` file not found errors
 - **✅ Fixed**: Multiprocessing errors in uvicorn
-- **✅ Verified**: Application starts successfully on port ${APP_PORT:-8247}
+- **✅ Verified**: Application starts successfully on port 8000
 - **✅ Confirmed**: Health endpoint responding correctly
 - **✅ Confirmed**: Database connectivity working
 
@@ -51,7 +51,7 @@
 ## 📊 CURRENT OPERATIONAL STATUS
 
 ### ✅ Working Features
-- **Application**: Running on http://localhost:${APP_PORT:-8247}
+- **Application**: Running on http://localhost:8000
 - **Health Check**: ✅ Responding correctly
 - **Database**: ✅ Connected and healthy
 - **API Endpoints**: ✅ All functional
@@ -60,19 +60,19 @@
 ### 🔍 Verified Endpoints
 ```bash
 # Health Check ✅
-curl http://localhost:${APP_PORT:-8247}/health
+curl http://localhost:8000/health
 Response: {"status":"healthy","database":"connected",...}
 
 # Root Endpoint ✅
-curl http://localhost:${APP_PORT:-8247}/
+curl http://localhost:8000/
 Response: {"message":"Welcome to Enrich DDF Floor 2",...}
 
 # Company Creation ✅
-curl -X POST http://localhost:${APP_PORT:-8247}/api/v1/companies -H "Content-Type: application/json" -d '{"name":"Test","domain":"test.com"}'
+curl -X POST http://localhost:8000/api/v1/companies -H "Content-Type: application/json" -d '{"name":"Test","domain":"test.com"}'
 Response: {"message":"Company created successfully",...}
 
 # Company Listing ✅
-curl http://localhost:${APP_PORT:-8247}/api/v1/companies
+curl http://localhost:8000/api/v1/companies
 Response: [{"name":"Test Company",...}, ...]
 ```
 
@@ -163,19 +163,19 @@ Response: [{"name":"Test Company",...}, ...]
 ### ✅ Verified Commands
 ```bash
 # Start application
-bash -c "source venv/bin/activate && python -m uvicorn main:app --host 0.0.0.0 --port ${APP_PORT:-8247} --reload" &
+bash -c "source venv/bin/activate && python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload" &
 
 # Run linters
 source venv/bin/activate && ruff check . --fix
 
 # Test health endpoint
-curl -s http://localhost:${APP_PORT:-8247}/health
+curl -s http://localhost:8000/health
 
 # Create company
-curl -X POST http://localhost:${APP_PORT:-8247}/api/v1/companies -H "Content-Type: application/json" -d '{"name":"Test","domain":"test.com"}'
+curl -X POST http://localhost:8000/api/v1/companies -H "Content-Type: application/json" -d '{"name":"Test","domain":"test.com"}'
 
 # List companies
-curl -s http://localhost:${APP_PORT:-8247}/api/v1/companies | jq '.[0:2]'
+curl -s http://localhost:8000/api/v1/companies | jq '.[0:2]'
 ```
 
 ### 🔧 Development Commands

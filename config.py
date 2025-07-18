@@ -13,6 +13,10 @@ class Settings(BaseSettings):
     app_version: str = "0.1.0"
     debug: bool = False
 
+    # Server settings
+    host: str = "0.0.0.0"
+    port: int = 8247  # Non-round port to avoid conflicts
+
     # Database settings
     database_url: str = "sqlite:///./app.db"
     test_database_url: str = "sqlite:///./test.db"
@@ -36,6 +40,10 @@ class Settings(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = False
+
+    def get_base_url(self) -> str:
+        """Generate base URL from host and port configuration."""
+        return f"http://{self.host}:{self.port}"
 
 
 # Global settings instance

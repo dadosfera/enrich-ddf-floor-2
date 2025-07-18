@@ -4,7 +4,7 @@
 
 **Date**: 2024-07-16  
 **Status**: ✅ **SUCCESSFULLY COMPLETED**  
-**Application**: Running and operational on http://localhost:${APP_PORT:-8247}  
+**Application**: Running and operational on http://localhost:8000  
 
 ---
 
@@ -12,7 +12,7 @@
 
 ### 1. ✅ **Application Successfully Running**
 - **Status**: ✅ OPERATIONAL
-- **URL**: http://localhost:${APP_PORT:-8247}
+- **URL**: http://localhost:8000
 - **Health Check**: ✅ PASSING
 - **Database**: ✅ CONNECTED
 - **API Documentation**: ✅ AVAILABLE at /docs
@@ -133,7 +133,7 @@ source venv/bin/activate && pytest -v --cov=. --cov-report=html
 
 ### 🔍 **Health Check**
 ```bash
-curl http://localhost:${APP_PORT:-8247}/health
+curl http://localhost:8000/health
 ```
 
 ### 🛠️ **Run Linters**
@@ -143,7 +143,7 @@ source venv/bin/activate && ruff check . && black --check . && isort --check-onl
 
 ### 📊 **API Documentation**
 ```bash
-open http://localhost:${APP_PORT:-8247}/docs
+open http://localhost:8000/docs
 ```
 
 ---
