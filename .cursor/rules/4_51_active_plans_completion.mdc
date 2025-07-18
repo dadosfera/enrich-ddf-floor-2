@@ -1,0 +1,71 @@
+# Active Plans Completion Protocol
+
+## 🎯 Definition of "Finished"
+An active plan is **finished** when:
+- ✅ All **core deliverables** are implemented
+- ✅ **Critical functionality** is working
+- ✅ **Documentation** is updated
+- ✅ Plan is moved to `docs/plans/completed/`
+- ✅ **Git state** is clean
+
+## 📋 Completion Checklist
+Before marking a plan as complete:
+
+### Phase 1: Core Implementation
+- [ ] **Primary functionality** implemented and tested
+- [ ] **Critical endpoints** responding correctly
+- [ ] **Database operations** working
+- [ ] **Error handling** in place
+
+### Phase 2: Quality Assurance  
+- [ ] **70%+ test coverage** for critical paths
+- [ ] **No blocking linter errors** (accept minor issues)
+- [ ] **Documentation updated** with current status
+- [ ] **Migration scripts** created if needed
+
+### Phase 3: Finalization
+- [ ] **Plan moved** to completed directory
+- [ ] **Progress documented** in commit message
+- [ ] **Remaining work** noted for future
+- [ ] **Success criteria** met
+
+## 🚫 What NOT to Chase
+- **100% test coverage** (aim for 70%+)
+- **Perfect linter compliance** (accept minor issues)
+- **All edge cases** (focus on core functionality)
+- **Production-ready security** (document for future)
+
+## 📊 Success Metrics
+A plan is successfully completed when:
+- **Core functionality works** (app starts, endpoints respond)
+- **Critical tests pass** (health, basic CRUD)
+- **Documentation reflects** current state
+- **No blocking issues** remain
+
+## 🔄 When Plans Are "Active"
+A plan remains active if:
+- **Core functionality** is not implemented
+- **Critical tests** are failing
+- **Documentation** is outdated
+- **Blocking issues** prevent progress
+
+## 📝 Documentation Standards
+When completing a plan:
+1. **Add completion summary** to plan file
+2. **Document remaining work** for future
+3. **Update related documentation**
+4. **Create migration notes** if needed
+
+## 🎯 Quick Assessment
+To determine if a plan is complete:
+1. **Can the app start?** ✅
+2. **Do critical endpoints work?** ✅  
+3. **Do basic tests pass?** ✅
+4. **Is documentation current?** ✅
+5. **Are changes committed?** ✅
+
+If 4/5 are ✅, the plan is **COMPLETE**.
+description:
+globs:
+alwaysApply: false
+---
