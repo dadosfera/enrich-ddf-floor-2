@@ -11,7 +11,7 @@
 ## ✅ COMPLETED FEATURES
 
 ### 🏗️ Core Infrastructure
-- [x] **FastAPI Application** - Running on http://0.0.0.0:${APP_PORT:-8247}
+- [x] **FastAPI Application** - Running on http://0.0.0.0:8000
 - [x] **Database Integration** - SQLAlchemy + SQLite with Alembic migrations
 - [x] **CORS Middleware** - Configured for cross-origin requests
 - [x] **Health Check Endpoint** - `/health` with database connectivity check
@@ -186,7 +186,7 @@
 - **Virtual Environment**: Active and working
 - **Dependencies**: All installed and up to date
 - **Database**: SQLite with 72KB of data
-- **Application**: Running on port ${APP_PORT:-8247}
+- **Application**: Running on port 8000
 
 ### 🔧 Available Commands
 ```bash
@@ -200,7 +200,7 @@ source venv/bin/activate && ruff check . && black --check . && isort --check-onl
 source venv/bin/activate && pytest -v --cov=. --cov-report=html
 
 # Health check
-curl http://localhost:${APP_PORT:-8247}/health
+curl http://localhost:8000/health
 ```
 
 ---

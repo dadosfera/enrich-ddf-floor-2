@@ -12,7 +12,7 @@
 ### ✅ 1. Run the App - SUCCESS
 - **✅ Fixed**: `main-simple.py` file not found errors (using correct `main.py`)
 - **✅ Resolved**: Multiprocessing errors in uvicorn
-- **✅ Confirmed**: Application running successfully on http://localhost:8000
+- **✅ Confirmed**: Application running successfully on http://localhost:${APP_PORT:-8247}
 - **✅ Verified**: Health endpoint responding correctly
 - **✅ Confirmed**: Database connectivity working
 
@@ -82,7 +82,7 @@
 ## 📈 OPERATIONAL METRICS
 
 ### 🎯 Success Indicators
-- **App Status**: ✅ Running on http://localhost:8000
+- **App Status**: ✅ Running on http://localhost:${APP_PORT:-8247}
 - **Health Check**: ✅ Database connected
 - **API Response**: ✅ All endpoints functional
 - **Linting**: ✅ Zero issues
@@ -127,7 +127,7 @@
 ## 🎉 RETRY EXECUTION SUCCESS SUMMARY
 
 ### ✅ **MISSION ACCOMPLISHED**
-- **App Running**: ✅ Successfully on http://localhost:8000
+- **App Running**: ✅ Successfully on http://localhost:${APP_PORT:-8247}
 - **All Errors Fixed**: ✅ No runtime or linting errors
 - **Linter Optimized**: ✅ Zero issues, fast execution
 - **Plans Created**: ✅ Comprehensive /active documentation
@@ -156,14 +156,14 @@
 timeout 30s bash -c "source venv/bin/activate && python main.py" &
 
 # Verify app is running
-timeout 10s curl -s http://localhost:8000/health
+timeout 10s curl -s http://localhost:${APP_PORT:-8247}/health
 
 # Check linting status
 timeout 30s python -m ruff check .
 
 # Test API endpoints
-timeout 10s curl -s http://localhost:8000/ | jq .
-timeout 10s curl -s -X POST http://localhost:8000/api/v1/companies \
+timeout 10s curl -s http://localhost:${APP_PORT:-8247}/ | jq .
+timeout 10s curl -s -X POST http://localhost:${APP_PORT:-8247}/api/v1/companies \
   -H "Content-Type: application/json" \
   -d '{"name":"Retry Test Company","domain":"retrytest.com","industry":"Technology"}' | jq .
 ```

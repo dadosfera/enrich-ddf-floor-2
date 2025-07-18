@@ -8,7 +8,7 @@
 source venv/bin/activate && python3 main.py
 
 # Alternative: Run with specific host/port
-source venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port ${APP_PORT:-8247} --reload
+source venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 ### Run All Linters
@@ -49,13 +49,13 @@ source venv/bin/activate && pytest -v -s --tb=short
 ### Check Application Status
 ```bash
 # Health check endpoint
-curl -X GET "http://localhost:${APP_PORT:-8247}/health"
+curl -X GET "http://localhost:8000/health"
 
 # Root endpoint
-curl -X GET "http://localhost:${APP_PORT:-8247}/"
+curl -X GET "http://localhost:8000/"
 
 # API documentation
-curl -X GET "http://localhost:${APP_PORT:-8247}/docs"
+curl -X GET "http://localhost:8000/docs"
 ```
 
 ### Database Health
@@ -129,10 +129,10 @@ source venv/bin/activate && coverage-badge -o coverage-badge.svg
 ### Performance Testing
 ```bash
 # Load test with Apache Bench
-ab -n 1000 -c 10 http://localhost:${APP_PORT:-8247}/health
+ab -n 1000 -c 10 http://localhost:8000/health
 
 # Load test with wrk
-wrk -t12 -c400 -d30s http://localhost:${APP_PORT:-8247}/health
+wrk -t12 -c400 -d30s http://localhost:8000/health
 ```
 
 ## 🔍 Debugging Commands
@@ -175,7 +175,7 @@ lsof -i :8000
 kill -9 $(lsof -t -i:8000)
 
 # Check network connectivity
-curl -v http://localhost:${APP_PORT:-8247}/health
+curl -v http://localhost:8000/health
 ```
 
 ## 🛠️ Development Commands
@@ -224,7 +224,7 @@ print('OpenAPI schema generated: openapi.json')
 "
 
 # View API docs
-open http://localhost:${APP_PORT:-8247}/docs
+open http://localhost:8000/docs
 ```
 
 ## 🚀 Production Commands
@@ -261,7 +261,7 @@ docker-compose up -d --scale app=3
 ### Application Metrics
 ```bash
 # Check application metrics
-curl http://localhost:${APP_PORT:-8247}/metrics
+curl http://localhost:8000/metrics
 
 # Monitor memory usage
 ps aux | grep python | awk '{print $6}' | awk '{sum+=$1} END {print "Memory usage:", sum/1024, "MB"}'
