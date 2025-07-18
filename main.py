@@ -6,16 +6,18 @@ Provides database integration and dynamic port configuration.
 import logging
 import socket
 from contextlib import asynccontextmanager
+from datetime import datetime
 from typing import Any, Dict, List
 
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 
 from config import settings
 from database.connection import Base, engine, get_db
-from database.models import Company, Product
+from database.models import Company, Contact, Product
 
 
 def is_port_available(port: int, host: str = "localhost") -> bool:
@@ -44,18 +46,18 @@ def find_available_port(
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_app: FastAPI):
     """Application lifespan manager."""
     # Startup
     print(f"🚀 Starting {settings.app_name} v{settings.app_version}")
     print(f"📊 Database: {settings.database_url}")
     print(f"🔒 Debug mode: {settings.debug}")
-    
+
     # Create tables
     Base.metadata.create_all(bind=engine)
-    
+
     yield
-    
+
     # Shutdown
     print("🛑 Shutting down application...")
 
@@ -90,6 +92,7 @@ async def root():
     return {
         "message": f"Welcome to {settings.app_name}",
         "version": settings.app_version,
+        "status": "running",
         "debug": settings.debug,
         "docs_url": f"{settings.get_base_url()}/docs",
         "health_url": f"{settings.get_base_url()}/health",
@@ -101,18 +104,19 @@ async def health_check(db: Session = Depends(get_db)):
     """Health check endpoint."""
     try:
         # Test database connection
-        db.execute("SELECT 1")
+        db.execute(text("SELECT 1"))
         db_status = "connected"
     except Exception as e:
-        logger.error(f"Database health check failed: {e}")
+        logger.exception("Database health check failed")
         db_status = "disconnected"
-        raise HTTPException(status_code=503, detail="Database unavailable")
-    
+        raise HTTPException(status_code=503, detail="Database unavailable") from e
+
     return {
         "status": "healthy",
         "version": settings.app_version,
         "database": db_status,
         "base_url": settings.get_base_url(),
+        "timestamp": datetime.utcnow().isoformat(),
     }
 
 
@@ -126,53 +130,80 @@ async def list_companies(
 
 
 @app.post("/api/v1/companies", response_model=Dict[str, Any])
-async def create_company(
-    company_data: Dict[str, Any], db: Session = Depends(get_db)
-):
+async def create_company(company_data: Dict[str, Any], db: Session = Depends(get_db)):
     """Create a new company."""
     try:
         company = Company(**company_data)
         db.add(company)
         db.commit()
         db.refresh(company)
-        return company.to_dict()
+        return {"status": "created", "id": company.id, "data": company.to_dict()}
     except Exception as e:
         db.rollback()
-        logger.error(f"Failed to create company: {e}")
-        raise HTTPException(status_code=400, detail=str(e))
+        logger.exception("Failed to create company")
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@app.get("/api/v1/contacts", response_model=List[Dict[str, Any]])
+async def list_contacts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    """List contacts from database."""
+    contacts = db.query(Contact).offset(skip).limit(limit).all()
+    return [contact.to_dict() for contact in contacts]
+
+
+@app.post("/api/v1/contacts", response_model=Dict[str, Any])
+async def create_contact(contact_data: Dict[str, Any], db: Session = Depends(get_db)):
+    """Create a new contact."""
+    try:
+        contact = Contact(**contact_data)
+        db.add(contact)
+        db.commit()
+        db.refresh(contact)
+        return {"status": "created", "id": contact.id, "data": contact.to_dict()}
+    except Exception as e:
+        db.rollback()
+        logger.exception("Failed to create contact")
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 @app.get("/api/v1/products", response_model=List[Dict[str, Any]])
-async def list_products(
-    skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
-):
+async def list_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """List products from database."""
     products = db.query(Product).offset(skip).limit(limit).all()
     return [product.to_dict() for product in products]
+
+
+@app.post("/api/v1/products", response_model=Dict[str, Any])
+async def create_product(product_data: Dict[str, Any], db: Session = Depends(get_db)):
+    """Create a new product."""
+    try:
+        product = Product(**product_data)
+        db.add(product)
+        db.commit()
+        db.refresh(product)
+        return {"status": "created", "id": product.id, "data": product.to_dict()}
+    except Exception as e:
+        db.rollback()
+        logger.exception("Failed to create product")
+        raise HTTPException(status_code=400, detail=str(e)) from e
 
 
 if __name__ == "__main__":
     # Find available port if configured port is occupied
     try:
         if not is_port_available(settings.port, settings.host):
-            logger.warning(
-                f"Port {settings.port} is occupied, finding alternative..."
-            )
+            logger.warning(f"Port {settings.port} is occupied, finding alternative...")
             available_port = find_available_port(settings.port, settings.host)
             logger.info(f"Using alternative port: {available_port}")
         else:
             available_port = settings.port
-            
+
         # Log startup information
         logger.info(f"🌐 Server starting on {settings.host}:{available_port}")
         logger.info(f"📋 Base URL: http://{settings.host}:{available_port}")
-        logger.info(
-            f"📚 API Docs: http://{settings.host}:{available_port}/docs"
-        )
-        logger.info(
-            f"❤️ Health Check: http://{settings.host}:{available_port}/health"
-        )
-        
+        logger.info(f"📚 API Docs: http://{settings.host}:{available_port}/docs")
+        logger.info(f"❤️ Health Check: http://{settings.host}:{available_port}/health")
+
         uvicorn.run(
             "main:app",
             host=settings.host,
@@ -181,5 +212,5 @@ if __name__ == "__main__":
             log_level=settings.log_level.lower(),
         )
     except Exception as e:
-        logger.error(f"Failed to start server: {e}")
+        logger.exception("Failed to start server")
         raise
