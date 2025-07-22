@@ -54,7 +54,7 @@ case "$ACTION" in
             echo "💡 Check if the file exists and path is correct"
         fi
         ;;
-    "search") 
+    "search")
         if [ -z "$SEARCH_TERM" ]; then
             echo "❌ Search term required for 'search' action"
             echo "💡 Usage: $0 <file_path> search <search_term>"
@@ -72,4 +72,4 @@ case "$ACTION" in
         echo "💡 Valid actions: read, edit, search"
         exit 1
         ;;
-esac 
+esac

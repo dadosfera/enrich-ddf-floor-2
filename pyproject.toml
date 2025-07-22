@@ -29,7 +29,7 @@ target-version = "py38"
 line-length = 88
 exclude = [
     ".bzr",
-    ".direnv", 
+    ".direnv",
     ".eggs",
     ".git",
     ".git-rewrite",
@@ -174,7 +174,7 @@ ignore-patterns = ["^\\..*", ".*\\.tmp$", ".*\\.log$"]
 [tool.pylint.messages_control]
 disable = [
     "missing-module-docstring",
-    "missing-class-docstring", 
+    "missing-class-docstring",
     "missing-function-docstring",
     "too-few-public-methods",
     "import-error",
@@ -195,7 +195,7 @@ max-statements = 50
 [tool.pyright]
 include = [
     "main.py",
-    "config.py", 
+    "config.py",
     "database/",
     "tests/"
 ]
@@ -228,4 +228,4 @@ typeCheckingMode = "basic"
 useLibraryCodeForTypes = false
 autoSearchPaths = true
 autoImportCompletions = true
-indexing = true 
+indexing = true

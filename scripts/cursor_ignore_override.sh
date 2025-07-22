@@ -30,4 +30,4 @@ mv "$IGNORE_FILE.tmp" "$IGNORE_FILE"
 
 echo "✅ Temporarily allowed: $TARGET_PATTERN"
 echo "💡 Run 'scripts/cursor_ignore_restore.sh' to restore original exclusions"
-echo "⚠️  Remember to restore exclusions after AI work is complete" 
+echo "⚠️  Remember to restore exclusions after AI work is complete"

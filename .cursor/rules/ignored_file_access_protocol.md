@@ -28,7 +28,7 @@
 
 4. **Offer temporary access solutions**
    ```
-   "I can help you temporarily modify .cursorignore if you need me to have 
+   "I can help you temporarily modify .cursorignore if you need me to have
    broader access to this directory."
    ```
 
@@ -37,21 +37,21 @@
 **Scenario 1: Log File Analysis**
 ```
 User: "Check the latest error in the logs"
-AI Response: "I need the specific log file path since logs/ is excluded. 
+AI Response: "I need the specific log file path since logs/ is excluded.
 Could you specify which log file? For example: logs/error.log"
 ```
 
-**Scenario 2: Model Configuration**  
+**Scenario 2: Model Configuration**
 ```
 User: "Update the model config"
-AI Response: "Model files are excluded from indexing. Please provide the 
+AI Response: "Model files are excluded from indexing. Please provide the
 exact path to the config file, such as: model_cache/config.json"
 ```
 
 **Scenario 3: Generated Content Review**
 ```
 User: "Review the generated images"
-AI Response: "Generated content is excluded. I can access specific files 
+AI Response: "Generated content is excluded. I can access specific files
 if you provide paths like: generated_images/image_001.png"
 ```
 
@@ -138,4 +138,4 @@ grep -r "search_term" [ignored_directory]/ | head -10
 **Security Warnings:**
 - Never override security exclusions
 - Use alternative approaches for sensitive files
-- Document any security-related access 
+- Document any security-related access

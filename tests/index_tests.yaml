@@ -14,7 +14,7 @@ test_categories:
     timeout: 120
     parallel: true
     coverage: true
-    
+
   integration:
     description: "Integration tests for component interactions"
     files:
@@ -22,7 +22,7 @@ test_categories:
     timeout: 180
     parallel: false
     coverage: true
-    
+
   e2e:
     description: "End-to-end tests for complete user journeys"
     files:
@@ -30,7 +30,7 @@ test_categories:
     timeout: 300
     parallel: false
     coverage: false
-    
+
   critical:
     description: "Critical path tests for essential functionality"
     files:
@@ -40,7 +40,7 @@ test_categories:
     timeout: 240
     parallel: true
     coverage: true
-    
+
   mutation:
     description: "Mutation tests for data validation"
     files:
@@ -48,7 +48,7 @@ test_categories:
     timeout: 90
     parallel: true
     coverage: false
-    
+
   all:
     description: "All tests in the suite"
     files:
@@ -64,7 +64,7 @@ execution_params:
   coverage_threshold: 80
   fail_fast: false
   verbose: false
-  
+
 # Pre-commit hooks
 pre_commit_hooks:
   - "ruff"
@@ -78,7 +78,7 @@ test_data:
   companies_fixture: "tests/fixtures/companies.json"
   contacts_fixture: "tests/fixtures/contacts.json"
   products_fixture: "tests/fixtures/products.json"
-  
+
 # Coverage configuration
 coverage:
   html_dir: "htmlcov"
@@ -107,4 +107,4 @@ security:
 reporting:
   junit_xml: "test-results.xml"
   html_report: "test-report.html"
-  json_report: "test-results.json" 
+  json_report: "test-results.json"

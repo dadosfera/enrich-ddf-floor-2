@@ -144,7 +144,7 @@ CREATE INDEX idx_products_sku ON products(sku);
 # Add database constraints
 class Company(Base):
     __tablename__ = "companies"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False, unique=True)
     domain = Column(String(255), unique=True)
@@ -263,12 +263,12 @@ app = FastAPI(
             "description": "Company management operations",
         },
         {
-            "name": "contacts", 
+            "name": "contacts",
             "description": "Contact management operations",
         },
         {
             "name": "products",
-            "description": "Product management operations", 
+            "description": "Product management operations",
         },
     ],
 )
@@ -428,4 +428,4 @@ docker run -p 8000:8000 enrich-ddf-floor-2
 
 # Deploy with docker-compose
 docker-compose up -d
-``` 
+```

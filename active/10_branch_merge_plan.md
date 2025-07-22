@@ -1,8 +1,8 @@
 # Branch Merge Plan - Local and Remote Branch Integration
 
-**Created**: $(date +%Y-%m-%d %H:%M:%S)  
-**Current Branch**: feature/app-updates  
-**Workspace**: /Users/luismartins/local_repos/enrich-ddf-floor-2  
+**Created**: $(date +%Y-%m-%d %H:%M:%S)
+**Current Branch**: feature/app-updates
+**Workspace**: /Users/luismartins/local_repos/enrich-ddf-floor-2
 **Reference**: /Users/luismartins/local_repos/docs-fera/prompts-fera/mini_prompt/agent_branch_merge_workflow_mini_prompt.md
 
 ## 🎯 Objective
@@ -11,7 +11,7 @@ Execute a safe, manual conflict resolution workflow to merge local `feature/app-
 ## 🚨 Critical Safety Compliance
 This plan follows **mandatory safety guidelines**:
 - ✅ All commands ≤200 characters
-- ✅ Maximum 2 operations per command  
+- ✅ Maximum 2 operations per command
 - ✅ Separate tool calls for verification
 - ✅ Proper timeout usage with gtimeout
 - ✅ **MANUAL CONFLICT RESOLUTION ONLY** - No `git reset --hard` or `--no-verify`
@@ -228,17 +228,17 @@ merge_result=$?
 if [ $merge_result -ne 0 ]; then
     echo "⚠️ Merge conflicts detected - entering manual resolution mode"
     echo "🛑 AUTOMATION STOPPED - MANUAL INTERVENTION REQUIRED"
-    
+
     # Display conflict summary
     echo "📋 Conflicted files:"
     git status --porcelain | grep "^UU"
-    
+
     echo "📋 Next steps:"
     echo "1. Resolve each conflict manually"
     echo "2. git add <resolved-file>"
     echo "3. git commit (when all conflicts resolved)"
     echo "4. Continue with cleanup process"
-    
+
     exit 1
 fi
 ```
@@ -297,7 +297,7 @@ cleanup_remote_branch() {
     echo "1) Deprecate (rename to deprecated-$branch)"
     echo "2) Delete completely"
     echo "3) Keep as-is"
-    
+
     # This would require interactive input in actual execution
     # For planning purposes, document the decision process
 }
@@ -415,4 +415,4 @@ echo "5. Consider alternative merge strategies"
 
 This plan prioritizes **manual conflict resolution** and **safety compliance** over automation speed. Every conflict must be analyzed individually, and no automated resolution tools should be used. The process emphasizes understanding both sides of conflicts and creating integrated solutions that preserve the intent of all changes.
 
-**Next Steps**: Execute phases sequentially, stopping immediately if conflicts are detected to perform manual resolution before proceeding. 
+**Next Steps**: Execute phases sequentially, stopping immediately if conflicts are detected to perform manual resolution before proceeding.

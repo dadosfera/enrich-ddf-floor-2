@@ -20,12 +20,12 @@ echo "📁 Backup directory: $BACKUP_DIR"
 update_file() {
     local file="$1"
     local description="$2"
-    
+
     if [[ -f "$file" ]]; then
         echo "  📝 Updating $description: $file"
         # Create backup
         cp "$file" "$BACKUP_DIR/$(basename "$file").backup"
-        
+
         # Replace hardcoded ports with environment variable syntax
         sed -i.tmp \
             -e "s|http://localhost:$OLD_PORT|http://localhost:$NEW_PORT|g" \
@@ -34,7 +34,7 @@ update_file() {
             -e "s|port $OLD_PORT|port $NEW_PORT|g" \
             -e "s|Port $OLD_PORT|Port $NEW_PORT|g" \
             "$file"
-        
+
         # Remove temporary file
         rm -f "$file.tmp"
     else
@@ -116,4 +116,4 @@ echo "🧪 Test the migration:"
 echo "   APP_PORT=8247 python main.py"
 echo ""
 echo "📖 View migration details:"
-echo "   cat $BACKUP_DIR/migration_summary.md" 
+echo "   cat $BACKUP_DIR/migration_summary.md"
