@@ -1,0 +1,63 @@
+# Task Completion Guidelines
+
+## 🎯 Goal-Focused Execution
+When working on tasks, always:
+1. **Define clear completion criteria** before starting
+2. **Set maximum iteration limits** (3 attempts for linter fixes, 2 for test fixes)
+3. **Prioritize core functionality** over perfection
+4. **Document progress** and remaining work
+
+## 🚫 Anti-Stuck Rules
+
+### Linter Fixes
+- **Maximum 3 attempts** per file for linter fixes
+- If line length issues persist, accept current state and move on
+- Focus on critical functionality over code formatting perfection
+- Use `# noqa` comments for persistent non-critical issues
+
+### Test Fixes  
+- **Maximum 2 attempts** per test failure
+- If tests fail due to API changes, update test expectations
+- Don't chase 100% test coverage - aim for 70%+ for core functionality
+- Document known test issues for future resolution
+
+### Task Completion Criteria
+- **Core functionality working** (app starts, endpoints respond)
+- **Critical tests passing** (health, basic CRUD operations)
+- **Documentation updated** with current status
+- **Git state clean** (changes committed or documented)
+
+## 📋 Progress Tracking
+Before starting any task:
+1. **List specific deliverables**
+2. **Set time limits** (e.g., "30 minutes max for linter fixes")
+3. **Define success metrics** (e.g., "80% of critical tests passing")
+4. **Plan fallback options** if time limit reached
+
+## 🔄 When to Stop and Move On
+Stop current task and move to next priority when:
+- **3+ linter fix attempts** on same file
+- **2+ test fix attempts** on same test
+- **Time limit reached** (document remaining work)
+- **Core functionality achieved** (perfection not required)
+
+## 📝 Documentation Requirements
+Always document:
+- **What was completed**
+- **What remains to be done**
+- **Known issues** and their impact
+- **Next steps** for future work
+
+## 🎯 Success Definition
+A task is "complete" when:
+- ✅ Core functionality works
+- ✅ Critical tests pass (70%+ coverage)
+- ✅ Changes are committed
+- ✅ Documentation is updated
+- ✅ No blocking issues remain
+
+**Remember**: Perfect is the enemy of done. Focus on working functionality over perfect code.
+description:
+globs:
+alwaysApply: false
+---

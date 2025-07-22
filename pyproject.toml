@@ -18,6 +18,9 @@ addopts = "--strict-markers --tb=short --cov=main --cov-report=term-missing --co
 filterwarnings = [
     "ignore::DeprecationWarning"
 ]
+markers = [
+    "asyncio: marks tests as async (deselect with '-m \"not asyncio\"')"
+]
 
 # === OPTIMIZED LINTER CONFIGURATIONS ===
 
@@ -186,4 +189,43 @@ max-line-length = 88
 max-args = 10
 max-locals = 15
 max-branches = 12
-max-statements = 50 
+max-statements = 50
+
+# === PYRIGHT/BASEDPYRIGHT CONFIGURATION ===
+[tool.pyright]
+include = [
+    "main.py",
+    "config.py", 
+    "database/",
+    "tests/"
+]
+exclude = [
+    "**/__pycache__",
+    "**/.*",
+    "venv/",
+    "build/",
+    "dist/",
+    "htmlcov/",
+    "alembic/versions/",
+    "scripts/",
+    "docs/",
+    "active/",
+    ".coverage",
+    "*.db",
+    "*.log",
+    ".tmp/",
+    "tmp/"
+]
+ignore = [
+    "alembic/",
+    "scripts/",
+    "QUICK_REFERENCE.md",
+    "IMPLEMENTATION_SUMMARY.md"
+]
+pythonVersion = "3.13"
+pythonPlatform = "Darwin"
+typeCheckingMode = "basic"
+useLibraryCodeForTypes = false
+autoSearchPaths = true
+autoImportCompletions = true
+indexing = true 

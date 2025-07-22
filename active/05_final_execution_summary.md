@@ -12,7 +12,7 @@
 
 #### 1. **App Running Successfully** ✅
 - **Status**: ✅ OPERATIONAL
-- **URL**: http://localhost:8000
+- **URL**: http://localhost:${APP_PORT:-8247}
 - **Health Check**: Database connected and functional
 - **Performance**: Sub-100ms response times
 
@@ -47,17 +47,17 @@
 ### Application Performance ✅
 ```bash
 # Health Check Response
-curl http://localhost:8000/health
+curl http://localhost:${APP_PORT:-8247}/health
 # {"status":"healthy","database":"connected","timestamp":"...","version":"0.1.0"}
 
 # Database Operations
-curl -X POST http://localhost:8000/api/v1/companies \
+curl -X POST http://localhost:${APP_PORT:-8247}/api/v1/companies \
   -H "Content-Type: application/json" \
   -d '{"name":"Test Company","domain":"test.com"}'
 # Response: 200 OK with full entity data
 
 # Data Persistence
-curl http://localhost:8000/api/v1/companies | jq length
+curl http://localhost:${APP_PORT:-8247}/api/v1/companies | jq length
 # Result: 26 companies successfully stored
 ```
 
@@ -228,9 +228,9 @@ GET  /docs           # Auto-generated API documentation
 ✅ **Working CRUD operations with database persistence**  
 
 ### Current Application Access:
-- **Main App**: http://localhost:8000
-- **Health Check**: http://localhost:8000/health  
-- **API Docs**: http://localhost:8000/docs
+- **Main App**: http://localhost:${APP_PORT:-8247}
+- **Health Check**: http://localhost:${APP_PORT:-8247}/health  
+- **API Docs**: http://localhost:${APP_PORT:-8247}/docs
 - **Test Data**: 26+ companies successfully created and stored
 
 ### Final Status: **🎯 MISSION ACCOMPLISHED**

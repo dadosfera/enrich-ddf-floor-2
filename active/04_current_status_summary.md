@@ -168,15 +168,15 @@ Most failures are due to **response format changes** after database integration:
 ### What's Working ✅
 ```bash
 # Application startup and health checks
-curl http://localhost:8000/health
+curl http://localhost:${APP_PORT:-8247}/health
 # Response: {"status":"healthy","database":"connected",...}
 
 # Company creation and listing
-curl -X POST http://localhost:8000/api/v1/companies \
+curl -X POST http://localhost:${APP_PORT:-8247}/api/v1/companies \
   -H "Content-Type: application/json" \
   -d '{"name":"Test Company","domain":"test.com"}'
 
-curl http://localhost:8000/api/v1/companies
+curl http://localhost:${APP_PORT:-8247}/api/v1/companies
 # Returns: Array of company objects with full database fields
 
 # Product creation and listing (working)
@@ -234,8 +234,8 @@ curl http://localhost:8000/api/v1/companies
 
 ### For Next Developer:
 1. **Run the app**: `source venv/bin/activate && python main.py`
-2. **Check health**: `curl http://localhost:8000/health`
-3. **View API docs**: Visit http://localhost:8000/docs
+2. **Check health**: `curl http://localhost:${APP_PORT:-8247}/health`
+3. **View API docs**: Visit http://localhost:${APP_PORT:-8247}/docs
 4. **Test creation**: Use provided curl commands above
 5. **Run tests**: `pytest tests/ -v` (expect some failures due to format changes)
 
