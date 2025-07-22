@@ -44,7 +44,8 @@ class TestPortAvailabilityFunctions:
 
     def test_find_available_port_no_ports_available(self):
         """Test finding available port when no ports are available."""
-        with patch("main.is_port_available", return_value=False), pytest.raises(
-            RuntimeError, match="No available port found"
+        with (
+            patch("main.is_port_available", return_value=False),
+            pytest.raises(RuntimeError, match="No available port found"),
         ):
             find_available_port(8000, max_attempts=2)
