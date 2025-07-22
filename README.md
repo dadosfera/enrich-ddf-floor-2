@@ -14,7 +14,7 @@ cd enrich-ddf-floor-2
 
 ## Architecture
 - **API-First**: FastAPI-based REST architecture
-- **Non-Streamlit**: Production-ready without Streamlit dependencies  
+- **Non-Streamlit**: Production-ready without Streamlit dependencies
 - **Unified Platform**: Aggregates all enrich-ddf-group features
 - **Enterprise-Ready**: Docker, PostgreSQL, Redis, Celery
 

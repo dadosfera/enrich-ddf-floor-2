@@ -159,28 +159,28 @@ validate_environment() {
 # Check dependencies
 check_dependencies() {
     log_info "Checking dependencies..."
-    
+
     # Check Python
     if ! command -v python3 &> /dev/null; then
         log_error "Python 3 is required but not installed"
         exit 1
     fi
-    
+
     # Check virtual environment
     if [[ ! -d "venv" ]]; then
         log_warning "Virtual environment not found, creating..."
         python3 -m venv venv
     fi
-    
+
     # Activate virtual environment
     source venv/bin/activate
-    
+
     # Check required packages
     if ! python3 -c "import fastapi, uvicorn, sqlalchemy" 2>/dev/null; then
         log_warning "Required packages not found, installing..."
         pip install -r requirements-minimal.txt
     fi
-    
+
     log_success "Dependencies check completed"
 }
 
@@ -190,18 +190,18 @@ find_available_port() {
         echo "$PORT"
         return
     fi
-    
+
     # Default port range
     local start_port=8000
     local end_port=9000
-    
+
     for port in $(seq $start_port $end_port); do
         if ! timeout 1 bash -c "</dev/tcp/localhost/$port" 2>/dev/null; then
             echo "$port"
             return
         fi
     done
-    
+
     log_error "No available ports found in range $start_port-$end_port"
     exit 1
 }
@@ -209,9 +209,9 @@ find_available_port() {
 # Run tests
 run_tests() {
     log_info "Running test suite..."
-    
+
     source venv/bin/activate
-    
+
     # Run with timeout to prevent hanging
     if timeout 300 pytest -v --tb=short --cov=. --cov-report=html; then
         log_success "All tests passed"
@@ -225,22 +225,22 @@ run_tests() {
 # Start application
 start_application() {
     log_info "Starting application..."
-    
+
     local app_port=$(find_available_port)
     log_info "Using port: $app_port"
-    
+
     # Set environment variables
     export APP_PORT="$app_port"
     export APP_HOST="$HOST"
     export APP_ENV="$ENVIRONMENT"
     export APP_DEBUG="$DEBUG"
-    
+
     if [[ "$VERBOSE" == "true" ]]; then
         export APP_VERBOSE="true"
     fi
-    
+
     source venv/bin/activate
-    
+
     # Start with timeout and proper error handling
     if timeout 30 python3 main.py; then
         log_success "Application started successfully on http://$HOST:$app_port"
@@ -279,20 +279,20 @@ setup_platform() {
 main() {
     log_info "🚀 Starting Enrich DDF Floor 2 Application"
     log_info "Version: 1.0.0"
-    
+
     # Parse arguments
     parse_args "$@"
-    
+
     # Validate inputs
     validate_platform
     validate_environment
-    
+
     # Setup platform
     setup_platform
-    
+
     # Check dependencies
     check_dependencies
-    
+
     # Execute based on mode
     if [[ "$TEST" == "true" ]]; then
         if run_tests; then
@@ -314,4 +314,4 @@ main() {
 }
 
 # Execute main function with all arguments
-main "$@" 
+main "$@"

@@ -15,7 +15,7 @@ When working on tasks, always:
 - Focus on critical functionality over code formatting perfection
 - Use `# noqa` comments for persistent non-critical issues
 
-### Test Fixes  
+### Test Fixes
 - **Maximum 2 attempts** per test failure
 - If tests fail due to API changes, update test expectations
 - Don't chase 100% test coverage - aim for 70%+ for core functionality

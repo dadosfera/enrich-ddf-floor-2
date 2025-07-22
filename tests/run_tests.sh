@@ -138,35 +138,35 @@ parse_args() {
 # Check dependencies
 check_dependencies() {
     log_info "Checking test dependencies..."
-    
+
     # Check Python
     if ! command -v python3 &> /dev/null; then
         log_error "Python 3 is required but not installed"
         exit 1
     fi
-    
+
     # Check virtual environment
     if [[ ! -d "venv" ]]; then
         log_error "Virtual environment not found. Please run: python3 -m venv venv"
         exit 1
     fi
-    
+
     # Activate virtual environment
     source venv/bin/activate
-    
+
     # Check pytest
     if ! python3 -c "import pytest" 2>/dev/null; then
         log_error "pytest is required but not installed"
         exit 1
     fi
-    
+
     log_success "Dependencies check completed"
 }
 
 # Build pytest arguments
 build_pytest_args() {
     local args=()
-    
+
     # Test path based on type
     case $TEST_TYPE in
         all)
@@ -188,41 +188,41 @@ build_pytest_args() {
             args+=("tests/unit/test_mutation_tests.py")
             ;;
     esac
-    
+
     # Add common options
     if [[ "$VERBOSE" == "true" ]]; then
         args+=("-v")
     fi
-    
+
     if [[ "$FAIL_FAST" == "true" ]]; then
         args+=("-x")
     fi
-    
+
     if [[ "$PARALLEL" == "true" ]]; then
         args+=("-n" "auto")
     fi
-    
+
     if [[ "$COVERAGE" == "true" ]]; then
         args+=("--cov=." "--cov-report=html" "--cov-report=term-missing")
     fi
-    
+
     # Add timeout
     args+=("--timeout=$TIMEOUT")
-    
+
     echo "${args[@]}"
 }
 
 # Run tests
 run_tests() {
     log_info "Running $TEST_TYPE tests..."
-    
+
     source venv/bin/activate
-    
+
     # Build pytest arguments
     local pytest_args=($(build_pytest_args))
-    
+
     log_info "pytest arguments: ${pytest_args[*]}"
-    
+
     # Run tests with timeout
     if timeout $((TIMEOUT + 30)) pytest "${pytest_args[@]}"; then
         log_success "All $TEST_TYPE tests passed"
@@ -236,9 +236,9 @@ run_tests() {
 # Run pre-commit checks
 run_pre_commit() {
     log_info "Running pre-commit checks..."
-    
+
     source venv/bin/activate
-    
+
     # Check if pre-commit is available
     if command -v pre-commit &> /dev/null; then
         if timeout 60 pre-commit run --all-files; then
@@ -257,11 +257,11 @@ run_pre_commit() {
 # Run linter checks
 run_linters() {
     log_info "Running linter checks..."
-    
+
     source venv/bin/activate
-    
+
     local linter_failed=false
-    
+
     # Run ruff
     if timeout 30 ruff check .; then
         log_success "Ruff checks passed"
@@ -269,7 +269,7 @@ run_linters() {
         log_error "Ruff checks failed"
         linter_failed=true
     fi
-    
+
     # Run black check
     if timeout 30 black --check .; then
         log_success "Black formatting check passed"
@@ -277,7 +277,7 @@ run_linters() {
         log_error "Black formatting check failed"
         linter_failed=true
     fi
-    
+
     # Run isort check
     if timeout 30 isort --check-only .; then
         log_success "Import sorting check passed"
@@ -285,7 +285,7 @@ run_linters() {
         log_error "Import sorting check failed"
         linter_failed=true
     fi
-    
+
     # Run mypy
     if timeout 60 mypy .; then
         log_success "Type checking passed"
@@ -293,7 +293,7 @@ run_linters() {
         log_error "Type checking failed"
         linter_failed=true
     fi
-    
+
     if [[ "$linter_failed" == "true" ]]; then
         return 1
     else
@@ -304,9 +304,9 @@ run_linters() {
 # Generate test report
 generate_report() {
     log_info "Generating test report..."
-    
+
     local report_file="test_report_$(date +%Y%m%d_%H%M%S).txt"
-    
+
     {
         echo "Enrich DDF Floor 2 - Test Report"
         echo "Generated: $(date)"
@@ -319,18 +319,18 @@ generate_report() {
         echo ""
         echo "Test Results:"
         echo "============="
-        
+
         if [[ "$COVERAGE" == "true" ]]; then
             echo "Coverage report available in: htmlcov/index.html"
         fi
-        
+
         echo ""
         echo "Linter Results:"
         echo "==============="
         # Add linter results here if needed
-        
+
     } > "$report_file"
-    
+
     log_success "Test report generated: $report_file"
 }
 
@@ -338,34 +338,34 @@ generate_report() {
 main() {
     log_info "🧪 Starting Enrich DDF Floor 2 Test Runner"
     log_info "Version: 1.0.0"
-    
+
     # Parse arguments
     parse_args "$@"
-    
+
     # Check dependencies
     check_dependencies
-    
+
     # Run pre-commit checks
     if ! run_pre_commit; then
         log_error "Pre-commit checks failed, aborting test run"
         exit 1
     fi
-    
+
     # Run linter checks
     if ! run_linters; then
         log_error "Linter checks failed, aborting test run"
         exit 1
     fi
-    
+
     # Run tests
     if run_tests; then
         log_success "Test execution completed successfully"
-        
+
         # Generate report if requested
         if [[ "$COVERAGE" == "true" ]]; then
             generate_report
         fi
-        
+
         exit 0
     else
         log_error "Test execution failed"
@@ -374,4 +374,4 @@ main() {
 }
 
 # Execute main function with all arguments
-main "$@" 
+main "$@"
