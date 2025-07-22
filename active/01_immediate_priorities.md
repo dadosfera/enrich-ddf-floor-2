@@ -1,7 +1,7 @@
 # 🚀 Immediate Priorities - Enrich DDF Floor 2
 
 ## 📋 Current Status Summary
-- ✅ FastAPI app running successfully on http://0.0.0.0:8000
+- ✅ FastAPI app running successfully on http://0.0.0.0:${APP_PORT:-8247}
 - ✅ Database integration with SQLAlchemy and Alembic
 - ✅ CRUD endpoints for Companies, Contacts, and Products
 - ✅ Health check endpoint with database connectivity

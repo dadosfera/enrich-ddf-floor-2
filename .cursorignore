@@ -1,0 +1,130 @@
+# === PERFORMANCE CRITICAL EXCLUSIONS ===
+# These should NEVER be indexed due to size/performance impact
+
+# Large Binary Model Files
+model_cache/
+models/
+*.safetensors
+*.bin
+*.h5
+*.onnx
+*.pkl
+*.pt
+*.pth
+*.weights
+*.checkpoint
+
+# Package Dependencies  
+node_modules/
+venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Build Artifacts
+build/
+dist/
+coverage/
+test-results/
+htmlcov/
+.coverage
+
+# === SECURITY SENSITIVE EXCLUSIONS ===
+# These should NEVER be accessible to AI for security reasons
+
+# Credentials and Secrets
+.env
+.env.*
+!.env.example
+!.env.template
+secrets/
+credentials/
+*.key
+*.pem
+*.crt
+*.p12
+api-tokens/
+aws-credentials/
+
+# === DEVELOPMENT NOISE EXCLUSIONS ===
+# These reduce AI context pollution but may occasionally need access
+
+# Logs and Temporary Files
+logs/
+*.log
+tmp/
+.tmp/
+*.tmp
+
+# Generated Content
+generated_images/
+generated_videos/
+exports/
+
+# IDE Files
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# === CONDITIONAL EXCLUSIONS ===
+# These may need AI access occasionally - use sparingly
+
+# Documentation builds (exclude if auto-generated)
+docs/generated/
+docs/_build/
+
+# Test data (exclude if large, include if needed for development)
+test_data/large/
+fixtures/large/
+
+# Backup files (exclude old backups, may need recent ones)
+backup/
+scripts_backup_*/
+*.backup
+
+# === PROJECT SPECIFIC EXCLUSIONS ===
+# Custom exclusions for this specific project
+
+# Database files (may contain sensitive data)
+*.db
+*.sqlite
+*.sqlite3
+
+# Alembic migration files (auto-generated)
+alembic/versions/*.py
+!alembic/versions/__init__.py
+
+# Test coverage and results
+TEST_RESULTS.md
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db 

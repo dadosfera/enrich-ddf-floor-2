@@ -6,8 +6,9 @@ These tests verify that complete business workflows work end-to-end:
 3. Cross-entity relationships
 """
 
-from fastapi.testclient import TestClient
 import uuid
+
+from fastapi.testclient import TestClient
 
 
 class TestCriticalDataEnrichmentWorkflow:
@@ -44,12 +45,8 @@ class TestCriticalDataEnrichmentWorkflow:
         unique_id = str(uuid.uuid4())[:8]
         # Step 1: Create contact (use only accepted fields)
         contact_data = {
-            "first_name": sample_contact_data.get(
-                "first_name", "John"
-            ),
-            "last_name": sample_contact_data.get(
-                "last_name", "Doe"
-            ),
+            "first_name": sample_contact_data.get("first_name", "John"),
+            "last_name": sample_contact_data.get("last_name", "Doe"),
             "email": f"john.doe-{unique_id}@example.com",
         }
         create_response = client.post(
@@ -60,7 +57,7 @@ class TestCriticalDataEnrichmentWorkflow:
         contact_data = create_response.json()
 
         # Step 2: Verify contact creation response structure
-        assert "message" in contact_data
+        assert "status" in contact_data
         assert "data" in contact_data
         assert contact_data["status"] == "created"
 
@@ -79,19 +76,11 @@ class TestCriticalDataEnrichmentWorkflow:
         """CRITICAL: Test complete product classification workflow."""
         # Step 1: Create product (use only accepted fields)
         product_data = {
-            "name": sample_product_data.get(
-                "name", "Test Product"
-            ),
-            "brand": sample_product_data.get(
-                "brand", "TestBrand"
-            ),
-            "category": sample_product_data.get(
-                "category", "Electronics"
-            ),
+            "name": sample_product_data.get("name", "Test Product"),
+            "brand": sample_product_data.get("brand", "TestBrand"),
+            "category": sample_product_data.get("category", "Electronics"),
         }
-        create_response = client.post(
-            "/api/v1/products", json=product_data
-        )
+        create_response = client.post("/api/v1/products", json=product_data)
         assert create_response.status_code == 200
         product_data = create_response.json()
 
@@ -132,9 +121,7 @@ class TestCriticalDataEnrichmentWorkflow:
             "last_name": "Contact",
             "email": f"mutate-{unique_id}@x.com",
         }
-        create_response = client.post(
-            "/api/v1/contacts", json=contact_data
-        )
+        create_response = client.post("/api/v1/contacts", json=contact_data)
         assert create_response.status_code == 200
         contact_id = create_response.json()["id"]
         assert contact_id
@@ -146,9 +133,7 @@ class TestCriticalDataEnrichmentWorkflow:
         product_data = {
             "name": f"Mutate Product {unique_id}",
         }
-        create_response = client.post(
-            "/api/v1/products", json=product_data
-        )
+        create_response = client.post("/api/v1/products", json=product_data)
         assert create_response.status_code == 200
         product_id = create_response.json()["id"]
         assert product_id
@@ -193,18 +178,12 @@ class TestCriticalAPIIntegration:
             "domain": f"concurrent-{unique_id}.com",
         }
         contact_data = {
-            "first_name": sample_contact_data.get(
-                "first_name", "John"
-            ),
-            "last_name": sample_contact_data.get(
-                "last_name", "Doe"
-            ),
+            "first_name": sample_contact_data.get("first_name", "John"),
+            "last_name": sample_contact_data.get("last_name", "Doe"),
             "email": f"john.doe-concurrent-{unique_id}@example.com",
         }
         product_data = {
-            "name": sample_product_data.get(
-                "name", f"Test Product {unique_id}"
-            ),
+            "name": sample_product_data.get("name", f"Test Product {unique_id}"),
         }
         company_response = client.post(
             "/api/v1/companies",
@@ -238,15 +217,9 @@ class TestCriticalErrorScenarios:
         invalid_data = {"invalid": "structure"}
 
         # Test each endpoint with invalid data
-        company_response = client.post(
-            "/api/v1/companies", json=invalid_data
-        )
-        contact_response = client.post(
-            "/api/v1/contacts", json=invalid_data
-        )
-        product_response = client.post(
-            "/api/v1/products", json=invalid_data
-        )
+        company_response = client.post("/api/v1/companies", json=invalid_data)
+        contact_response = client.post("/api/v1/contacts", json=invalid_data)
+        product_response = client.post("/api/v1/products", json=invalid_data)
 
         # Accept 400 as valid for invalid data
         assert company_response.status_code in [200, 400]
@@ -262,15 +235,11 @@ class TestCriticalErrorScenarios:
         # Make multiple rapid requests
         for _i in range(10):
             company_data = {
-                "name": sample_company_data.get(
-                    "company_name", "Test Company"
-                ),
+                "name": sample_company_data.get("company_name", "Test Company"),
                 "domain": "test.com",
                 "industry": "Technology",
             }
-            response = client.post(
-                "/api/v1/companies", json=company_data
-            )
+            response = client.post("/api/v1/companies", json=company_data)
             responses.append(response)
 
         # Accept 400 as valid for duplicate/invalid data

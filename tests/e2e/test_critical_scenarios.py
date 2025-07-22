@@ -7,6 +7,7 @@ These tests simulate complete user journeys and critical business scenarios:
 """
 
 import uuid
+
 from fastapi.testclient import TestClient
 
 
@@ -59,9 +60,7 @@ class TestCriticalUserJourneys:
         contact_data = {
             "first_name": "Maria",
             "last_name": "Silva",
-            "email": (
-                f"maria.silva-{unique_id}@techcorp.com"
-            ),
+            "email": (f"maria.silva-{unique_id}@techcorp.com"),
             "phone": "+55 11 99999-1234",
         }
         contact_response = client.post(
@@ -73,9 +72,7 @@ class TestCriticalUserJourneys:
         # Step 3: Add products that the company sells (use only accepted fields)
         product_data = {
             "name": "Enterprise Software Solution",
-            "description": (
-                "Cloud-based enterprise management system"
-            ),
+            "description": ("Cloud-based enterprise management system"),
             "brand": "TechCorp",
             "category": "Software",
         }
@@ -97,7 +94,7 @@ class TestCriticalSystemBehavior:
     def test_system_stability_under_normal_load(self, client: TestClient):
         """CRITICAL: Test system remains stable under normal operational load."""
         unique_id = str(uuid.uuid4())[:8]
-        
+
         # Simulate normal user activity over time
         operations = [
             lambda: client.get("/health"),
@@ -112,9 +109,7 @@ class TestCriticalSystemBehavior:
                 json={
                     "first_name": "John",
                     "last_name": "Doe",
-                    "email": (
-                        f"john.doe-{unique_id}@example.com"
-                    ),
+                    "email": (f"john.doe-{unique_id}@example.com"),
                 },
             ),
         ]
@@ -131,7 +126,7 @@ class TestCriticalSystemBehavior:
     def test_api_consistency_across_endpoints(self, client: TestClient):
         """CRITICAL: Test that all endpoints maintain consistent behavior."""
         unique_id = str(uuid.uuid4())[:8]
-        
+
         endpoints = [
             "/api/v1/companies",
             "/api/v1/contacts",
@@ -152,9 +147,7 @@ class TestCriticalSystemBehavior:
             "/api/v1/contacts": {
                 "first_name": "Jane",
                 "last_name": "Smith",
-                "email": (
-                    f"jane.smith-{unique_id}@example.com"
-                ),
+                "email": (f"jane.smith-{unique_id}@example.com"),
             },
             "/api/v1/products": {"name": f"Test Product {unique_id}"},
         }
@@ -175,7 +168,7 @@ class TestCriticalDataIntegrity:
     def test_data_integrity_across_operations(self, client: TestClient):
         """CRITICAL: Test data integrity is maintained across operations."""
         unique_id = str(uuid.uuid4())[:8]
-        
+
         # Create entities with structured data (use only accepted fields)
         company_data = {
             "name": "DataCorp Analytics",

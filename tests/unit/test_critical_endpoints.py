@@ -6,6 +6,8 @@ These tests cover the most critical functionality that must always work:
 3. Data validation and error handling
 """
 
+import uuid
+
 from fastapi.testclient import TestClient
 
 
@@ -58,12 +60,20 @@ class TestCriticalEndpoints:
         """CRITICAL: Test contact creation endpoint."""
         # Only use fields accepted by the Contact model
         allowed_fields = [
-            "first_name", "last_name", "email", "phone", "job_title",
-            "department", "company_id", "linkedin_url", "twitter_url"
+            "first_name",
+            "last_name",
+            "email",
+            "phone",
+            "job_title",
+            "department",
+            "company_id",
+            "linkedin_url",
+            "twitter_url",
         ]
-        contact_payload = {k: v for k, v in sample_contact_data.items() if k in allowed_fields}
+        contact_payload = {
+            k: v for k, v in sample_contact_data.items() if k in allowed_fields
+        }
         # Use a unique email to avoid uniqueness constraint violation
-        import uuid
         contact_payload["email"] = f"test_{uuid.uuid4().hex[:8]}@example.com"
         response = client.post("/api/v1/contacts", json=contact_payload)
         assert response.status_code == 200
@@ -128,7 +138,9 @@ class TestDataValidation:
     def test_empty_request_body_handling(self, client: TestClient):
         """CRITICAL: Test handling of empty request bodies."""
         response = client.post("/api/v1/companies", json={})
-        assert response.status_code == 200  # Current implementation accepts any dict
+        assert (
+            response.status_code == 400
+        )  # API correctly rejects empty data due to DB constraints
 
     def test_malformed_json_handling(self, client: TestClient):
         """CRITICAL: Test handling of malformed JSON."""
@@ -143,7 +155,9 @@ class TestDataValidation:
         """CRITICAL: Test handling of unusually large payloads."""
         large_data = {"description": "x" * 10000}  # 10KB description
         response = client.post("/api/v1/companies", json=large_data)
-        assert response.status_code == 200
+        assert (
+            response.status_code == 400
+        )  # API correctly rejects data without required fields
 
 
 class TestErrorHandling:
