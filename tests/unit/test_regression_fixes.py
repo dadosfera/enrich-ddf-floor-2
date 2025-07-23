@@ -15,21 +15,17 @@ class TestPythonCompatibilityRegression:
         """Test that nested with statements work correctly for Python 3.8 compatibility."""
         # This test ensures the fix for Python 3.8 compatibility remains working
         with patch("main.is_port_available", return_value=False):  # noqa: SIM117
-            with pytest.raises(
-                RuntimeError, match="No available port found"
-            ):
+            with pytest.raises(RuntimeError, match="No available port found"):
                 find_available_port(8000, max_attempts=2)
 
     def test_python_version_compatibility(self):
         """Test that the code works with Python 3.8+ syntax."""
         # Verify we're using Python 3.8 or higher
         assert sys.version_info >= (3, 8), "Python 3.8+ required"
-        
+
         # Test that basic functionality works
         with patch("socket.socket") as mock_socket:
-            mock_socket.return_value.__enter__.return_value.connect_ex.return_value = (
-                1
-            )
+            mock_socket.return_value.__enter__.return_value.connect_ex.return_value = 1
             result = is_port_available(8000)
             assert result is True
 
@@ -83,7 +79,7 @@ class TestLinterComplianceRegression:
         """Test that code passes ruff checks."""
         # This test ensures that the code structure remains compliant
         # with ruff rules, especially the SIM117 rule for nested with statements
-        
+
         # Test that the noqa comment is properly placed
         with patch("main.is_port_available", return_value=False):  # noqa: SIM117
             with pytest.raises(RuntimeError):
@@ -93,12 +89,10 @@ class TestLinterComplianceRegression:
         """Test that code formatting remains consistent."""
         # This test ensures that the code remains properly formatted
         # according to black standards
-        
+
         # Test that long lines are properly formatted
         with patch("socket.socket") as mock_socket:
-            mock_socket.return_value.__enter__.return_value.connect_ex.return_value = (
-                1
-            )
+            mock_socket.return_value.__enter__.return_value.connect_ex.return_value = 1
             result = is_port_available(8000)
             assert result is True
 
@@ -109,13 +103,13 @@ class TestTestInfrastructureStability:
     def test_test_discovery_works(self):
         """Test that pytest can discover all test files."""
         # This test ensures that the test structure remains intact
-        import tests.unit.test_critical_endpoints  # noqa: PLC0415
-        import tests.unit.test_lifespan  # noqa: PLC0415
-        import tests.unit.test_mutation_tests  # noqa: PLC0415
-        import tests.unit.test_port_functions  # noqa: PLC0415
-        import tests.integration.test_critical_workflows  # noqa: PLC0415
-        import tests.e2e.test_critical_scenarios  # noqa: PLC0415
-        
+        import tests.e2e.test_critical_scenarios
+        import tests.integration.test_critical_workflows
+        import tests.unit.test_critical_endpoints
+        import tests.unit.test_lifespan
+        import tests.unit.test_mutation_tests
+        import tests.unit.test_port_functions
+
         # Verify that all test modules can be imported
         assert tests.unit.test_critical_endpoints is not None
         assert tests.unit.test_lifespan is not None
@@ -128,7 +122,7 @@ class TestTestInfrastructureStability:
         """Test that code coverage remains above the required threshold."""
         # This test ensures that we maintain good test coverage
         # The actual coverage check is done by pytest-cov
-        
+
         # Test that critical functions are covered
         with patch("socket.socket") as mock_socket:
             mock_socket.return_value.__enter__.return_value.connect_ex.return_value = 1
@@ -147,25 +141,27 @@ class TestConfigurationStability:
         """Test that pyproject.toml configuration remains valid."""
         # This test ensures that the configuration remains valid
         # and that all linter configurations are properly set
-        
+
         # Test that we can import the main module
-        import main  # noqa: PLC0415
+        import main
+
         assert main is not None
 
     def test_test_index_yaml_structure(self):
         """Test that the test index YAML structure remains valid."""
         # This test ensures that the test configuration remains intact
-        import yaml  # noqa: PLC0415
-        
-        from pathlib import Path  # noqa: PLC0415
+        from pathlib import Path
+
+        import yaml
+
         with Path("tests/index_tests.yaml").open("r") as f:
             config = yaml.safe_load(f)
-        
+
         # Verify that required sections exist
         assert "test_categories" in config
         assert "execution_params" in config
         assert "pre_commit_hooks" in config
-        
+
         # Verify that all test categories are properly defined
         categories = config["test_categories"]
         assert "unit" in categories
@@ -174,4 +170,4 @@ class TestConfigurationStability:
         assert "critical" in categories
         assert "mutation" in categories
         assert "regression" in categories
-        assert "all" in categories 
+        assert "all" in categories
