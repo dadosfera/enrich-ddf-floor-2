@@ -49,6 +49,15 @@ test_categories:
     parallel: true
     coverage: false
 
+  regression:
+    description: "Regression tests for bug fixes and stability"
+    files:
+      - "tests/unit/test_port_functions.py"
+      - "tests/unit/test_lifespan.py"
+    timeout: 60
+    parallel: true
+    coverage: false
+
   all:
     description: "All tests in the suite"
     files:
@@ -108,3 +117,18 @@ reporting:
   junit_xml: "test-results.xml"
   html_report: "test-report.html"
   json_report: "test-results.json"
+
+# Linter configuration
+linter_config:
+  ignore_cosmetic: true
+  max_line_length: 88
+  ignore_patterns:
+    - "*/__pycache__/*"
+    - "*/venv/*"
+    - "*.pyc"
+    - "migrations/*"
+    - "alembic/*"
+  suppress_warnings:
+    - "E501"  # Line too long (cosmetic)
+    - "W503"  # Line break before binary operator
+    - "E203"  # Whitespace before ':'
