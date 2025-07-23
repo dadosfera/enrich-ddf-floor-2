@@ -11,6 +11,7 @@ test_categories:
       - "tests/unit/test_lifespan.py"
       - "tests/unit/test_mutation_tests.py"
       - "tests/unit/test_port_functions.py"
+      - "tests/unit/test_regression_fixes.py"
     timeout: 120
     parallel: true
     coverage: true
