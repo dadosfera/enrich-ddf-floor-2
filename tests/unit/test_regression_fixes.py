@@ -103,12 +103,12 @@ class TestTestInfrastructureStability:
     def test_test_discovery_works(self):
         """Test that pytest can discover all test files."""
         # This test ensures that the test structure remains intact
-        import tests.e2e.test_critical_scenarios
-        import tests.integration.test_critical_workflows
-        import tests.unit.test_critical_endpoints
-        import tests.unit.test_lifespan
-        import tests.unit.test_mutation_tests
-        import tests.unit.test_port_functions
+        import tests.e2e.test_critical_scenarios  # noqa: PLC0415
+        import tests.integration.test_critical_workflows  # noqa: PLC0415
+        import tests.unit.test_critical_endpoints  # noqa: PLC0415
+        import tests.unit.test_lifespan  # noqa: PLC0415
+        import tests.unit.test_mutation_tests  # noqa: PLC0415
+        import tests.unit.test_port_functions  # noqa: PLC0415
 
         # Verify that all test modules can be imported
         assert tests.unit.test_critical_endpoints is not None
@@ -143,16 +143,16 @@ class TestConfigurationStability:
         # and that all linter configurations are properly set
 
         # Test that we can import the main module
-        import main
+        import main  # noqa: PLC0415
 
         assert main is not None
 
     def test_test_index_yaml_structure(self):
         """Test that the test index YAML structure remains valid."""
         # This test ensures that the test configuration remains intact
-        from pathlib import Path
+        from pathlib import Path  # noqa: PLC0415
 
-        import yaml
+        import yaml  # noqa: PLC0415
 
         with Path("tests/index_tests.yaml").open("r") as f:
             config = yaml.safe_load(f)
