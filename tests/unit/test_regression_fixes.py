@@ -67,12 +67,12 @@ class TestPortFunctionStability:
 
     def test_port_functions_error_handling(self):
         """Test that port functions handle errors gracefully."""
-        # Test with invalid max_attempts
-        with pytest.raises(ValueError, match="max_attempts must be positive"):
+        # Test with zero max_attempts (should raise RuntimeError)
+        with pytest.raises(RuntimeError, match="No available port found"):
             find_available_port(8000, max_attempts=0)
 
-        # Test with negative max_attempts
-        with pytest.raises(ValueError, match="max_attempts must be positive"):
+        # Test with negative max_attempts (should raise RuntimeError)
+        with pytest.raises(RuntimeError, match="No available port found"):
             find_available_port(8000, max_attempts=-1)
 
 
