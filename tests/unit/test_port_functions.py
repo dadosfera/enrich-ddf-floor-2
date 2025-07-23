@@ -13,18 +13,14 @@ class TestPortAvailabilityFunctions:
     def test_is_port_available_success(self):
         """Test port availability check when port is available."""
         with patch("socket.socket") as mock_socket:
-            mock_socket.return_value.__enter__.return_value.connect_ex.return_value = (
-                1
-            )
+            mock_socket.return_value.__enter__.return_value.connect_ex.return_value = 1
             result = is_port_available(8000)
             assert result is True
 
     def test_is_port_available_failure(self):
         """Test port availability check when port is occupied."""
         with patch("socket.socket") as mock_socket:
-            mock_socket.return_value.__enter__.return_value.connect_ex.return_value = (
-                0
-            )
+            mock_socket.return_value.__enter__.return_value.connect_ex.return_value = 0
             result = is_port_available(8000)
             assert result is False
 
