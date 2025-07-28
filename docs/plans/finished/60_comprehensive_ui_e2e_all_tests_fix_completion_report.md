@@ -63,7 +63,7 @@
 
 #### **3.1 Multiple Selector Strategy**
 - **Implemented**: Fallback selector strategies for all UI interactions
-- **Selectors**: 
+- **Selectors**:
   - `text=GET` → `text=companies` → `[data-testid*='companies']`
   - `text=POST` → `text=companies` → `[data-testid*='post']`
 - **Timeout**: Reduced from 30s to 15s with multiple attempts

@@ -36,11 +36,11 @@
 
 #### **1.2 Import Path Standardization**
 - **Fixed**: All `ModuleNotFoundError: No module named 'tests'` issues
-- **Pattern**: 
+- **Pattern**:
   ```python
   # OLD (failing)
   from tests.e2e.server_manager import ServerManager
-  
+
   # NEW (working)
   import sys
   import os
@@ -55,11 +55,11 @@
   # OLD (failing)
   def start_server(self):
       # Custom server logic
-      
+
   # NEW (working)
   def __init__(self):
       self.server_manager = ServerManager()
-      
+
   async def setup(self):
       await self.server_manager.ensure_server_running()
   ```
@@ -72,7 +72,7 @@
   ```python
   # OLD (failing)
   asyncio.run(asyncio.sleep(wait_time))
-  
+
   # NEW (working)
   await asyncio.sleep(wait_time)
   ```
@@ -86,7 +86,7 @@
   async def api_request_with_retry(self, url, method="GET", **kwargs):
       # ... code ...
       asyncio.run(asyncio.sleep(1))
-      
+
   # NEW (working)
   async def api_request_with_retry(self, url, method="GET", **kwargs):
       # ... code ...
@@ -109,7 +109,7 @@
 
 #### **4.1 Multiple Selector Strategy**
 - **Implemented**: Fallback selector strategies for all UI interactions
-- **Selectors**: 
+- **Selectors**:
   - `text=GET` → `text=companies` → `[data-testid*='companies']`
   - `text=POST` → `text=companies` → `[data-testid*='post']`
 - **Timeout**: Reduced from 30s to 15s with multiple attempts

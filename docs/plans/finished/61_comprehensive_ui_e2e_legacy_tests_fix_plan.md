@@ -59,11 +59,11 @@
 
 #### **1.2 Import Path Standardization**
 - **Fix**: Replace absolute imports with relative imports
-- **Pattern**: 
+- **Pattern**:
   ```python
   # OLD (failing)
   from tests.e2e.server_manager import ServerManager
-  
+
   # NEW (working)
   import sys
   import os
@@ -78,11 +78,11 @@
   # OLD (failing)
   def start_server(self):
       # Custom server logic
-      
+
   # NEW (working)
   def __init__(self):
       self.server_manager = ServerManager()
-      
+
   async def setup(self):
       await self.server_manager.ensure_server_running()
   ```
@@ -95,7 +95,7 @@
   ```python
   # OLD (failing)
   asyncio.run(asyncio.sleep(wait_time))
-  
+
   # NEW (working)
   await asyncio.sleep(wait_time)
   ```
@@ -109,7 +109,7 @@
   async def api_request_with_retry(self, url, method="GET", **kwargs):
       # ... code ...
       asyncio.run(asyncio.sleep(1))
-      
+
   # NEW (working)
   async def api_request_with_retry(self, url, method="GET", **kwargs):
       # ... code ...

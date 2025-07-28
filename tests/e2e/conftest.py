@@ -8,7 +8,7 @@ def browser_context_args():
         "viewport": {"width": 1920, "height": 1080},
         "ignore_https_errors": True,
         "record_video_dir": "tests/e2e/videos/",
-        "record_video_size": {"width": 1920, "height": 1080}
+        "record_video_size": {"width": 1920, "height": 1080},
     }
 
 
@@ -26,19 +26,19 @@ def test_data():
             "name": "Test Company E2E",
             "industry": "Technology",
             "website": "https://testcompany-e2e.com",
-            "description": "Test company for E2E testing"
+            "description": "Test company for E2E testing",
         },
         "contact": {
             "first_name": "John",
             "last_name": "Doe",
             "email": "john.doe@testcompany-e2e.com",
             "phone": "+1-555-0123",
-            "position": "Software Engineer"
+            "position": "Software Engineer",
         },
         "product": {
             "name": "Test Product E2E",
             "description": "A test product for E2E testing",
             "price": 99.99,
-            "category": "Software"
-        }
-    } 
+            "category": "Software",
+        },
+    }

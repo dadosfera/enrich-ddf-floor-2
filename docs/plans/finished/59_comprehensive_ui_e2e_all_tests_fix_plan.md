@@ -20,7 +20,7 @@
 
 #### **1. Server Management Problems (CRITICAL)**
 - **Issue**: Multiple tests fail to start server or connect to existing server
-- **Symptoms**: 
+- **Symptoms**:
   - `Server failed to start within expected time`
   - `Connection refused` errors
   - `Max retries exceeded` errors
@@ -29,7 +29,7 @@
 
 #### **2. Async/Await Implementation Errors (CRITICAL)**
 - **Issue**: `asyncio.run() cannot be called from a running event loop`
-- **Symptoms**: 
+- **Symptoms**:
   - `RuntimeWarning: coroutine 'sleep' was never awaited`
   - `asyncio.run() cannot be called from a running event loop`
 - **Root Cause**: Incorrect async/await usage in retry logic
@@ -94,7 +94,7 @@
 
 #### **3.1 Multiple Selector Strategy**
 - **Implement**: Fallback selector strategies for all UI interactions
-- **Selectors**: 
+- **Selectors**:
   - `text=GET` → `text=companies` → `[data-testid*='companies']`
   - `text=POST` → `text=companies` → `[data-testid*='post']`
 - **Timeout**: Reduce from 30s to 15s with multiple attempts

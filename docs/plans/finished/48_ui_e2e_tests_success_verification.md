@@ -170,4 +170,4 @@
 
 The Enrich DDF Floor 2 application now has a comprehensive E2E testing framework using Playwright that verifies the complete critical user journey, ensuring the application is robust, reliable, and ready for production use.
 
-**No failing tests were identified - all tests are passing successfully!** 🎉 
+**No failing tests were identified - all tests are passing successfully!** 🎉
