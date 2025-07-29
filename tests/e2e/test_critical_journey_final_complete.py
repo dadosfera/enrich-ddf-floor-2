@@ -488,7 +488,7 @@ def test_ui_verify_data_creation_fixed(page, base_url, test_data):
 
 def main():
     """Run all comprehensive E2E tests with all fixes applied."""
-    base_url = "http://127.0.0.1:8000"
+    base_url = "http://127.0.0.1:8247"
 
     # Generate unique timestamp for test data to avoid constraint violations
     timestamp = int(time.time())
