@@ -175,7 +175,9 @@ def verify_with_exponential_backoff(base_url, test_data, created_ids, max_attemp
             verification_passed = False
 
             # Strategy 1: Database verification
-            if verify_data_in_database(test_data) or verify_by_id(created_ids, base_url):
+            if verify_data_in_database(test_data) or verify_by_id(
+                created_ids, base_url
+            ):
                 verification_passed = True
 
             # Strategy 3: List verification with enhanced logic

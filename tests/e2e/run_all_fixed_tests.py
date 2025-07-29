@@ -7,6 +7,7 @@ Runs all fixed tests to verify critical user journey completion
 import asyncio
 import logging
 import subprocess
+import sys
 from datetime import datetime
 
 
@@ -38,7 +39,8 @@ async def run_test_file(test_file):
             ["./venv/bin/python", test_file],
             capture_output=True,
             text=True,
-            timeout=300, check=False,
+            timeout=300,
+            check=False,
         )
 
         if result.returncode == 0:
@@ -50,15 +52,19 @@ async def run_test_file(test_file):
             return {"file": test_file, "status": "FAIL", "output": result.stderr}
 
     except subprocess.TimeoutExpired:
-        logger.error(f"⏰ {test_file}: TIMEOUT")
+        logger.exception(f"⏰ {test_file}: TIMEOUT")
         return {
             "file": test_file,
             "status": "TIMEOUT",
-            "output": "Test timed out after 300 seconds",
+            "output": "Test execution timed out",
         }
     except Exception as e:
-        logger.error(f"💥 {test_file}: ERROR - {e}")
-        return {"file": test_file, "status": "ERROR", "output": str(e)}
+        logger.exception(f"💥 {test_file}: ERROR")
+        return {
+            "file": test_file, 
+            "status": "ERROR", 
+            "output": str(e)
+        }
 
 
 async def run_all_tests():
@@ -120,4 +126,4 @@ async def main():
 
 if __name__ == "__main__":
     success = asyncio.run(main())
-    exit(0 if success else 1)
+    sys.exit(0 if success else 1)

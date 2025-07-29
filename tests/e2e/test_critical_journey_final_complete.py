@@ -316,7 +316,9 @@ def verify_data_with_comprehensive_fixes(
             verification_passed = False
 
             # Strategy 1: Database verification
-            if verify_data_in_database(test_data) or verify_by_id(created_ids, base_url):
+            if verify_data_in_database(test_data) or verify_by_id(
+                created_ids, base_url
+            ):
                 verification_passed = True
 
             # Strategy 3: List verification with enhanced logic
