@@ -15,7 +15,7 @@ def browser_context_args():
 @pytest.fixture(scope="session")
 def base_url():
     """Base URL for the application."""
-    return "http://127.0.0.1:8000"
+    return "http://127.0.0.1:8247"
 
 
 @pytest.fixture(scope="session")

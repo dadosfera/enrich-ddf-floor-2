@@ -240,7 +240,7 @@ def test_list_products(base_url, test_data):
 
 def main():
     """Run all critical user journey tests."""
-    base_url = "http://127.0.0.1:8000"
+    base_url = "http://127.0.0.1:8247"
 
     test_data = {
         "company": {
