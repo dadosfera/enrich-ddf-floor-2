@@ -60,11 +60,7 @@ async def run_test_file(test_file):
         }
     except Exception as e:
         logger.exception(f"💥 {test_file}: ERROR")
-        return {
-            "file": test_file, 
-            "status": "ERROR", 
-            "output": str(e)
-        }
+        return {"file": test_file, "status": "ERROR", "output": str(e)}
 
 
 async def run_all_tests():

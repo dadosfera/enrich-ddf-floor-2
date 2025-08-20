@@ -34,6 +34,15 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     metrics_enabled: bool = True
 
+    # Real Data Enrichment API Keys
+    hunter_api_key: Optional[str] = None
+    clearbit_api_key: Optional[str] = None
+    fullcontact_api_key: Optional[str] = None
+    zerobounce_api_key: Optional[str] = None
+    github_token: Optional[str] = None
+    pdl_api_key: Optional[str] = None
+    apollo_api_key: Optional[str] = None
+
     class Config:
         """Pydantic configuration."""
 

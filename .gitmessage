@@ -1,0 +1,47 @@
+# Commit Message Template for enrich-ddf-floor-2
+#
+# Format: <type>(<scope>): <subject>
+#
+# Types:
+#   feat:     New feature or enhancement
+#   fix:      Bug fix
+#   docs:     Documentation changes
+#   style:    Code style changes (formatting, etc)
+#   refactor: Code refactoring without feature changes
+#   test:     Adding or updating tests
+#   chore:    Maintenance tasks, dependencies
+#   perf:     Performance improvements
+#   ci:       CI/CD pipeline changes
+#   build:    Build system or external dependencies
+#   revert:   Revert a previous commit
+#
+# Scope examples:
+#   api, frontend, database, enrichment, integrations
+#   hunter, clearbit, pdl, apollo, zerobounce
+#   tests, docs, config, deployment
+#
+# Examples:
+#   feat(enrichment): add real-time person data enrichment via Hunter.io
+#   fix(frontend): resolve TypeScript compilation errors in Components
+#   feat(integrations): implement Clearbit company enrichment API
+#   test(e2e): add comprehensive data enrichment flow tests
+#   docs(api): update API documentation with new enrichment endpoints
+#   chore(deps): update React and Vite to latest versions
+#   fix(database): resolve SQLite connection pooling issues
+#   feat(api): add quota management for external API calls
+#
+# Guidelines:
+#   - Use imperative mood ("add" not "added" or "adds")
+#   - Keep subject line under 50 characters
+#   - Capitalize the subject line
+#   - Do not end subject line with a period
+#   - Use body to explain what and why, not how
+#   - Reference issues with "Fixes #123" or "Closes #123"
+#   - Break lines at 72 characters in the body
+#
+# Body (optional - explain what and why):
+# 
+# 
+# Footer (optional - reference issues):
+# Fixes #123
+# Closes #456

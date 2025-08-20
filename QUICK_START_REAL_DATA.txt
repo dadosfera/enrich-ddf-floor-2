@@ -1,0 +1,21 @@
+🎯 QUICK START GUIDE
+===================
+
+1. Get API Keys:
+   - Hunter.io: https://hunter.io/api-keys (50 free/month)
+   - Clearbit: https://clearbit.com/api (50 free/month)
+   - FullContact: https://platform.fullcontact.com (1,000 free/month)
+
+2. Configure Environment:
+   echo 'HUNTER_API_KEY=your_key_here' >> .env
+   echo 'CLEARBIT_API_KEY=your_key_here' >> .env
+   echo 'FULLCONTACT_API_KEY=your_key_here' >> .env
+
+3. Test Real Data:
+   python test_real_enrichment.py
+
+4. View Results:
+   Check data_sources field - should show real APIs instead of 'mock'
+
+See active/71_real_data_enrichment_implementation_plan.md for details!
+
