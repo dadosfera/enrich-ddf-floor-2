@@ -11,7 +11,7 @@ from pathlib import Path
 def fix_logging_exception_patterns(content: str) -> str:
     """Fix TRY400: Replace logging.error with logging.exception in exception handlers"""
     # Pattern: except ...: ... logging.exception(...)
-    pattern = r'(except[^:]*:\s*)([^:]*?)logging\.error\((.*?)\)'
+    pattern = r"(except[^:]*:\s*)([^:]*?)logging\.error\((.*?)\)"
 
     def replace_func(match):
         indent = match.group(1)
@@ -21,10 +21,11 @@ def fix_logging_exception_patterns(content: str) -> str:
 
     return re.sub(pattern, replace_func, content, flags=re.DOTALL)
 
+
 def fix_elif_patterns(content: str) -> str:
     """Fix PLR5501: Convert 'else: if' to 'elif' patterns"""
     # Simple pattern: } else:\n    if
-    pattern = r'}\s*else:\s*\n\s*if\s+([^:]+):'
+    pattern = r"}\s*else:\s*\n\s*if\s+([^:]+):"
 
     def replace_func(match):
         condition = match.group(1)
@@ -32,16 +33,17 @@ def fix_elif_patterns(content: str) -> str:
 
     return re.sub(pattern, replace_func, content)
 
+
 def fix_variable_overwrite(content: str) -> str:
     """Fix PLW2901: Variable overwritten in loop"""
     # Pattern: for line_item in lines: ... line_item = ...
-    lines = content.split('\n')
+    lines = content.split("\n")
     fixed_lines = []
 
     for i, line in enumerate(lines):
-        if 'for ' in line and ' in ' in line and '=' in line:
+        if "for " in line and " in " in line and "=" in line:
             # Check if this line overwrites the loop variable
-            loop_var = line.split('for ')[1].split(' in ')[0].strip()
+            loop_var = line.split("for ")[1].split(" in ")[0].strip()
             if f"{loop_var} =" in line:
                 # Rename the loop variable to avoid conflict
                 line = line.replace(f"for {loop_var} in", f"for {loop_var}_item in")
@@ -49,31 +51,33 @@ def fix_variable_overwrite(content: str) -> str:
                 line = line.replace(f"{loop_var} =", f"{loop_var}_item =")
         fixed_lines.append(line)
 
-    return '\n'.join(fixed_lines)
+    return "\n".join(fixed_lines)
+
 
 def fix_fstring_syntax(content: str) -> str:
     """Fix f-string syntax errors by adding missing braces"""
     # Pattern: f"..." with unclosed braces
-    lines = content.split('\n')
+    lines = content.split("\n")
     fixed_lines = []
 
     for line in lines:
         if 'f"' in line or "f'" in line:
             # Count braces
-            open_count = line.count('{') - line.count('{{')
-            close_count = line.count('}') - line.count('}}')
+            open_count = line.count("{") - line.count("{{")
+            close_count = line.count("}") - line.count("}}")
 
             if open_count > close_count:
                 # Add missing closing braces
-                line += '}' * (open_count - close_count)
+                line += "}" * (open_count - close_count)
         fixed_lines.append(line)
 
-    return '\n'.join(fixed_lines)
+    return "\n".join(fixed_lines)
+
 
 def apply_advanced_fixes(file_path: Path) -> bool:
     """Apply advanced auto-fixes to a single file"""
     try:
-        content = file_path.read_text(encoding='utf-8')
+        content = file_path.read_text(encoding="utf-8")
         original_content = content
 
         # Apply fixes
@@ -83,12 +87,13 @@ def apply_advanced_fixes(file_path: Path) -> bool:
         content = fix_fstring_syntax(content)
 
         if content != original_content:
-            file_path.write_text(content, encoding='utf-8')
+            file_path.write_text(content, encoding="utf-8")
             return True
     except Exception as e:
         print(f"Error processing {file_path}: {e}")
 
     return False
+
 
 def main():
     """Main function to run advanced auto-fixes"""
@@ -117,6 +122,7 @@ def main():
     else:
         print("ℹ No advanced fixes were applied")
         return False
+
 
 if __name__ == "__main__":
     main()
