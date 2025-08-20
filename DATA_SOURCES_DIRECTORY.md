@@ -180,4 +180,17 @@
 3. **Hunter Pro** → Unlimited email finding
 4. **Industry-specific APIs** → Niche data sources
 
+## ⚠️ **IMPORTANT UPDATES**
+
+### **Clearbit Discontinuation (2021)**
+**Clearbit was acquired by HubSpot** and is no longer available as a standalone API service. All references to Clearbit in this documentation are marked as discontinued.
+
+**Recommended Alternatives:**
+- **FullContact** - For person enrichment and social profiles
+- **People Data Labs** - For comprehensive people data (premium)
+- **GitHub API** - For developer profiles and technical data
+- **Apollo.io** - For B2B contact database
+
+---
+
 This directory provides the complete landscape of available data sources. The active plan focuses on immediate implementation of the free tier sources first! 🚀

@@ -80,7 +80,7 @@ class RealDataEnrichmentEngine:
         last_name = person_data.get("last_name", "")
 
         enriched_data = {
-            "full_name": f"{first_name} {last_name}".strip(),
+            "full_name": f"{first_name} {last_name!r}".strip(),
             "email": email,
             "data_sources": [],
             "enrichment_score": 0,
@@ -104,9 +104,9 @@ class RealDataEnrichmentEngine:
                     self._merge_clearbit_data(enriched_data, result)
                     self.quota_manager.record_request("clearbit")
                     enriched_data["data_sources"].append("clearbit")
-                    logger.info(f"✅ Clearbit enrichment successful for {email}")
+                    logger.info(f"✅ Clearbit enrichment successful for {email!r}")
             except Exception as e:
-                logger.error(f"Clearbit error: {e}")
+                logger.error(f"Clearbit error: {e!r}")
 
         # Try Hunter.io for email verification
         if (
@@ -120,9 +120,9 @@ class RealDataEnrichmentEngine:
                     self._merge_hunter_data(enriched_data, result)
                     self.quota_manager.record_request("hunter")
                     enriched_data["data_sources"].append("hunter")
-                    logger.info(f"✅ Hunter.io verification successful for {email}")
+                    logger.info(f"✅ Hunter.io verification successful for {email!r}")
             except Exception as e:
-                logger.error(f"Hunter.io error: {e}")
+                logger.error(f"Hunter.io error: {e!r}")
 
         # Calculate enrichment score based on filled fields
         enriched_data["enrichment_score"] = self._calculate_enrichment_score(
@@ -214,7 +214,7 @@ class RealDataEnrichmentEngine:
         )
 
         return {
-            "full_name": f"{first_name} {last_name}",
+            "full_name": f"{first_name} {last_name!r}",
             "email": email,
             "professional": {
                 "current_title": "Software Engineer",
@@ -224,7 +224,7 @@ class RealDataEnrichmentEngine:
             },
             "contact": {
                 "phone": "+1-555-0123",
-                "linkedin": f"https://linkedin.com/in/{first_name.lower()}-{last_name.lower()}",
+                "linkedin": f"https://linkedin.com/in/{first_name.lower()}-{last_name.lower()!r}",
             },
             "location": {
                 "city": "San Francisco",
@@ -275,10 +275,10 @@ class RealDataEnrichmentEngine:
                     self.quota_manager.record_request("clearbit")
                     enriched_data["data_sources"].append("clearbit")
                     logger.info(
-                        f"✅ Clearbit company enrichment successful for {domain}"
+                        f"✅ Clearbit company enrichment successful for {domain!r}"
                     )
             except Exception as e:
-                logger.error(f"Clearbit company error: {e}")
+                logger.error(f"Clearbit company error: {e!r}")
 
         enriched_data["enrichment_score"] = self._calculate_company_enrichment_score(
             enriched_data
@@ -331,8 +331,8 @@ class RealDataEnrichmentEngine:
             "location": {"city": "San Francisco", "state": "CA", "country": "USA"},
             "tech_stack": ["Python", "React", "PostgreSQL"],
             "social": {
-                "linkedin": f"https://linkedin.com/company/{name.lower().replace(' ', '-')}",
-                "twitter": f"https://twitter.com/{name.lower().replace(' ', '')}",
+                "linkedin": f"https://linkedin.com/company/{name.lower().replace(' ', '-')!r}",
+                "twitter": f"https://twitter.com/{name.lower().replace(' ', '')!r}",
             },
             "enrichment_score": 70,
             "data_sources": ["mock_enhanced"],

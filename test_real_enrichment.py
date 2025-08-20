@@ -292,14 +292,14 @@ def show_free_api_signup_instructions():
             ],
         },
         {
-            "name": "Clearbit",
-            "url": "https://clearbit.com/api",
-            "free_tier": "50 requests/month",
+            "name": "GitHub API",
+            "url": "https://github.com/settings/tokens",
+            "free_tier": "5,000 requests/hour",
             "setup": [
-                "1. Sign up at clearbit.com",
-                "2. Go to API Keys section",
-                "3. Copy secret key",
-                "4. Set CLEARBIT_API_KEY=your_key",
+                "1. Go to GitHub Settings > Developer settings",
+                "2. Generate new personal access token",
+                "3. Select 'public_repo' scope",
+                "4. Set GITHUB_TOKEN=your_token",
             ],
         },
         {
@@ -333,9 +333,9 @@ def show_free_api_signup_instructions():
 
     print("\n🔧 Environment Setup:")
     print("   export HUNTER_API_KEY='your_hunter_key'")
-    print("   export CLEARBIT_API_KEY='your_clearbit_key'")
     print("   export FULLCONTACT_API_KEY='your_fullcontact_key'")
     print("   export ZEROBOUNCE_API_KEY='your_zerobounce_key'")
+    print("   export GITHUB_TOKEN='your_github_token'")
 
 
 async def main():

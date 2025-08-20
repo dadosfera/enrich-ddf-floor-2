@@ -21,14 +21,11 @@ Transform the current mock data enrichment system into a production-ready real d
   5. ✅ Copy key (starts with `pk_`)
 - **Configuration**: `HUNTER_API_KEY=pk_your_key_here`
 
-#### **✅ Clearbit - Person & Company Enrichment**
-- **Free Tier**: 50 requests/month
-- **Signup**: https://clearbit.com/signup
-- **Process**:
-  1. ✅ Create account
-  2. ✅ Go to API → Keys
-  3. ✅ Copy secret key (starts with `sk_`)
-- **Configuration**: `CLEARBIT_API_KEY=sk_your_key_here`
+#### **❌ ~~Clearbit~~ - DISCONTINUED**
+- **Status**: ❌ Acquired by HubSpot in 2021, no longer available
+- **Alternative**: Use FullContact or People Data Labs for similar functionality
+- **Migration**: Replace with GitHub API for developer profiles
+- **Note**: Existing integrations should be updated to use alternative services
 
 #### **✅ FullContact - Social Profiles**
 - **Free Tier**: 1,000 lookups/month
@@ -47,6 +44,16 @@ Transform the current mock data enrichment system into a production-ready real d
   2. ✅ Go to API → API v2
   3. ✅ Copy API key
 - **Configuration**: `ZEROBOUNCE_API_KEY=your_key_here`
+
+#### **🔄 GitHub API - Developer Profiles**
+- **Free Tier**: 5,000 requests/hour
+- **Signup**: https://github.com/settings/tokens
+- **Process**:
+  1. 🔄 Go to GitHub Settings → Developer settings
+  2. 🔄 Generate new personal access token
+  3. 🔄 Select 'public_repo' scope
+  4. 🔄 Copy token (starts with `ghp_`)
+- **Configuration**: `GITHUB_TOKEN=ghp_your_token_here`
 
 ### **Step 2: Environment Configuration (5 minutes)**
 

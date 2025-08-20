@@ -40,7 +40,7 @@ def find_available_port(
         if is_port_available(port, host):
             return port
     raise RuntimeError(
-        f"No available port found in range {start_port}-{start_port + max_attempts - 1}"
+        f"No available port found in range {start_port}-{start_port + max_attempts - 1!r}"
     )
 
 
@@ -48,9 +48,9 @@ def find_available_port(
 async def lifespan(_app: FastAPI):
     """Application lifespan manager."""
     # Startup
-    print(f"🚀 Starting {settings.app_name} v{settings.app_version}")
-    print(f"📊 Database: {settings.database_url}")
-    print(f"🔒 Debug mode: {settings.debug}")
+    print(f"🚀 Starting {settings.app_name} v{settings.app_version!r}")
+    print(f"📊 Database: {settings.database_url!r}")
+    print(f"🔒 Debug mode: {settings.debug!r}")
 
     # Create tables
     Base.metadata.create_all(bind=engine)
@@ -89,7 +89,7 @@ logger = logging.getLogger(__name__)
 async def root():
     """Root endpoint returning basic application information."""
     return {
-        "message": f"Welcome to {settings.app_name}",
+        "message": f"Welcome to {settings.app_name!r}",
         "version": settings.app_version,
         "status": "running",
         "debug": settings.debug,
@@ -124,7 +124,7 @@ async def list_companies(
     skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 ):
     """List companies from database."""
-    logger.info(f"📋 Fetching companies with skip={skip}, limit={limit}")
+    logger.info(f"📋 Fetching companies with skip={skip}, limit={limit!r}")
     try:
         companies = db.query(Company).offset(skip).limit(limit).all()
         company_list = [company.to_dict() for company in companies]
@@ -143,14 +143,14 @@ async def list_companies(
     except Exception as e:
         logger.exception("❌ Failed to fetch companies")
         raise HTTPException(
-            status_code=500, detail=f"Failed to fetch companies: {e!s}"
+            status_code=500, detail=f"Failed to fetch companies: {e!s!r}"
         ) from e
 
 
 @app.post("/api/v1/companies", response_model=Dict[str, Any])
 async def create_company(company_data: Dict[str, Any], db: Session = Depends(get_db)):
     """Create a new company."""
-    logger.info(f"🏢 Creating new company: {company_data.get('name', 'Unknown')}")
+    logger.info(f"🏢 Creating new company: {company_data.get('name', 'Unknown')!r}")
     try:
         company = Company(**company_data)
         db.add(company)
@@ -164,20 +164,20 @@ async def create_company(company_data: Dict[str, Any], db: Session = Depends(get
             "message": f"Company '{company.name}' created successfully",
         }
 
-        logger.info(f"✅ Successfully created company with ID: {company.id}")
+        logger.info(f"✅ Successfully created company with ID: {company.id!r}")
         return response
     except Exception as e:
         db.rollback()
-        logger.exception(f"❌ Failed to create company: {company_data}")
+        logger.exception(f"❌ Failed to create company: {company_data!r}")
         raise HTTPException(
-            status_code=400, detail=f"Failed to create company: {e!s}"
+            status_code=400, detail=f"Failed to create company: {e!s!r}"
         ) from e
 
 
 @app.get("/api/v1/contacts", response_model=Dict[str, Any])
 async def list_contacts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """List contacts from database."""
-    logger.info(f"👥 Fetching contacts with skip={skip}, limit={limit}")
+    logger.info(f"👥 Fetching contacts with skip={skip}, limit={limit!r}")
     try:
         contacts = db.query(Contact).offset(skip).limit(limit).all()
         contact_list = [contact.to_dict() for contact in contacts]
@@ -196,14 +196,14 @@ async def list_contacts(skip: int = 0, limit: int = 100, db: Session = Depends(g
     except Exception as e:
         logger.exception("❌ Failed to fetch contacts")
         raise HTTPException(
-            status_code=500, detail=f"Failed to fetch contacts: {e!s}"
+            status_code=500, detail=f"Failed to fetch contacts: {e!s!r}"
         ) from e
 
 
 @app.post("/api/v1/contacts", response_model=Dict[str, Any])
 async def create_contact(contact_data: Dict[str, Any], db: Session = Depends(get_db)):
     """Create a new contact."""
-    logger.info(f"👤 Creating new contact: {contact_data.get('name', 'Unknown')}")
+    logger.info(f"👤 Creating new contact: {contact_data.get('name', 'Unknown')!r}")
     try:
         contact = Contact(**contact_data)
         db.add(contact)
@@ -217,20 +217,20 @@ async def create_contact(contact_data: Dict[str, Any], db: Session = Depends(get
             "message": f"Contact '{contact.name}' created successfully",
         }
 
-        logger.info(f"✅ Successfully created contact with ID: {contact.id}")
+        logger.info(f"✅ Successfully created contact with ID: {contact.id!r}")
         return response
     except Exception as e:
         db.rollback()
-        logger.exception(f"❌ Failed to create contact: {contact_data}")
+        logger.exception(f"❌ Failed to create contact: {contact_data!r}")
         raise HTTPException(
-            status_code=400, detail=f"Failed to create contact: {e!s}"
+            status_code=400, detail=f"Failed to create contact: {e!s!r}"
         ) from e
 
 
 @app.get("/api/v1/products", response_model=Dict[str, Any])
 async def list_products(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     """List products from database."""
-    logger.info(f"🛍️ Fetching products with skip={skip}, limit={limit}")
+    logger.info(f"🛍️ Fetching products with skip={skip}, limit={limit!r}")
     try:
         products = db.query(Product).offset(skip).limit(limit).all()
         product_list = [product.to_dict() for product in products]
@@ -249,14 +249,14 @@ async def list_products(skip: int = 0, limit: int = 100, db: Session = Depends(g
     except Exception as e:
         logger.exception("❌ Failed to fetch products")
         raise HTTPException(
-            status_code=500, detail=f"Failed to fetch products: {e!s}"
+            status_code=500, detail=f"Failed to fetch products: {e!s!r}"
         ) from e
 
 
 @app.post("/api/v1/products", response_model=Dict[str, Any])
 async def create_product(product_data: Dict[str, Any], db: Session = Depends(get_db)):
     """Create a new product."""
-    logger.info(f"📦 Creating new product: {product_data.get('name', 'Unknown')}")
+    logger.info(f"📦 Creating new product: {product_data.get('name', 'Unknown')!r}")
     try:
         product = Product(**product_data)
         db.add(product)
@@ -270,13 +270,13 @@ async def create_product(product_data: Dict[str, Any], db: Session = Depends(get
             "message": f"Product '{product.name}' created successfully",
         }
 
-        logger.info(f"✅ Successfully created product with ID: {product.id}")
+        logger.info(f"✅ Successfully created product with ID: {product.id!r}")
         return response
     except Exception as e:
         db.rollback()
-        logger.exception(f"❌ Failed to create product: {product_data}")
+        logger.exception(f"❌ Failed to create product: {product_data!r}")
         raise HTTPException(
-            status_code=400, detail=f"Failed to create product: {e!s}"
+            status_code=400, detail=f"Failed to create product: {e!s!r}"
         ) from e
 
 
@@ -288,7 +288,7 @@ async def create_product(product_data: Dict[str, Any], db: Session = Depends(get
 @app.post("/api/v1/integrations/pdl/enrich-person")
 async def enrich_person_pdl(request_data: Dict[str, Any]):
     """Enrich person data using People Data Labs API."""
-    logger.info(f"🔍 PDL Person enrichment request: {request_data}")
+    logger.info(f"🔍 PDL Person enrichment request: {request_data!r}")
 
     try:
         # Mock enrichment response for testing (replace with real PDL API call)
@@ -322,7 +322,7 @@ async def enrich_person_pdl(request_data: Dict[str, Any]):
                 "linkedin_url": (
                     f"https://linkedin.com/in/"
                     f"{request_data.get('first_name', 'unknown').lower()}-"
-                    f"{request_data.get('last_name', 'person').lower()}"
+                    f"{request_data.get('last_name', 'person').lower()!r}"
                 ),
                 "location": "San Francisco, CA",
                 "skills": ["Python", "JavaScript", "FastAPI", "React"],
@@ -337,14 +337,14 @@ async def enrich_person_pdl(request_data: Dict[str, Any]):
     except Exception as e:
         logger.exception("❌ PDL Person enrichment failed")
         raise HTTPException(
-            status_code=500, detail=f"Person enrichment failed: {str(e)}"
+            status_code=500, detail=f"Person enrichment failed: {str(e)!r}"
         ) from e
 
 
 @app.post("/api/v1/integrations/pdl/enrich-company")
 async def enrich_company_pdl(request_data: Dict[str, Any]):
     """Enrich company data using People Data Labs API."""
-    logger.info(f"🏢 PDL Company enrichment request: {request_data}")
+    logger.info(f"🏢 PDL Company enrichment request: {request_data!r}")
 
     try:
         # Mock enrichment response for testing (replace with real PDL API call)
@@ -363,7 +363,7 @@ async def enrich_company_pdl(request_data: Dict[str, Any]):
                 "employee_count": 350,
                 "industry": "Technology",
                 "sector": "Software",
-                "website": f"https://{domain}",
+                "website": f"https://{domain!r}",
                 "domain": domain,
                 "founded": 2010,
                 "location": {
@@ -371,8 +371,8 @@ async def enrich_company_pdl(request_data: Dict[str, Any]):
                     "region": "California",
                     "country": "United States",
                 },
-                "linkedin_url": f"https://linkedin.com/company/{company_name.lower().replace(' ', '-')}",
-                "twitter_url": f"https://twitter.com/{company_name.lower().replace(' ', '')}",
+                "linkedin_url": f"https://linkedin.com/company/{company_name.lower().replace(' ', '-')!r}",
+                "twitter_url": f"https://twitter.com/{company_name.lower().replace(' ', '')!r}",
                 "description": f"{company_name} is a leading technology company specializing in innovative software solutions.",
                 "technologies": ["Python", "JavaScript", "AWS", "Docker"],
                 "funding": {"total_funding": 50000000, "last_funding_type": "Series B"},
@@ -387,14 +387,14 @@ async def enrich_company_pdl(request_data: Dict[str, Any]):
     except Exception as e:
         logger.exception("❌ PDL Company enrichment failed")
         raise HTTPException(
-            status_code=500, detail=f"Company enrichment failed: {str(e)}"
+            status_code=500, detail=f"Company enrichment failed: {str(e)!r}"
         ) from e
 
 
 @app.post("/api/v1/integrations/wiza/enrich-profile")
 async def enrich_linkedin_profile_wiza(request_data: Dict[str, Any]):
     """Enrich LinkedIn profile using Wiza API."""
-    logger.info(f"🔗 Wiza LinkedIn enrichment request: {request_data}")
+    logger.info(f"🔗 Wiza LinkedIn enrichment request: {request_data!r}")
 
     try:
         linkedin_url = request_data.get("linkedin_url", "")
@@ -445,7 +445,7 @@ async def enrich_linkedin_profile_wiza(request_data: Dict[str, Any]):
     except Exception as e:
         logger.exception("❌ Wiza LinkedIn enrichment failed")
         raise HTTPException(
-            status_code=500, detail=f"LinkedIn profile enrichment failed: {str(e)}"
+            status_code=500, detail=f"LinkedIn profile enrichment failed: {str(e)!r}"
         ) from e
 
 
@@ -454,7 +454,7 @@ async def enrich_person_data(
     request_data: Dict[str, Any], db: Session = Depends(get_db)
 ):
     """Main enrichment endpoint for person data."""
-    logger.info(f"🔍 Person enrichment request: {request_data}")
+    logger.info(f"🔍 Person enrichment request: {request_data!r}")
 
     try:
         # Import and use the real data enrichment engine
@@ -493,7 +493,7 @@ async def enrich_person_data(
     except Exception as e:
         logger.exception("❌ Person enrichment failed")
         raise HTTPException(
-            status_code=500, detail=f"Person enrichment failed: {str(e)}"
+            status_code=500, detail=f"Person enrichment failed: {str(e)!r}"
         ) from e
 
 
@@ -502,7 +502,7 @@ async def enrich_company_data(
     request_data: Dict[str, Any], db: Session = Depends(get_db)
 ):
     """Main enrichment endpoint for company data."""
-    logger.info(f"🏢 Company enrichment request: {request_data}")
+    logger.info(f"🏢 Company enrichment request: {request_data!r}")
 
     try:
         # Import and use the real data enrichment engine
@@ -541,7 +541,7 @@ async def enrich_company_data(
     except Exception as e:
         logger.exception("❌ Company enrichment failed")
         raise HTTPException(
-            status_code=500, detail=f"Company enrichment failed: {str(e)}"
+            status_code=500, detail=f"Company enrichment failed: {str(e)!r}"
         ) from e
 
 
@@ -551,13 +551,13 @@ if __name__ == "__main__":
         if not is_port_available(settings.port, settings.host):
             logger.warning(f"Port {settings.port} is occupied, finding alternative...")
             available_port = find_available_port(settings.port, settings.host)
-            logger.info(f"Using alternative port: {available_port}")
+            logger.info(f"Using alternative port: {available_port!r}")
         else:
             available_port = settings.port
 
         # Log startup information
-        logger.info(f"🌐 Server starting on {settings.host}:{available_port}")
-        logger.info(f"📋 Base URL: http://{settings.host}:{available_port}")
+        logger.info(f"🌐 Server starting on {settings.host}:{available_port!r}")
+        logger.info(f"📋 Base URL: http://{settings.host}:{available_port!r}")
         logger.info(f"📚 API Docs: http://{settings.host}:{available_port}/docs")
         logger.info(f"❤️ Health Check: http://{settings.host}:{available_port}/health")
 
