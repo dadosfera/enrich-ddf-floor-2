@@ -71,7 +71,7 @@ class TestCriticalEndpoints:
             "twitter_url",
         ]
         contact_payload = {
-            k: v for k, v in sample_contact_data.items() if k in allowed_fields  # TODO: Review loop variable naming (PLW2901)
+            k: v for k, v in sample_contact_data.items() if k in allowed_fields  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
         }
         # Use a unique email to avoid uniqueness constraint violation
         contact_payload["email"] = f"test_{uuid.uuid4().hex[:8]}@example.com"

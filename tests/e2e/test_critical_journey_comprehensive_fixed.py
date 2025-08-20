@@ -194,7 +194,7 @@ def verify_with_exponential_backoff(base_url, test_data, created_ids, max_attemp
                 # Verify our test company is in the list
                 test_company_found = any(
                     company.get("name") == test_data["company"]["name"]
-                    for company in companies_data  # TODO: Review loop variable naming (PLW2901)
+                    for company in companies_data  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
                 )
 
                 if test_company_found:
@@ -209,7 +209,7 @@ def verify_with_exponential_backoff(base_url, test_data, created_ids, max_attemp
                     # Verify our test contact is in the list
                     test_contact_found = any(
                         contact.get("email") == test_data["contact"]["email"]
-                        for contact in contacts_data  # TODO: Review loop variable naming (PLW2901)
+                        for contact in contacts_data  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
                     )
 
                     if test_contact_found:
@@ -226,7 +226,7 @@ def verify_with_exponential_backoff(base_url, test_data, created_ids, max_attemp
                         # Verify our test product is in the list
                         test_product_found = any(
                             product.get("name") == test_data["product"]["name"]
-                            for product in products_data  # TODO: Review loop variable naming (PLW2901)
+                            for product in products_data  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
                         )
 
                         if test_product_found:
@@ -520,7 +520,7 @@ def main():
     """Run all comprehensive E2E tests with comprehensive fixes applied."""
     base_url = "http://127.0.0.1:8000"
 
-    # Generate unique timestamp for test data to avoid constraint violations  # TODO: Review loop variable naming (PLW2901)
+    # Generate unique timestamp for test data to avoid constraint violations  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
     timestamp = int(time.time())
 
     test_data = {

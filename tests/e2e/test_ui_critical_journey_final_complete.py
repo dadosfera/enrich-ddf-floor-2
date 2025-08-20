@@ -8,7 +8,6 @@ Simplified version with robust error handling
 import asyncio
 import logging
 import uuid
-from datetime import datetime
 
 import requests
 from playwright.async_api import async_playwright
@@ -386,7 +385,7 @@ class FinalUITest:
                     self.test_results[test_name] = False
 
             # Calculate results
-            passed_tests = sum(1 for result in self.test_results.values() if result)  # TODO: Review loop variable naming (PLW2901)
+            passed_tests = sum(1 for result in self.test_results.values() if result)  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
             total_tests = len(self.test_results)
             success_rate = (passed_tests / total_tests) * 100 if total_tests > 0 else 0
 
@@ -395,7 +394,7 @@ class FinalUITest:
             logger.info("📊 FINAL UI E2E TEST RESULTS")
             logger.info("=" * 60)
 
-            for test_name, result in self.test_results.items():  # TODO: Review loop variable naming (PLW2901)
+            for test_name, result in self.test_results.items():  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
                 status = "✅ PASS" if result else "❌ FAIL"
                 logger.info(f"{test_name}: {status}")
 

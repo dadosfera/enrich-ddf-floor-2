@@ -311,7 +311,7 @@ class RealDataEnrichmentEngine:
     def _calculate_company_enrichment_score(self, data: Dict) -> int:
         """Calculate company enrichment score."""
         key_fields = ["name", "domain", "industry", "employees", "founded", "location"]
-        filled_fields = sum(1 for field in key_fields if data.get(field))  # TODO: Review loop variable naming (PLW2901)
+        filled_fields = sum(1 for field in key_fields if data.get(field))  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
         return int((filled_fields / len(key_fields)) * 100)
 
     def _generate_mock_company_data(self, company_data: Dict) -> Dict:

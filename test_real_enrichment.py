@@ -20,14 +20,14 @@ def print_section(title: str):
 
 
 def print_result(title: str, data: dict, highlight_real: bool = False):
-    """Print formatted enrichment result."""  # TODO: Review loop variable naming (PLW2901)
+    """Print formatted enrichment result."""  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
     print(f"\n🔍 {title}")
     print("-" * 60)
 
     if highlight_real and "mock" not in str(data.get("data_sources", [])):
         print("✅ REAL DATA ENRICHMENT")
     elif "mock" in str(data.get("data_sources", [])):
-        print("🚨 MOCK DATA (Configure API keys for real data)")  # TODO: Review loop variable naming (PLW2901)
+        print("🚨 MOCK DATA (Configure API keys for real data)")  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
 
     print(json.dumps(data, indent=2))
 
@@ -46,7 +46,7 @@ def check_api_keys():
     configured_keys = []
     missing_keys = []
 
-    for key, value in keys.items():  # TODO: Review loop variable naming (PLW2901)
+    for key, value in keys.items():  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
         if value and value != "your_key_here":
             configured_keys.append(key)
             print(f"✅ {key}: Configured")
@@ -262,8 +262,8 @@ async def benchmark_enrichment_speed():
             print(f"❌ {email}: Error - {e}")
 
     total_duration = (datetime.now() - start_time).total_seconds()
-    successful_requests = sum(1 for r in results if r.get("success"))  # TODO: Review loop variable naming (PLW2901)
-    average_duration = sum(r["duration"] for r in results if r.get("success")) / max(  # TODO: Review loop variable naming (PLW2901)
+    successful_requests = sum(1 for r in results if r.get("success"))  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
+    average_duration = sum(r["duration"] for r in results if r.get("success")) / max(  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
         successful_requests, 1
     )
 

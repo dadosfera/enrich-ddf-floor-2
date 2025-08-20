@@ -24,7 +24,7 @@ def print_section(title: str):
 
 
 def print_result(title: str, data: Dict[str, Any]):
-    """Print formatted API result."""  # TODO: Review loop variable naming (PLW2901)
+    """Print formatted API result."""  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
     print(f"\n🔍 {title}")
     print("-" * 40)
     print(json.dumps(data, indent=2))
@@ -62,7 +62,7 @@ def get_sample_contacts():
             print(f"✅ Found {contacts_data['total']} total contacts in database")
             print("📋 First 5 contacts:")
 
-            for i, contact in enumerate(contacts_data["data"][:5], 1):  # TODO: Review loop variable naming (PLW2901)
+            for i, contact in enumerate(contacts_data["data"][:5], 1):  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
                 print(f"  {i}. {contact['first_name']} {contact['last_name']}")
                 print(f"     Email: {contact['email']}")
                 print(f"     ID: {contact['id']}")
@@ -87,7 +87,7 @@ def get_sample_companies():
             print(f"✅ Found {companies_data['total']} total companies in database")
             print("📋 First 5 companies:")
 
-            for i, company in enumerate(companies_data["data"][:5], 1):  # TODO: Review loop variable naming (PLW2901)
+            for i, company in enumerate(companies_data["data"][:5], 1):  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
                 print(f"  {i}. {company['name']}")
                 print(f"     Domain: {company.get('domain', 'N/A')}")
                 print(f"     Industry: {company.get('industry', 'N/A')}")

@@ -117,7 +117,7 @@ class TestCriticalSystemBehavior:
         for _i in range(5):
             for operation in operations:
                 response = operation()
-                # Accept 400 for POST requests (duplicate/invalid data)  # TODO: Review loop variable naming (PLW2901)
+                # Accept 400 for POST requests (duplicate/invalid data)  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
                 if response.request.method == "POST":
                     assert response.status_code in [200, 201, 400]
                 else:
@@ -163,7 +163,7 @@ class TestCriticalSystemBehavior:
 
 
 class TestCriticalDataIntegrity:
-    """Critical tests for data integrity and validation."""  # TODO: Review loop variable naming (PLW2901)
+    """Critical tests for data integrity and validation."""  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
 
     def test_data_integrity_across_operations(self, client: TestClient):
         """CRITICAL: Test data integrity is maintained across operations."""

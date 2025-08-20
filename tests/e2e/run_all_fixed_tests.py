@@ -79,10 +79,10 @@ async def run_all_tests():
         logger.info("-" * 60)
 
     # Calculate statistics
-    passed = sum(1 for r in results if r["status"] == "PASS")  # TODO: Review loop variable naming (PLW2901)
-    failed = sum(1 for r in results if r["status"] == "FAIL")  # TODO: Review loop variable naming (PLW2901)
-    timeout = sum(1 for r in results if r["status"] == "TIMEOUT")  # TODO: Review loop variable naming (PLW2901)
-    error = sum(1 for r in results if r["status"] == "ERROR")  # TODO: Review loop variable naming (PLW2901)
+    passed = sum(1 for r in results if r["status"] == "PASS")  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
+    failed = sum(1 for r in results if r["status"] == "FAIL")  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
+    timeout = sum(1 for r in results if r["status"] == "TIMEOUT")  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
+    error = sum(1 for r in results if r["status"] == "ERROR")  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
     total = len(results)
 
     success_rate = (passed / total) * 100 if total > 0 else 0
@@ -92,7 +92,7 @@ async def run_all_tests():
     logger.info("📊 COMPREHENSIVE TEST SUITE RESULTS")
     logger.info("=" * 80)
 
-    for result in results:  # TODO: Review loop variable naming (PLW2901)
+    for result in results:  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
         status_icon = "✅" if result["status"] == "PASS" else "❌"
         logger.info(f"{status_icon} {result['file']}: {result['status']}")
 

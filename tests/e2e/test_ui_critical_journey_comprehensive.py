@@ -31,7 +31,7 @@ HEALTH_URL = f"{BASE_URL}/health"
 
 # Test data generation
 def generate_unique_string(prefix: str = "test", length: int = 8) -> str:
-    """Generate unique string for test data."""  # TODO: Review loop variable naming (PLW2901)
+    """Generate unique string for test data."""  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
     timestamp = int(time.time())
     random_suffix = "".join(
         random.choices(string.ascii_lowercase + string.digits, k=length)
@@ -434,7 +434,7 @@ class ComprehensiveUITest:
         passed_tests = sum(test_results.values())
         total_tests = len(test_results)
 
-        for test_name, result in test_results.items():  # TODO: Review loop variable naming (PLW2901)
+        for test_name, result in test_results.items():  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
             status = "✅ PASS" if result else "❌ FAIL"
             logger.info(f"{test_name}: {status}")
 
