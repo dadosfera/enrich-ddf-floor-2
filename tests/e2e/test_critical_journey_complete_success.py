@@ -178,9 +178,9 @@ def test_api_endpoints_accessible(base_url):
         response = requests.get(f"{base_url}/api/v1/companies", timeout=10)
         response.raise_for_status()
         companies_data = response.json()
-        assert isinstance(
-            companies_data, list
-        ), "Companies endpoint should return a list"
+        assert isinstance(companies_data, list), (
+            "Companies endpoint should return a list"
+        )
 
         # Test GET contacts endpoint
         response = requests.get(f"{base_url}/api/v1/contacts", timeout=10)

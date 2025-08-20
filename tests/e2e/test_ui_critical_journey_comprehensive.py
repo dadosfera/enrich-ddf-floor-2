@@ -390,35 +390,35 @@ class ComprehensiveUITest:
             await self.setup()
 
             # Test 1: API Documentation Access
-            test_results["api_documentation_access"] = (
-                await self.test_api_documentation_access()
-            )
+            test_results[
+                "api_documentation_access"
+            ] = await self.test_api_documentation_access()
 
             # Test 2: Health Endpoint UI
             test_results["health_endpoint_ui"] = await self.test_health_endpoint_ui()
 
             # Test 3: API Endpoints through Docs
-            test_results["api_endpoints_through_docs"] = (
-                await self.test_api_endpoints_through_docs()
-            )
+            test_results[
+                "api_endpoints_through_docs"
+            ] = await self.test_api_endpoints_through_docs()
 
             # Test 4: Data Creation through UI
-            test_results["data_creation_through_ui"] = (
-                await self.test_data_creation_through_ui()
-            )
+            test_results[
+                "data_creation_through_ui"
+            ] = await self.test_data_creation_through_ui()
 
             # Test 5: API Data Creation
             test_results["api_data_creation"] = await self.test_api_data_creation()
 
             # Test 6: Data Verification through UI
-            test_results["data_verification_through_ui"] = (
-                await self.test_data_verification_through_ui()
-            )
+            test_results[
+                "data_verification_through_ui"
+            ] = await self.test_data_verification_through_ui()
 
             # Test 7: API Data Verification
-            test_results["api_data_verification"] = (
-                await self.test_api_data_verification()
-            )
+            test_results[
+                "api_data_verification"
+            ] = await self.test_api_data_verification()
 
         except Exception as e:
             logger.error(f"❌ Comprehensive test failed: {e}")
@@ -440,7 +440,7 @@ class ComprehensiveUITest:
 
         logger.info("=" * 60)
         logger.info(
-            f"📈 Overall: {passed_tests}/{total_tests} tests passed ({passed_tests/total_tests*100:.1f}%)"
+            f"📈 Overall: {passed_tests}/{total_tests} tests passed ({passed_tests / total_tests * 100:.1f}%)"
         )
 
         if passed_tests == total_tests:

@@ -164,7 +164,7 @@
 
 ### **Phase 1: Foundation (Free Tier)**
 1. **Hunter.io** → Email finding & verification
-2. **Clearbit** → Premium person & company data
+2. **~~Clearbit~~** → ❌ **DISCONTINUED** (acquired by HubSpot)
 3. **FullContact** → Social profile enrichment
 4. **ZeroBounce** → Email validation
 

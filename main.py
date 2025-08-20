@@ -40,8 +40,7 @@ def find_available_port(
         if is_port_available(port, host):
             return port
     raise RuntimeError(
-        f"No available port found in range "
-        f"{start_port}-{start_port + max_attempts - 1}"
+        f"No available port found in range {start_port}-{start_port + max_attempts - 1}"
     )
 
 
@@ -109,9 +108,7 @@ async def health_check(db: Session = Depends(get_db)):
     except Exception as e:
         logger.exception("Database health check failed")
         db_status = "disconnected"
-        raise HTTPException(
-            status_code=503, detail="Database unavailable"
-        ) from e
+        raise HTTPException(status_code=503, detail="Database unavailable") from e
 
     return {
         "status": "healthy",
@@ -146,8 +143,7 @@ async def list_companies(
     except Exception as e:
         logger.exception("❌ Failed to fetch companies")
         raise HTTPException(
-            status_code=500, 
-            detail=f"Failed to fetch companies: {e!s}"
+            status_code=500, detail=f"Failed to fetch companies: {e!s}"
         ) from e
 
 
@@ -288,11 +284,12 @@ async def create_product(product_data: Dict[str, Any], db: Session = Depends(get
 # ENRICHMENT ENDPOINTS
 # ==============================================================================
 
+
 @app.post("/api/v1/integrations/pdl/enrich-person")
 async def enrich_person_pdl(request_data: Dict[str, Any]):
     """Enrich person data using People Data Labs API."""
     logger.info(f"🔍 PDL Person enrichment request: {request_data}")
-    
+
     try:
         # Mock enrichment response for testing (replace with real PDL API call)
         enriched_data = {
@@ -305,19 +302,19 @@ async def enrich_person_pdl(request_data: Dict[str, Any]):
                 "current_role": {
                     "title": "Software Engineer",
                     "company": "Tech Corp",
-                    "seniority_level": "mid"
+                    "seniority_level": "mid",
                 },
                 "experience": [
                     {
                         "company": "Tech Corp",
                         "title": "Software Engineer",
-                        "start_date": "2020-01-01"
+                        "start_date": "2020-01-01",
                     }
                 ],
                 "education": [
                     {
                         "school": "University of Technology",
-                        "degree": "Bachelor of Computer Science"
+                        "degree": "Bachelor of Computer Science",
                     }
                 ],
                 "emails": [request_data.get("email", "unknown@example.com")],
@@ -329,19 +326,18 @@ async def enrich_person_pdl(request_data: Dict[str, Any]):
                 ),
                 "location": "San Francisco, CA",
                 "skills": ["Python", "JavaScript", "FastAPI", "React"],
-                "likelihood": 8
+                "likelihood": 8,
             },
-            "message": "Person enriched successfully (mock data)"
+            "message": "Person enriched successfully (mock data)",
         }
-        
+
         logger.info("✅ PDL Person enrichment successful (mock)")
         return enriched_data
-        
+
     except Exception as e:
         logger.exception("❌ PDL Person enrichment failed")
         raise HTTPException(
-            status_code=500, 
-            detail=f"Person enrichment failed: {str(e)}"
+            status_code=500, detail=f"Person enrichment failed: {str(e)}"
         ) from e
 
 
@@ -349,12 +345,14 @@ async def enrich_person_pdl(request_data: Dict[str, Any]):
 async def enrich_company_pdl(request_data: Dict[str, Any]):
     """Enrich company data using People Data Labs API."""
     logger.info(f"🏢 PDL Company enrichment request: {request_data}")
-    
+
     try:
         # Mock enrichment response for testing (replace with real PDL API call)
         company_name = request_data.get("name", "Unknown Company")
-        domain = request_data.get("domain", f"{company_name.lower().replace(' ', '')}.com")
-        
+        domain = request_data.get(
+            "domain", f"{company_name.lower().replace(' ', '')}.com"
+        )
+
         enriched_data = {
             "success": True,
             "status": 200,
@@ -371,29 +369,25 @@ async def enrich_company_pdl(request_data: Dict[str, Any]):
                 "location": {
                     "city": "San Francisco",
                     "region": "California",
-                    "country": "United States"
+                    "country": "United States",
                 },
                 "linkedin_url": f"https://linkedin.com/company/{company_name.lower().replace(' ', '-')}",
                 "twitter_url": f"https://twitter.com/{company_name.lower().replace(' ', '')}",
                 "description": f"{company_name} is a leading technology company specializing in innovative software solutions.",
                 "technologies": ["Python", "JavaScript", "AWS", "Docker"],
-                "funding": {
-                    "total_funding": 50000000,
-                    "last_funding_type": "Series B"
-                },
-                "likelihood": 9
+                "funding": {"total_funding": 50000000, "last_funding_type": "Series B"},
+                "likelihood": 9,
             },
-            "message": "Company enriched successfully (mock data)"
+            "message": "Company enriched successfully (mock data)",
         }
-        
+
         logger.info("✅ PDL Company enrichment successful (mock)")
         return enriched_data
-        
+
     except Exception as e:
         logger.exception("❌ PDL Company enrichment failed")
         raise HTTPException(
-            status_code=500, 
-            detail=f"Company enrichment failed: {str(e)}"
+            status_code=500, detail=f"Company enrichment failed: {str(e)}"
         ) from e
 
 
@@ -401,10 +395,10 @@ async def enrich_company_pdl(request_data: Dict[str, Any]):
 async def enrich_linkedin_profile_wiza(request_data: Dict[str, Any]):
     """Enrich LinkedIn profile using Wiza API."""
     logger.info(f"🔗 Wiza LinkedIn enrichment request: {request_data}")
-    
+
     try:
         linkedin_url = request_data.get("linkedin_url", "")
-        
+
         # Mock enrichment response for testing (replace with real Wiza API call)
         enriched_data = {
             "success": True,
@@ -418,7 +412,7 @@ async def enrich_linkedin_profile_wiza(request_data: Dict[str, Any]):
                 "current_position": {
                     "title": "Senior Software Engineer",
                     "company": "Tech Corp",
-                    "company_url": "https://linkedin.com/company/tech-corp"
+                    "company_url": "https://linkedin.com/company/tech-corp",
                 },
                 "location": "San Francisco Bay Area",
                 "industry": "Technology",
@@ -428,58 +422,56 @@ async def enrich_linkedin_profile_wiza(request_data: Dict[str, Any]):
                     {
                         "title": "Senior Software Engineer",
                         "company": "Tech Corp",
-                        "duration": "2 yrs"
+                        "duration": "2 yrs",
                     },
                     {
                         "title": "Software Engineer",
                         "company": "StartupCo",
-                        "duration": "1 yr 6 mos"
-                    }
+                        "duration": "1 yr 6 mos",
+                    },
                 ],
                 "education": [
-                    {
-                        "school": "Stanford University",
-                        "degree": "BS Computer Science"
-                    }
+                    {"school": "Stanford University", "degree": "BS Computer Science"}
                 ],
                 "skills": ["Python", "React", "AWS", "Machine Learning"],
-                "connections": 500
+                "connections": 500,
             },
-            "message": "LinkedIn profile enriched successfully (mock data)"
+            "message": "LinkedIn profile enriched successfully (mock data)",
         }
-        
+
         logger.info("✅ Wiza LinkedIn enrichment successful (mock)")
         return enriched_data
-        
+
     except Exception as e:
         logger.exception("❌ Wiza LinkedIn enrichment failed")
         raise HTTPException(
-            status_code=500, 
-            detail=f"LinkedIn profile enrichment failed: {str(e)}"
+            status_code=500, detail=f"LinkedIn profile enrichment failed: {str(e)}"
         ) from e
 
 
 @app.post("/api/v1/enrich/person")
-async def enrich_person_data(request_data: Dict[str, Any], db: Session = Depends(get_db)):
+async def enrich_person_data(
+    request_data: Dict[str, Any], db: Session = Depends(get_db)
+):
     """Main enrichment endpoint for person data."""
     logger.info(f"🔍 Person enrichment request: {request_data}")
-    
+
     try:
         # Import and use the real data enrichment engine
         from core.enrichment.real_data_enrichment import real_enrichment_engine
-        
+
         # Use real data enrichment with fallback to mock data
         enriched_data = await real_enrichment_engine.enrich_person_real(request_data)
-        
+
         # Create enriched person response
         enriched_person = {
             "original_data": request_data,
             "enriched_data": enriched_data,
             "enrichment_score": enriched_data.get("enrichment_score", 0),
             "data_sources": enriched_data.get("data_sources", []),
-            "enriched_at": datetime.utcnow().isoformat()
+            "enriched_at": datetime.utcnow().isoformat(),
         }
-        
+
         # Optionally save to database or update existing contact
         email = enriched_data.get("email")
         if email:
@@ -488,43 +480,46 @@ async def enrich_person_data(request_data: Dict[str, Any], db: Session = Depends
                 # Update existing contact with enriched data
                 contact.enrichment_data = enriched_person["enriched_data"]
                 db.commit()
-                logger.info(f"✅ Updated existing contact {contact.id} with enriched data")
-        
+                logger.info(
+                    f"✅ Updated existing contact {contact.id} with enriched data"
+                )
+
         return {
             "success": True,
             "data": enriched_person,
-            "message": "Person enriched successfully"
+            "message": "Person enriched successfully",
         }
-        
+
     except Exception as e:
         logger.exception("❌ Person enrichment failed")
         raise HTTPException(
-            status_code=500, 
-            detail=f"Person enrichment failed: {str(e)}"
+            status_code=500, detail=f"Person enrichment failed: {str(e)}"
         ) from e
 
 
 @app.post("/api/v1/enrich/company")
-async def enrich_company_data(request_data: Dict[str, Any], db: Session = Depends(get_db)):
+async def enrich_company_data(
+    request_data: Dict[str, Any], db: Session = Depends(get_db)
+):
     """Main enrichment endpoint for company data."""
     logger.info(f"🏢 Company enrichment request: {request_data}")
-    
+
     try:
         # Import and use the real data enrichment engine
         from core.enrichment.real_data_enrichment import real_enrichment_engine
-        
+
         # Use real data enrichment with fallback to mock data
         enriched_data = await real_enrichment_engine.enrich_company_real(request_data)
-        
+
         # Create enriched company response
         enriched_company = {
             "original_data": request_data,
             "enriched_data": enriched_data,
             "enrichment_score": enriched_data.get("enrichment_score", 0),
             "data_sources": enriched_data.get("data_sources", []),
-            "enriched_at": datetime.utcnow().isoformat()
+            "enriched_at": datetime.utcnow().isoformat(),
         }
-        
+
         # Optionally save to database or update existing company
         domain = enriched_data.get("domain")
         if domain:
@@ -533,19 +528,20 @@ async def enrich_company_data(request_data: Dict[str, Any], db: Session = Depend
                 # Update existing company with enriched data
                 company.enrichment_data = enriched_company["enriched_data"]
                 db.commit()
-                logger.info(f"✅ Updated existing company {company.id} with enriched data")
-        
+                logger.info(
+                    f"✅ Updated existing company {company.id} with enriched data"
+                )
+
         return {
             "success": True,
             "data": enriched_company,
-            "message": "Company enriched successfully"
+            "message": "Company enriched successfully",
         }
-        
+
     except Exception as e:
         logger.exception("❌ Company enrichment failed")
         raise HTTPException(
-            status_code=500, 
-            detail=f"Company enrichment failed: {str(e)}"
+            status_code=500, detail=f"Company enrichment failed: {str(e)}"
         ) from e
 
 
