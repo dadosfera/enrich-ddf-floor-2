@@ -39,7 +39,7 @@ check_env_files_fast() {
             error "  → Keep real credentials in local .env file only"
             errors=$((errors + 1))
         fi
-        
+
         # Check for other suspicious patterns
         if grep -E "(=[a-f0-9]{40}|=xoxb-[0-9]+-)" .env >/dev/null 2>&1; then
             warning "Potential real credentials detected in .env file"
@@ -67,7 +67,7 @@ check_sensitive_files_fast() {
 
     # Check for common sensitive file patterns in project root
     local sensitive_files=0
-    
+
     # Private keys
     if ls *.pem *.key *_rsa id_rsa* 2>/dev/null | head -1 >/dev/null; then
         error "Private key files detected in project root!"
@@ -75,7 +75,7 @@ check_sensitive_files_fast() {
         error "  → Remove or add to .gitignore"
         sensitive_files=1
     fi
-    
+
     # Certificates
     if ls *.crt *.cer *.p12 *.pfx 2>/dev/null | head -1 >/dev/null; then
         error "Certificate files detected in project root!"
@@ -118,33 +118,53 @@ check_database_files_fast() {
     return $errors
 }
 
-# Check staged files for API keys (git pre-commit context)
-check_staged_files() {
+# Check specific files for API keys (optimized for pre-commit)
+check_specific_files() {
     local errors=0
+    local files_to_check=("$@")
 
-    # Only run if we're in a git repository and have staged files
-    if command -v git >/dev/null 2>&1 && git rev-parse --git-dir >/dev/null 2>&1; then
-        local staged_files
-        staged_files=$(git diff --cached --name-only 2>/dev/null || true)
-        
-        if [ -n "$staged_files" ]; then
-            log "Checking staged files for API keys..."
-            
-            # Check each staged file for API key patterns
-            while IFS= read -r file; do
-                if [ -f "$file" ] && [[ "$file" =~ \.(py|js|ts|tsx|json|yaml|yml|env)$ ]]; then
-                    # Quick check for common API key patterns
-                    if git show ":$file" 2>/dev/null | grep -E "(AKIA[0-9A-Z]{16}|sk-[a-zA-Z0-9]{48})" >/dev/null; then
-                        error "Real API key detected in staged file: $file"
-                        error "  → Remove real API keys before committing"
-                        errors=$((errors + 1))
-                    fi
-                fi
-            done <<< "$staged_files"
+    if [ ${#files_to_check[@]} -eq 0 ]; then
+        # Fallback to staged files if no specific files provided
+        if command -v git >/dev/null 2>&1 && git rev-parse --git-dir >/dev/null 2>&1; then
+            local staged_files
+            staged_files=$(git diff --cached --name-only 2>/dev/null || true)
+
+            if [ -n "$staged_files" ]; then
+                while IFS= read -r file; do
+                    files_to_check+=("$file")
+                done <<< "$staged_files"
+            fi
         fi
     fi
 
+    if [ ${#files_to_check[@]} -gt 0 ]; then
+        log "Checking ${#files_to_check[@]} files for API keys..."
+
+        # Check each file for API key patterns
+        for file in "${files_to_check[@]}"; do
+            if [ -f "$file" ] && [[ "$file" =~ \.(py|js|ts|tsx|json|yaml|yml|env)$ ]]; then
+                # Quick check for common API key patterns
+                if grep -E "(AKIA[0-9A-Z]{16}|sk-[a-zA-Z0-9]{48})" "$file" >/dev/null 2>&1; then
+                    error "Real API key detected in file: $file"
+                    error "  → Remove real API keys before committing"
+                    errors=$((errors + 1))
+                fi
+
+                # Check for other suspicious patterns
+                if grep -E "(=[a-f0-9]{40}|=xoxb-[0-9]+-)" "$file" >/dev/null 2>&1; then
+                    warning "Potential real credentials detected in file: $file"
+                    warning "  → Verify these are not real API keys"
+                fi
+            fi
+        done
+    fi
+
     return $errors
+}
+
+# Legacy function for backward compatibility
+check_staged_files() {
+    check_specific_files "$@"
 }
 
 # Main protection function
@@ -153,18 +173,25 @@ main() {
 
     log "Starting fast API key protection scan..."
 
-    # Run fast protection checks
-    check_env_files_fast
-    total_errors=$((total_errors + $?))
+    # If specific files are passed as arguments, only check those
+    if [ $# -gt 0 ]; then
+        log "Checking specific files: $*"
+        check_specific_files "$@"
+        total_errors=$((total_errors + $?))
+    else
+        # Run comprehensive protection checks
+        check_env_files_fast
+        total_errors=$((total_errors + $?))
 
-    check_sensitive_files_fast
-    total_errors=$((total_errors + $?))
+        check_sensitive_files_fast
+        total_errors=$((total_errors + $?))
 
-    check_database_files_fast
-    total_errors=$((total_errors + $?))
+        check_database_files_fast
+        total_errors=$((total_errors + $?))
 
-    check_staged_files
-    total_errors=$((total_errors + $?))
+        check_staged_files
+        total_errors=$((total_errors + $?))
+    fi
 
     # Report results
     if [ $total_errors -eq 0 ]; then

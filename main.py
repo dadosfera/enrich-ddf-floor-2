@@ -397,55 +397,508 @@ async def enrich_linkedin_profile_wiza(request_data: Dict[str, Any]):
     logger.info(f"🔗 Wiza LinkedIn enrichment request: {request_data!r}")
 
     try:
-        linkedin_url = request_data.get("linkedin_url", "")
+        api_key = request_data.get("api_key")
+        if not api_key:
+            raise HTTPException(status_code=400, detail="API key is required")
 
-        # Mock enrichment response for testing (replace with real Wiza API call)
-        enriched_data = {
-            "success": True,
-            "status": 200,
-            "data": {
-                "linkedin_url": linkedin_url,
-                "first_name": "John",
-                "last_name": "Smith",
-                "full_name": "John Smith",
-                "headline": "Senior Software Engineer at Tech Corp",
-                "current_position": {
-                    "title": "Senior Software Engineer",
-                    "company": "Tech Corp",
-                    "company_url": "https://linkedin.com/company/tech-corp",
-                },
-                "location": "San Francisco Bay Area",
-                "industry": "Technology",
-                "email": "john.smith@techcorp.com",
-                "phone": "+1-555-0123",
-                "experience": [
-                    {
-                        "title": "Senior Software Engineer",
-                        "company": "Tech Corp",
-                        "duration": "2 yrs",
-                    },
-                    {
-                        "title": "Software Engineer",
-                        "company": "StartupCo",
-                        "duration": "1 yr 6 mos",
-                    },
-                ],
-                "education": [
-                    {"school": "Stanford University", "degree": "BS Computer Science"}
-                ],
-                "skills": ["Python", "React", "AWS", "Machine Learning"],
-                "connections": 500,
-            },
-            "message": "LinkedIn profile enriched successfully (mock data)",
-        }
+        linkedin_url = request_data.get("linkedin_url")
+        if not linkedin_url:
+            raise HTTPException(status_code=400, detail="LinkedIn URL is required")
 
-        logger.info("✅ Wiza LinkedIn enrichment successful (mock)")
-        return enriched_data
+        include_emails = request_data.get("include_emails", True)
+        include_phone = request_data.get("include_phone", True)
+
+        # Import Wiza service
+        from services.third_party.wiza import WizaService
+
+        wiza_service = WizaService(api_key=api_key)
+
+        # Enrich LinkedIn profile
+        result = await wiza_service.enrich_linkedin_profile(
+            linkedin_url, include_emails, include_phone
+        )
+
+        if result.get("success"):
+            logger.info("✅ Wiza LinkedIn enrichment successful")
+            return {
+                "success": True,
+                "data": result["profile"],
+                "credits_used": result.get("credits_used", 0),
+                "credits_remaining": result.get("credits_remaining", 0),
+                "message": result.get(
+                    "message", "LinkedIn profile enriched successfully"
+                ),
+            }
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Wiza LinkedIn enrichment failed: {result.get('error')}",
+            )
 
     except Exception as e:
         logger.exception("❌ Wiza LinkedIn enrichment failed")
         raise HTTPException(
             status_code=500, detail=f"LinkedIn profile enrichment failed: {str(e)!r}"
+        ) from e
+
+
+@app.post("/api/v1/integrations/wiza/find-email")
+async def find_email_wiza(request_data: Dict[str, Any]):
+    """Find email using Wiza API."""
+    logger.info(f"📧 Wiza email finding request: {request_data!r}")
+
+    try:
+        api_key = request_data.get("api_key")
+        if not api_key:
+            raise HTTPException(status_code=400, detail="API key is required")
+
+        first_name = request_data.get("first_name")
+        last_name = request_data.get("last_name")
+        company_domain = request_data.get("company_domain")
+
+        if not all([first_name, last_name, company_domain]):
+            raise HTTPException(
+                status_code=400,
+                detail="First name, last name, and company domain are required",
+            )
+
+        linkedin_url = request_data.get("linkedin_url")
+
+        # Import Wiza service
+        from services.third_party.wiza import WizaService
+
+        wiza_service = WizaService(api_key=api_key)
+
+        # Find email
+        result = await wiza_service.find_email(
+            str(first_name), str(last_name), str(company_domain), linkedin_url
+        )
+
+        if result.get("success"):
+            logger.info("✅ Wiza email finding successful")
+            return {
+                "success": True,
+                "data": result["emails"],
+                "credits_used": result.get("credits_used", 0),
+                "credits_remaining": result.get("credits_remaining", 0),
+                "message": result.get("message", "Email finding completed"),
+            }
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Wiza email finding failed: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ Wiza email finding failed")
+        raise HTTPException(
+            status_code=500, detail=f"Email finding failed: {str(e)!r}"
+        ) from e
+
+
+@app.post("/api/v1/integrations/wiza/enrich-company")
+async def enrich_company_wiza(request_data: Dict[str, Any]):
+    """Enrich company using Wiza API."""
+    logger.info(f"🏢 Wiza company enrichment request: {request_data!r}")
+
+    try:
+        api_key = request_data.get("api_key")
+        if not api_key:
+            raise HTTPException(status_code=400, detail="API key is required")
+
+        company_domain = request_data.get("company_domain")
+        company_name = request_data.get("company_name")
+        linkedin_url = request_data.get("linkedin_url")
+
+        if not any([company_domain, company_name, linkedin_url]):
+            raise HTTPException(
+                status_code=400, detail="At least one company identifier is required"
+            )
+
+        # Import Wiza service
+        from services.third_party.wiza import WizaService
+
+        wiza_service = WizaService(api_key=api_key)
+
+        # Enrich company
+        result = await wiza_service.enrich_company(
+            company_domain, company_name, linkedin_url
+        )
+
+        if result.get("success"):
+            logger.info("✅ Wiza company enrichment successful")
+            return {
+                "success": True,
+                "data": result["company"],
+                "credits_used": result.get("credits_used", 0),
+                "credits_remaining": result.get("credits_remaining", 0),
+                "message": result.get("message", "Company enrichment completed"),
+            }
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Wiza company enrichment failed: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ Wiza company enrichment failed")
+        raise HTTPException(
+            status_code=500, detail=f"Company enrichment failed: {str(e)!r}"
+        ) from e
+
+
+@app.get("/api/v1/integrations/wiza/credits")
+async def get_wiza_credits(api_key: str):
+    """Get Wiza API credits information."""
+    logger.info("📊 Wiza credits check request")
+
+    try:
+        # Import Wiza service
+        from services.third_party.wiza import WizaService
+
+        wiza_service = WizaService(api_key=api_key)
+
+        # Get credits
+        result = await wiza_service.get_credits()
+
+        if result.get("success"):
+            logger.info("✅ Wiza credits check successful")
+            return {
+                "success": True,
+                "data": {"credits": result["credits"]},
+                "message": result.get("message", "Credits retrieved successfully"),
+            }
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Wiza credits check failed: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ Wiza credits check failed")
+        raise HTTPException(
+            status_code=500, detail=f"Wiza credits check failed: {str(e)!r}"
+        ) from e
+
+
+@app.post("/api/v1/integrations/github/enrich-profile")
+async def enrich_github_profile(request_data: Dict[str, Any]):
+    """Enrich GitHub profile data."""
+    logger.info(f"🐙 GitHub profile enrichment request: {request_data!r}")
+
+    try:
+        username = request_data.get("username")
+        if not username:
+            raise HTTPException(status_code=400, detail="Username is required")
+
+        # Import GitHub service
+        from services.third_party.github import GitHubService
+
+        github_service = GitHubService()
+
+        # Enrich profile
+        result = github_service.enrich_developer_profile(username)
+
+        if result.get("success"):
+            logger.info("✅ GitHub profile enrichment successful")
+            return {
+                "success": True,
+                "data": result,
+                "message": "GitHub profile enriched successfully",
+            }
+        else:
+            raise HTTPException(
+                status_code=404,
+                detail=f"GitHub profile not found or error: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ GitHub profile enrichment failed")
+        raise HTTPException(
+            status_code=500, detail=f"GitHub profile enrichment failed: {str(e)!r}"
+        ) from e
+
+
+@app.post("/api/v1/integrations/github/enrich-organization")
+async def enrich_github_organization(request_data: Dict[str, Any]):
+    """Enrich GitHub organization data."""
+    logger.info(f"🏢 GitHub organization enrichment request: {request_data!r}")
+
+    try:
+        org_name = request_data.get("organization") or request_data.get("org_name")
+        if not org_name:
+            raise HTTPException(status_code=400, detail="Organization name is required")
+
+        # Import GitHub service
+        from services.third_party.github import GitHubService
+
+        github_service = GitHubService()
+
+        # Enrich organization
+        result = github_service.enrich_organization(org_name)
+
+        if result.get("success"):
+            logger.info("✅ GitHub organization enrichment successful")
+            return {
+                "success": True,
+                "data": result,
+                "message": "GitHub organization enriched successfully",
+            }
+        else:
+            raise HTTPException(
+                status_code=404,
+                detail=f"GitHub organization not found or error: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ GitHub organization enrichment failed")
+        raise HTTPException(
+            status_code=500, detail=f"GitHub organization enrichment failed: {str(e)!r}"
+        ) from e
+
+
+@app.get("/api/v1/integrations/github/rate-limit")
+async def get_github_rate_limit():
+    """Get GitHub API rate limit information."""
+    logger.info("📊 GitHub rate limit check request")
+
+    try:
+        # Import GitHub service
+        from services.third_party.github import GitHubService
+
+        github_service = GitHubService()
+
+        # Get rate limit info
+        result = github_service.get_rate_limit_info()
+
+        if "error" not in result:
+            logger.info("✅ GitHub rate limit check successful")
+            return {
+                "success": True,
+                "data": result,
+                "message": "GitHub rate limit retrieved successfully",
+            }
+        else:
+            raise HTTPException(
+                status_code=500,
+                detail=f"GitHub rate limit check failed: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ GitHub rate limit check failed")
+        raise HTTPException(
+            status_code=500, detail=f"GitHub rate limit check failed: {str(e)!r}"
+        ) from e
+
+
+@app.post("/api/v1/integrations/surfe/search-people")
+async def search_people_surfe(request_data: Dict[str, Any]):
+    """Search for people using Surfe API."""
+    logger.info(f"🔍 Surfe people search request: {request_data!r}")
+
+    try:
+        api_key = request_data.get("api_key")
+        if not api_key:
+            raise HTTPException(status_code=400, detail="API key is required")
+
+        filters = request_data.get("filters", {})
+        limit = request_data.get("limit", 10)
+        offset = request_data.get("offset", 0)
+
+        # Import Surfe service
+        from services.third_party.surfe import SurfeService
+
+        surfe_service = SurfeService(api_key=api_key)
+
+        # Search people
+        result = await surfe_service.search_people(filters, limit, offset)
+
+        if result.get("success"):
+            logger.info("✅ Surfe people search successful")
+            return {
+                "success": True,
+                "data": result["people"],
+                "total_count": result.get("total_count", 0),
+                "message": result.get("message", "People search completed"),
+            }
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Surfe people search failed: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ Surfe people search failed")
+        raise HTTPException(
+            status_code=500, detail=f"Surfe people search failed: {str(e)!r}"
+        ) from e
+
+
+@app.post("/api/v1/integrations/surfe/enrich-people")
+async def enrich_people_surfe(request_data: Dict[str, Any]):
+    """Enrich people data using Surfe API."""
+    logger.info(f"🔍 Surfe people enrichment request: {request_data!r}")
+
+    try:
+        api_key = request_data.get("api_key")
+        if not api_key:
+            raise HTTPException(status_code=400, detail="API key is required")
+
+        people = request_data.get("people", [])
+        if not people:
+            raise HTTPException(status_code=400, detail="People data is required")
+
+        include_email = request_data.get("include_email", True)
+        include_mobile = request_data.get("include_mobile", False)
+
+        # Import Surfe service
+        from services.third_party.surfe import SurfeService
+
+        surfe_service = SurfeService(api_key=api_key)
+
+        # Enrich people
+        result = await surfe_service.enrich_people(
+            people, include_email, include_mobile
+        )
+
+        if result.get("success"):
+            logger.info("✅ Surfe people enrichment successful")
+            return {
+                "success": True,
+                "data": result["people"],
+                "credits_used": result.get("credits_used", {}),
+                "credits_remaining": result.get("credits_remaining", {}),
+                "message": result.get("message", "People enrichment completed"),
+            }
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Surfe people enrichment failed: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ Surfe people enrichment failed")
+        raise HTTPException(
+            status_code=500, detail=f"Surfe people enrichment failed: {str(e)!r}"
+        ) from e
+
+
+@app.post("/api/v1/integrations/surfe/search-companies")
+async def search_companies_surfe(request_data: Dict[str, Any]):
+    """Search for companies using Surfe API."""
+    logger.info(f"🏢 Surfe company search request: {request_data!r}")
+
+    try:
+        api_key = request_data.get("api_key")
+        if not api_key:
+            raise HTTPException(status_code=400, detail="API key is required")
+
+        filters = request_data.get("filters", {})
+        limit = request_data.get("limit", 10)
+        offset = request_data.get("offset", 0)
+
+        # Import Surfe service
+        from services.third_party.surfe import SurfeService
+
+        surfe_service = SurfeService(api_key=api_key)
+
+        # Search companies
+        result = await surfe_service.search_companies(filters, limit, offset)
+
+        if result.get("success"):
+            logger.info("✅ Surfe company search successful")
+            return {
+                "success": True,
+                "data": result["companies"],
+                "total_count": result.get("total_count", 0),
+                "message": result.get("message", "Company search completed"),
+            }
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Surfe company search failed: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ Surfe company search failed")
+        raise HTTPException(
+            status_code=500, detail=f"Surfe company search failed: {str(e)!r}"
+        ) from e
+
+
+@app.post("/api/v1/integrations/surfe/enrich-companies")
+async def enrich_companies_surfe(request_data: Dict[str, Any]):
+    """Enrich company data using Surfe API."""
+    logger.info(f"🏢 Surfe company enrichment request: {request_data!r}")
+
+    try:
+        api_key = request_data.get("api_key")
+        if not api_key:
+            raise HTTPException(status_code=400, detail="API key is required")
+
+        companies = request_data.get("companies", [])
+        if not companies:
+            raise HTTPException(status_code=400, detail="Companies data is required")
+
+        # Import Surfe service
+        from services.third_party.surfe import SurfeService
+
+        surfe_service = SurfeService(api_key=api_key)
+
+        # Enrich companies
+        result = await surfe_service.enrich_companies(companies)
+
+        if result.get("success"):
+            logger.info("✅ Surfe company enrichment successful")
+            return {
+                "success": True,
+                "data": result["companies"],
+                "message": result.get("message", "Company enrichment completed"),
+            }
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Surfe company enrichment failed: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ Surfe company enrichment failed")
+        raise HTTPException(
+            status_code=500, detail=f"Surfe company enrichment failed: {str(e)!r}"
+        ) from e
+
+
+@app.get("/api/v1/integrations/surfe/credits")
+async def get_surfe_credits(api_key: str):
+    """Get Surfe API credits information."""
+    logger.info("📊 Surfe credits check request")
+
+    try:
+        # Import Surfe service
+        from services.third_party.surfe import SurfeService
+
+        surfe_service = SurfeService(api_key=api_key)
+
+        # Get credits
+        result = await surfe_service.get_credits()
+
+        if result.get("success"):
+            logger.info("✅ Surfe credits check successful")
+            return {
+                "success": True,
+                "data": result["credits"],
+                "message": result.get("message", "Credits retrieved successfully"),
+            }
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Surfe credits check failed: {result.get('error')}",
+            )
+
+    except Exception as e:
+        logger.exception("❌ Surfe credits check failed")
+        raise HTTPException(
+            status_code=500, detail=f"Surfe credits check failed: {str(e)!r}"
         ) from e
 
 

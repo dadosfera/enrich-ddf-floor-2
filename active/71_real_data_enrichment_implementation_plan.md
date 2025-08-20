@@ -27,14 +27,10 @@ Transform the current mock data enrichment system into a production-ready real d
 - **Migration**: Replace with GitHub API for developer profiles
 - **Note**: Existing integrations should be updated to use alternative services
 
-#### **✅ FullContact - Social Profiles**
-- **Free Tier**: 1,000 lookups/month
-- **Signup**: https://platform.fullcontact.com/signup
-- **Process**:
-  1. ✅ Register account
-  2. ✅ Navigate to API Keys
-  3. ✅ Generate new key
-- **Configuration**: `FULLCONTACT_API_KEY=your_key_here`
+#### **❌ ~~FullContact~~ - EXCLUDED**
+- **Status**: ❌ Not professional enough for our use case
+- **Alternative**: Use GitHub API for developer profiles and People Data Labs for comprehensive data
+- **Note**: Removed from implementation roadmap
 
 #### **✅ ZeroBounce - Email Validation**
 - **Free Tier**: 100 validations/month

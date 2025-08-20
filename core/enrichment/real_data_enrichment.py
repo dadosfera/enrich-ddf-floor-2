@@ -21,7 +21,8 @@ class QuotaManager:
             "hunter": {"monthly": 50, "used": 0, "reset_date": None},
             "clearbit": {"monthly": 50, "used": 0, "reset_date": None},
             "zerobounce": {"monthly": 100, "used": 0, "reset_date": None},
-            "fullcontact": {"monthly": 1000, "used": 0, "reset_date": None},
+            "github": {"hourly": 5000, "used": 0, "reset_date": None},
+            # "fullcontact": {"monthly": 1000, "used": 0, "reset_date": None}, # EXCLUDED - not professional enough
         }
 
     def can_make_request(self, service: str) -> bool:
@@ -73,6 +74,18 @@ class RealDataEnrichmentEngine:
         except ImportError:
             logger.warning("❌ Clearbit service not available")
 
+        try:
+            # Try to import GitHub service
+            if settings.github_token:
+                from services.third_party.github import GitHubService
+
+                self.services["github"] = GitHubService()
+                logger.info("✅ GitHub service initialized")
+            else:
+                logger.warning("❌ GitHub token not found")
+        except ImportError:
+            logger.warning("❌ GitHub service not available")
+
     async def enrich_person_real(self, person_data: Dict[str, Any]) -> Dict[str, Any]:
         """Enrich person data using real APIs with fallback to mock."""
         email = person_data.get("email")
@@ -123,6 +136,29 @@ class RealDataEnrichmentEngine:
                     logger.info(f"✅ Hunter.io verification successful for {email!r}")
             except Exception as e:
                 logger.error(f"Hunter.io error: {e!r}")
+
+        # Try GitHub for developer profile enrichment
+        github_username = person_data.get("github_username") or person_data.get(
+            "username"
+        )
+        if (
+            "github" in self.services
+            and self.quota_manager.can_make_request("github")
+            and github_username
+        ):
+            try:
+                result = self.services["github"].enrich_developer_profile(
+                    github_username
+                )
+                if result.get("success"):
+                    self._merge_github_data(enriched_data, result)
+                    self.quota_manager.record_request("github")
+                    enriched_data["data_sources"].append("github")
+                    logger.info(
+                        f"✅ GitHub enrichment successful for {github_username!r}"
+                    )
+            except Exception as e:
+                logger.error(f"GitHub error: {e!r}")
 
         # Calculate enrichment score based on filled fields
         enriched_data["enrichment_score"] = self._calculate_enrichment_score(
@@ -176,6 +212,63 @@ class RealDataEnrichmentEngine:
             "disposable", False
         )
         enriched_data["contact"]["email_webmail"] = hunter_result.get("webmail", False)
+
+    def _merge_github_data(self, enriched_data: Dict, github_result: Dict):
+        """Merge GitHub API response into enriched data."""
+        profile = github_result.get("profile", {})
+        repositories = github_result.get("repositories", [])
+        organizations = github_result.get("organizations", [])
+
+        if profile:
+            # Update basic info if not already set
+            if not enriched_data["full_name"] and profile.get("name"):
+                enriched_data["full_name"] = profile["name"]
+
+            # Add GitHub-specific contact info
+            enriched_data["contact"]["github"] = github_result.get("github_url")
+            if profile.get("email"):
+                enriched_data["contact"]["github_email"] = profile["email"]
+            if profile.get("twitter_username"):
+                enriched_data["contact"][
+                    "twitter"
+                ] = f"https://twitter.com/{profile['twitter_username']}"
+            if profile.get("blog"):
+                enriched_data["contact"]["website"] = profile["blog"]
+
+            # Add location if available
+            if profile.get("location"):
+                enriched_data["location"]["github_location"] = profile["location"]
+
+            # Add professional info
+            if profile.get("company"):
+                enriched_data["professional"]["github_company"] = profile["company"]
+
+            # Add developer-specific data
+            enriched_data["professional"]["github_stats"] = {
+                "public_repos": profile.get("public_repos", 0),
+                "followers": profile.get("followers", 0),
+                "following": profile.get("following", 0),
+            }
+
+            # Add bio as summary
+            if profile.get("bio"):
+                enriched_data["professional"]["bio"] = profile["bio"]
+
+        # Add programming skills
+        if github_result.get("programming_languages"):
+            enriched_data["skills"].extend(github_result["programming_languages"])
+            # Remove duplicates
+            enriched_data["skills"] = list(set(enriched_data["skills"]))
+
+        # Add repository information
+        if repositories:
+            enriched_data["professional"]["top_repositories"] = repositories
+
+        # Add organization memberships
+        if organizations:
+            enriched_data["professional"]["organizations"] = [
+                org.get("login") for org in organizations
+            ]
 
     def _calculate_enrichment_score(self, data: Dict) -> int:
         """Calculate enrichment score based on data completeness."""
@@ -311,7 +404,9 @@ class RealDataEnrichmentEngine:
     def _calculate_company_enrichment_score(self, data: Dict) -> int:
         """Calculate company enrichment score."""
         key_fields = ["name", "domain", "industry", "employees", "founded", "location"]
-        filled_fields = sum(1 for field in key_fields if data.get(field))  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
+        filled_fields = sum(
+            1 for field in key_fields if data.get(field)
+        )  # TODO: Review loop variable naming (PLW2901)  # TODO: Review loop variable naming (PLW2901)
         return int((filled_fields / len(key_fields)) * 100)
 
     def _generate_mock_company_data(self, company_data: Dict) -> Dict:

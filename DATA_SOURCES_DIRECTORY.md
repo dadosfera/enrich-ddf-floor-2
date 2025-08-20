@@ -17,7 +17,7 @@
 | **Source** | **Free Limit** | **People** | **Companies** | **Quality** | **Status** |
 |------------|----------------|------------|---------------|-------------|------------|
 | **~~Clearbit~~** | ~~50/month~~ | ~~✅ Full profiles~~ | ~~✅ Company intel~~ | ~~⭐⭐⭐⭐⭐~~ | ❌ **DISCONTINUED** |
-| **FullContact** | 1,000/month | ✅ Social profiles | ❌ Limited | ⭐⭐⭐ | 🔄 **Next** |
+| **~~FullContact~~** | ~~1,000/month~~ | ~~✅ Social profiles~~ | ~~❌ Limited~~ | ~~⭐⭐⭐~~ | ❌ **EXCLUDED** |
 | **Pipl (Basic)** | 200/month | ✅ People search | ❌ No | ⭐⭐⭐⭐ | 📋 **Future** |
 | **Social Mention** | Unlimited | ✅ Social mentions | ✅ Brand mentions | ⭐⭐ | 📋 **Future** |
 

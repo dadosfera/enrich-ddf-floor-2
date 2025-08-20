@@ -15,7 +15,7 @@
 | **Hunter.io** | 50 searches/month | Email finding & verification | ✅ **Ready** |
 | **Clearbit** | 50 requests/month | Person & company enrichment | ✅ **Ready** |
 | **ZeroBounce** | 100 validations/month | Email validation | 🔄 Next |
-| **FullContact** | 1,000 lookups/month | Person enrichment | 🔄 Next |
+| **~~FullContact~~** | ~~1,000 lookups/month~~ | ~~Person enrichment~~ | ❌ **EXCLUDED** |
 | **Pipl** | 200 searches/month | People search | 🔄 Next |
 | **LinkedIn Public** | Rate limited | Basic profiles | 🔄 Next |
 | **GitHub API** | 5,000 requests/hour | Developer profiles | 🔄 Next |

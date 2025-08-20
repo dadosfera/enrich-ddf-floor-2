@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     # Real Data Enrichment API Keys
     hunter_api_key: Optional[str] = None
     clearbit_api_key: Optional[str] = None
-    fullcontact_api_key: Optional[str] = None
+    # fullcontact_api_key: Optional[str] = None  # EXCLUDED - not professional enough
     zerobounce_api_key: Optional[str] = None
     github_token: Optional[str] = None
     pdl_api_key: Optional[str] = None

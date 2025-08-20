@@ -52,6 +52,7 @@ OPTIONS:
     --e2e                    Run end-to-end tests only
     --critical               Run critical path tests only
     --mutation               Run mutation tests only
+    --quick                  Run quick validation tests (optimized for pre-commit)
     --coverage               Generate coverage report
     --verbose                Enable verbose output
     --fail-fast              Stop on first failure
@@ -100,6 +101,10 @@ parse_args() {
                 ;;
             --mutation)
                 TEST_TYPE="mutation"
+                shift
+                ;;
+            --quick)
+                TEST_TYPE="quick"
                 shift
                 ;;
             --coverage)
@@ -186,6 +191,10 @@ build_pytest_args() {
             ;;
         mutation)
             args+=("tests/unit/test_mutation_tests.py")
+            ;;
+        quick)
+            # Quick validation tests for pre-commit hooks
+            args+=("tests/unit/test_critical_endpoints.py" "-k" "test_health_check or test_basic_endpoints")
             ;;
     esac
 
