@@ -289,7 +289,7 @@ def test_ui_verify_data_creation(page, base_url, test_data):
         # Verify our test company is in the list
         test_company_found = any(
             company["name"] == test_data["company"]["name"]
-            for company in companies_data
+            for company in companies_data  # TODO: Review loop variable naming (PLW2901)
         )
         assert test_company_found, "Test company not found in companies list"
 

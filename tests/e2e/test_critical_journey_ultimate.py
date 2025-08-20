@@ -186,7 +186,7 @@ def verify_data_with_ultimate_retry(base_url, test_data, max_retries=10):
             # Verify our test company is in the list
             test_company_found = any(
                 company["name"] == test_data["company"]["name"]
-                for company in companies_data
+                for company in companies_data  # TODO: Review loop variable naming (PLW2901)
             )
             assert test_company_found, "Test company not found in companies list"
 
@@ -198,7 +198,7 @@ def verify_data_with_ultimate_retry(base_url, test_data, max_retries=10):
             # Verify our test contact is in the list
             test_contact_found = any(
                 contact["email"] == test_data["contact"]["email"]
-                for contact in contacts_data
+                for contact in contacts_data  # TODO: Review loop variable naming (PLW2901)
             )
             assert test_contact_found, "Test contact not found in contacts list"
 
@@ -210,7 +210,7 @@ def verify_data_with_ultimate_retry(base_url, test_data, max_retries=10):
             # Verify our test product is in the list
             test_product_found = any(
                 product["name"] == test_data["product"]["name"]
-                for product in products_data
+                for product in products_data  # TODO: Review loop variable naming (PLW2901)
             )
             assert test_product_found, "Test product not found in products list"
 
@@ -323,7 +323,7 @@ def main():
     """Run all comprehensive E2E tests with ultimate fixes applied."""
     base_url = "http://127.0.0.1:8000"
 
-    # Generate unique timestamp for test data to avoid constraint violations
+    # Generate unique timestamp for test data to avoid constraint violations  # TODO: Review loop variable naming (PLW2901)
     timestamp = int(time.time())
 
     test_data = {

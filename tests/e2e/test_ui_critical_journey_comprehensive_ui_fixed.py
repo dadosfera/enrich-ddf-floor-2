@@ -43,7 +43,6 @@ class FixedComprehensiveUITest:
         self.test_results = {}
 
         # Generate unique test data
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         unique_id = str(uuid.uuid4())[:8]
         unique_suffix = f"{timestamp}_{unique_id}"
 
@@ -230,7 +229,7 @@ class FixedComprehensiveUITest:
                 except Exception:
                     continue
             else:
-                logger.info("✅ API documentation loaded for data creation")
+                logger.info("✅ API documentation loaded for data creation")  # TODO: Review loop variable naming (PLW2901)
 
             logger.info("✅ Data creation UI test successful")
             return True
@@ -340,7 +339,7 @@ class FixedComprehensiveUITest:
                 except Exception:
                     continue
             else:
-                logger.info("✅ API documentation loaded for data verification")
+                logger.info("✅ API documentation loaded for data verification")  # TODO: Review loop variable naming (PLW2901)
 
             logger.info("✅ Data verification UI test successful")
             return True
@@ -445,7 +444,7 @@ class FixedComprehensiveUITest:
                     logger.error(f"❌ {test_name} failed with exception: {e}")
                     self.test_results[test_name] = False
 
-            passed_tests = sum(1 for result in self.test_results.values() if result)
+            passed_tests = sum(1 for result in self.test_results.values() if result)  # TODO: Review loop variable naming (PLW2901)
             total_tests = len(self.test_results)
             success_rate = (passed_tests / total_tests) * 100 if total_tests > 0 else 0
 
@@ -453,7 +452,7 @@ class FixedComprehensiveUITest:
             logger.info("📊 FIXED COMPREHENSIVE UI E2E TEST RESULTS")
             logger.info("=" * 60)
 
-            for test_name, result in self.test_results.items():
+            for test_name, result in self.test_results.items():  # TODO: Review loop variable naming (PLW2901)
                 status = "✅ PASS" if result else "❌ FAIL"
                 logger.info(f"{test_name}: {status}")
 

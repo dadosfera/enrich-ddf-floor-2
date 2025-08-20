@@ -8351,10 +8351,5 @@ tests/unit/test_regression_fixes.py:155:9: PLC0415 `import` should be at the top
 157 |         with Path("tests/index_tests.yaml").open("r") as f:
     |
 
-
-Fixed 1 error:
-- core/enrichment/real_data_enrichment.py:
-    1 × PLR5501 (collapsible-else-if)
-
-Found 810 errors (1 fixed, 809 remaining).
+Found 809 errors.
 No fixes available (183 hidden fixes can be enabled with the `--unsafe-fixes` option).

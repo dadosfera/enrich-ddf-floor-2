@@ -335,7 +335,7 @@ def verify_data_with_comprehensive_fixes(
                 # Verify our test company is in the list
                 test_company_found = any(
                     company.get("name") == test_data["company"]["name"]
-                    for company in companies_data
+                    for company in companies_data  # TODO: Review loop variable naming (PLW2901)
                 )
 
                 if test_company_found:
@@ -350,7 +350,7 @@ def verify_data_with_comprehensive_fixes(
                     # Verify our test contact is in the list
                     test_contact_found = any(
                         contact.get("email") == test_data["contact"]["email"]
-                        for contact in contacts_data
+                        for contact in contacts_data  # TODO: Review loop variable naming (PLW2901)
                     )
 
                     if test_contact_found:
@@ -367,7 +367,7 @@ def verify_data_with_comprehensive_fixes(
                         # Verify our test product is in the list
                         test_product_found = any(
                             product.get("name") == test_data["product"]["name"]
-                            for product in products_data
+                            for product in products_data  # TODO: Review loop variable naming (PLW2901)
                         )
 
                         if test_product_found:
@@ -490,7 +490,7 @@ def main():
     """Run all comprehensive E2E tests with all fixes applied."""
     base_url = "http://127.0.0.1:8247"
 
-    # Generate unique timestamp for test data to avoid constraint violations
+    # Generate unique timestamp for test data to avoid constraint violations  # TODO: Review loop variable naming (PLW2901)
     timestamp = int(time.time())
 
     test_data = {

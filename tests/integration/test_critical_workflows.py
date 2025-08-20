@@ -221,7 +221,7 @@ class TestCriticalErrorScenarios:
         contact_response = client.post("/api/v1/contacts", json=invalid_data)
         product_response = client.post("/api/v1/products", json=invalid_data)
 
-        # Accept 400 as valid for invalid data
+        # Accept 400 as valid for invalid data  # TODO: Review loop variable naming (PLW2901)
         assert company_response.status_code in [200, 400]
         assert contact_response.status_code in [200, 400]
         assert product_response.status_code in [200, 400]
@@ -242,7 +242,7 @@ class TestCriticalErrorScenarios:
             response = client.post("/api/v1/companies", json=company_data)
             responses.append(response)
 
-        # Accept 400 as valid for duplicate/invalid data
+        # Accept 400 as valid for duplicate/invalid data  # TODO: Review loop variable naming (PLW2901)
         for response in responses:
             if response.status_code == 200:
                 assert response.json()["status"] == "created"

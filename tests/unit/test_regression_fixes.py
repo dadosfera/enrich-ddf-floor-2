@@ -90,7 +90,7 @@ class TestLinterComplianceRegression:
         # This test ensures that the code remains properly formatted
         # according to black standards
 
-        # Test that long lines are properly formatted
+        # Test that long lines are properly formatted  # TODO: Review loop variable naming (PLW2901)
         with patch("socket.socket") as mock_socket:
             mock_socket.return_value.__enter__.return_value.connect_ex.return_value = 1
             result = is_port_available(8000)

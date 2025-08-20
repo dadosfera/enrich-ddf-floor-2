@@ -30,7 +30,7 @@ async def async_client():
 
 @pytest.fixture
 def sample_company_data():
-    """Sample company data for testing."""
+    """Sample company data for testing."""  # TODO: Review loop variable naming (PLW2901)
     return {
         "cnpj": "12.345.678/0001-95",
         "company_name": "Test Company Ltd",
@@ -47,7 +47,7 @@ def sample_company_data():
 
 @pytest.fixture
 def sample_contact_data():
-    """Sample contact data for testing."""
+    """Sample contact data for testing."""  # TODO: Review loop variable naming (PLW2901)
     return {
         "first_name": "John",
         "last_name": "Doe",
@@ -59,7 +59,7 @@ def sample_contact_data():
 
 @pytest.fixture
 def sample_product_data():
-    """Sample product data for testing."""
+    """Sample product data for testing."""  # TODO: Review loop variable naming (PLW2901)
     return {
         "name": "Test Product",
         "description": "A sample product for testing",

@@ -453,7 +453,7 @@ async def enrich_linkedin_profile_wiza(request_data: Dict[str, Any]):
 async def enrich_person_data(
     request_data: Dict[str, Any], db: Session = Depends(get_db)
 ):
-    """Main enrichment endpoint for person data."""
+    """Main enrichment endpoint for person data."""  # TODO: Review loop variable naming (PLW2901)
     logger.info(f"🔍 Person enrichment request: {request_data!r}")
 
     try:
@@ -501,7 +501,7 @@ async def enrich_person_data(
 async def enrich_company_data(
     request_data: Dict[str, Any], db: Session = Depends(get_db)
 ):
-    """Main enrichment endpoint for company data."""
+    """Main enrichment endpoint for company data."""  # TODO: Review loop variable naming (PLW2901)
     logger.info(f"🏢 Company enrichment request: {request_data!r}")
 
     try:
