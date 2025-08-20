@@ -126,11 +126,11 @@ def enrich_person_data(person: Dict[str, Any]):
             original = enriched_data["data"]["original_data"]
             enriched = enriched_data["data"]["enriched_data"]
 
-            print(f"\n📊 Original Data:")
+            print("\n📊 Original Data:")
             print(f"   Name: {original['first_name']} {original['last_name']}")
             print(f"   Email: {original['email']}")
 
-            print(f"\n🎯 Enriched Data:")
+            print("\n🎯 Enriched Data:")
             print(f"   Full Name: {enriched['full_name']}")
             print(f"   Email: {enriched['email']}")
             print(f"   Phone: {enriched['contact']['phone']}")
@@ -180,11 +180,11 @@ def enrich_company_data(company: Dict[str, Any]):
             original = enriched_data["data"]["original_data"]
             enriched = enriched_data["data"]["enriched_data"]
 
-            print(f"\n📊 Original Data:")
+            print("\n📊 Original Data:")
             print(f"   Name: {original['name']}")
             print(f"   Domain: {original.get('domain', 'N/A')}")
 
-            print(f"\n🎯 Enriched Data:")
+            print("\n🎯 Enriched Data:")
             print(f"   Name: {enriched['name']}")
             print(f"   Legal Name: {enriched['legal_name']}")
             print(f"   Domain: {enriched['domain']}")
@@ -375,7 +375,7 @@ def main():
     print("✅ Database integration is functional")
     print("✅ API authentication and token management is operational")
     print(f"\n📚 View API documentation at: {API_BASE_URL}/docs")
-    print(f"🌐 Frontend application at: http://localhost:5173")
+    print("🌐 Frontend application at: http://localhost:5173")
 
 
 if __name__ == "__main__":

@@ -267,7 +267,7 @@ async def benchmark_enrichment_speed():
         successful_requests, 1
     )
 
-    print(f"\n📊 Performance Summary:")
+    print("\n📊 Performance Summary:")
     print(f"   Total time: {total_duration:.2f}s")
     print(f"   Successful requests: {successful_requests}/{len(test_emails)}")
     print(f"   Average request time: {average_duration:.2f}s")
