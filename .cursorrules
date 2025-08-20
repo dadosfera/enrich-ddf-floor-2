@@ -1,0 +1,99 @@
+# Cursor Rules for enrich-ddf-floor-2
+# Focus on functional issues over cosmetic style preferences
+
+# Linter Philosophy
+- Prioritize functional and security issues over cosmetic style preferences
+- Disable rules that are purely stylistic or subjective
+- Keep rules that prevent bugs, security issues, or runtime errors
+- Focus on code that works correctly rather than style preferences
+
+# Python Configuration (Ruff, Black, MyPy)
+- Use project's pyproject.toml for all Python linting configuration
+- Ruff handles import sorting, code formatting, and error detection
+- MyPy provides type checking with strict configuration
+- Focus on functional issues over style issues
+
+# JavaScript/TypeScript Configuration (ESLint, Prettier)
+- Use frontend/eslint.config.js for JavaScript/TypeScript linting
+- Prettier handles code formatting automatically
+- Disabled unused variable warnings (let TypeScript handle this)
+- Keep only functional and security-related rules
+
+# CRITICAL TERMINAL COMMAND EXECUTION SAFETY - ZERO TOLERANCE ENFORCEMENT
+
+## MANDATORY TERMINAL COMMAND RULES - NO EXCEPTIONS
+- **NEVER** chain commands with `&&`, `||`, or `;` operators
+- **NEVER** use `echo` or `printf` in terminal commands  
+- **NEVER** use `cat` for file creation or concatenation
+- **NEVER** use concatenated commands in single tool calls
+- **ALWAYS** use separate tool calls for each distinct operation
+- **ALWAYS** use timeout for every command (5s-300s)
+- **ALWAYS** keep commands under 150 characters
+- **ALWAYS** show command outputs to console
+- **MAXIMUM** 1 operation per command only
+
+## PROHIBITED PATTERNS - IMMEDIATE REJECTION
+```bash
+# REJECTED: Command chaining
+command1 && command2
+command1 || command2  
+command1 ; command2
+
+# REJECTED: Echo/printf in commands
+echo "message"
+printf "status"
+command && echo "done"
+
+# REJECTED: Cat for file creation
+cat > file.txt << EOF
+cat >> file.txt << 'CONTENT'
+
+# REJECTED: Complex operations
+git add -A && git commit -m "message" && git push
+```
+
+## REQUIRED SAFE PATTERNS
+```bash
+# CORRECT: Single command with timeout
+timeout 30 npm test
+
+# CORRECT: Simple operations
+timeout 10 git add -A
+timeout 30 git commit -m "fix: issue"  
+timeout 60 git push origin main
+
+# CORRECT: Use separate tool calls for multiple operations
+# Tool call 1: timeout 10 git add -A
+# Tool call 2: timeout 30 git commit -m "message"
+# Tool call 3: timeout 60 git push origin main
+```
+
+## FILE OPERATION REQUIREMENTS
+- **MANDATORY**: Use `write()` for all file creation and modifications
+- **NEVER**: Use `cat`, `echo`, `printf`, or shell redirects for file operations
+- **ALWAYS**: Use dedicated file tools (write, search_replace, read_file)
+
+## ENFORCEMENT CHECKLIST
+Before ANY terminal command, verify:
+- [ ] Single command only (no `&&`, `||`, `;`)
+- [ ] No echo/printf statements
+- [ ] No cat for file creation
+- [ ] Timeout present (5s-300s)
+- [ ] Under 150 characters
+- [ ] Output will be visible
+- [ ] Non-interactive operation
+
+**ZERO TOLERANCE**: Commands failing ANY checklist item are IMMEDIATELY REJECTED.
+
+# AUTO-FIX AND LINTING INTEGRATION
+- Automated linting pipeline with comprehensive auto-fix capabilities
+- Proper rollback plans and baseline safety measures implemented
+- Dry-run validation before auto-fix execution
+- Git history preservation with .git-blame-ignore-revs
+- Incremental commits for each auto-fix step
+
+# PROJECT STRUCTURE DISCIPLINE
+- Follow existing folder structure and naming conventions
+- Use pyproject.toml for Python dependency management
+- Use package.json for Node.js dependency management
+- Maintain clean separation between core logic and configuration

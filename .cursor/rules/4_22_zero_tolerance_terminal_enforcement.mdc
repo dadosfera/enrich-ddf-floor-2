@@ -1,0 +1,133 @@
+---
+description: "ZERO TOLERANCE enforcement of terminal command execution - no chaining, no echo, strict single commands only"
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# 🚨 ZERO TOLERANCE TERMINAL COMMAND ENFORCEMENT
+
+## CRITICAL UPGRADE TO EXISTING RULES
+
+This rule **SUPERSEDES** and **STRENGTHENS** existing terminal command rules with **ZERO TOLERANCE** enforcement.
+
+### **❌ ABSOLUTELY PROHIBITED - NO EXCEPTIONS**
+
+#### 1. Command Chaining (FORBIDDEN)
+```bash
+# REJECTED: ANY form of command chaining
+command1 && command2          # FORBIDDEN
+command1 || command2          # FORBIDDEN  
+command1 ; command2           # FORBIDDEN
+git add -A && git commit      # FORBIDDEN
+npm install && npm test       # FORBIDDEN
+```
+
+#### 2. Echo/Printf in Commands (FORBIDDEN)
+```bash
+# REJECTED: Echo or printf in terminal commands
+echo "Starting process..."    # FORBIDDEN
+printf "Status: %s\n"        # FORBIDDEN
+command && echo "completed"   # FORBIDDEN
+```
+
+#### 3. File Creation via Cat (FORBIDDEN)
+```bash
+# REJECTED: Cat for file creation
+cat > file.txt << EOF         # FORBIDDEN
+cat >> file.txt << 'CONTENT' # FORBIDDEN
+```
+
+### **✅ MANDATORY SAFE PATTERNS**
+
+#### Single Commands Only
+```bash
+# CORRECT: One command per tool call
+timeout 30 npm test
+timeout 10 git status  
+timeout 60 terraform plan
+```
+
+#### Separate Tool Calls for Multiple Operations
+```bash
+# CORRECT: Use separate tool calls for each operation
+# Tool call 1: timeout 10 git add -A
+# Tool call 2: timeout 30 git commit -m "fix: issue"  
+# Tool call 3: timeout 60 git push origin main
+```
+
+#### File Operations with Dedicated Tools
+```bash
+# CORRECT: Use proper file tools
+# write() for file creation
+# search_replace() for file editing
+# read_file() for file reading
+```
+
+## 🛡️ ENFORCEMENT CHECKLIST
+
+**BEFORE ANY terminal command, verify:**
+
+- [ ] **Single command only** (no `&&`, `||`, `;`)
+- [ ] **No echo/printf statements**
+- [ ] **No cat for file creation**  
+- [ ] **Timeout present** (5s-300s)
+- [ ] **Under 150 characters**
+- [ ] **Non-interactive operation**
+- [ ] **Output will be visible**
+
+### **IMMEDIATE REJECTION**
+
+Commands failing **ANY** checklist item are **IMMEDIATELY REJECTED**.
+
+**NO EXCEPTIONS**: This rule applies to ALL terminal operations.
+
+**ZERO TOLERANCE**: Violations result in immediate command rejection.
+
+## 📋 APPROVED COMMAND TEMPLATES
+
+### Template 1: Simple Operation
+```bash
+timeout 30 [single_command]
+```
+
+### Template 2: File System Check
+```bash
+timeout 10 ls -la [directory]
+timeout 15 find [path] -name "[pattern]"
+```
+
+### Template 3: Git Operation  
+```bash
+timeout 10 git status
+timeout 30 git commit -m "[message]"
+timeout 60 git push origin [branch]
+```
+
+### Template 4: Build Operation
+```bash
+timeout 300 npm run build
+timeout 180 terraform apply
+timeout 120 docker build -t [tag] .
+```
+
+## 🔒 ENFORCEMENT MECHANISM
+
+This rule provides:
+
+1. **Pre-execution validation** of all terminal commands
+2. **Automatic rejection** of prohibited patterns  
+3. **Guidance redirection** to safe alternatives
+4. **Zero tolerance enforcement** with no exceptions
+
+**CRITICAL**: This rule has **ALWAYS APPLY: TRUE** and supersedes all other considerations.
+
+## 📝 VIOLATION RESPONSE PROTOCOL
+
+When a prohibited pattern is detected:
+
+1. **IMMEDIATELY REJECT** the command
+2. **EXPLAIN** the specific violation
+3. **PROVIDE** the correct safe alternative
+4. **REFERENCE** this rule for enforcement authority
+
+**ZERO TOLERANCE**: No warnings, no exceptions, immediate rejection only.

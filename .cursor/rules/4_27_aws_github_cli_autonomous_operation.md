@@ -1,14 +1,17 @@
 # AWS CLI and GitHub CLI Autonomous Operation Rule
 
 ## Priority
+
 P1 (Critical): Must always be followed for AWS and GitHub CLI operations
 
 ## Core Principle
+
 **AI agents must execute CLI commands autonomously without getting stuck on pagination, interactive prompts, or blocking operations**
 
 ## Mandatory AWS CLI Flags
 
 ### **Always Required Flags**
+
 ```bash
 # REQUIRED for all AWS CLI commands
 --no-paginate           # Disable pagination
@@ -18,6 +21,7 @@ P1 (Critical): Must always be followed for AWS and GitHub CLI operations
 ```
 
 ### **Query and Filtering**
+
 ```bash
 # Use JMESPath queries to limit output
 --query 'Items[0:10]'                    # Limit results
@@ -26,6 +30,7 @@ P1 (Critical): Must always be followed for AWS and GitHub CLI operations
 ```
 
 ### **Error Handling**
+
 ```bash
 # Redirect stderr and handle errors properly
 command 2>&1 || echo "Command failed with exit code $?"
@@ -34,6 +39,7 @@ command 2>&1 || echo "Command failed with exit code $?"
 ## Mandatory GitHub CLI Flags
 
 ### **Always Required Flags**
+
 ```bash
 # REQUIRED for all GitHub CLI commands
 --json                  # JSON output for parsing
@@ -42,6 +48,7 @@ command 2>&1 || echo "Command failed with exit code $?"
 ```
 
 ### **Non-Interactive Operations**
+
 ```bash
 # Avoid interactive prompts
 gh auth status --hostname github.com 2>/dev/null || echo "Not authenticated"
@@ -51,6 +58,7 @@ gh repo create --public --confirm        # Auto-confirm operations
 ## Command Pattern Examples
 
 ### **AWS CloudFormation**
+
 ```bash
 # ✅ CORRECT: Autonomous template validation
 aws cloudformation validate-template \
@@ -72,6 +80,7 @@ aws cloudformation list-stacks
 ```
 
 ### **AWS EC2**
+
 ```bash
 # ✅ CORRECT: List instances autonomously
 aws ec2 describe-instances \
@@ -89,6 +98,7 @@ aws ec2 describe-vpcs \
 ```
 
 ### **GitHub CLI**
+
 ```bash
 # ✅ CORRECT: List repos autonomously
 gh repo list --json name,visibility --limit 20
@@ -103,6 +113,7 @@ gh repo create
 ## Error Handling Patterns
 
 ### **AWS CLI Error Handling**
+
 ```bash
 # Pattern 1: Capture and handle errors
 if ! aws sts get-caller-identity --no-paginate --no-cli-pager --output json >/dev/null 2>&1; then
@@ -126,6 +137,7 @@ timeout 30s aws cloudformation validate-template \
 ```
 
 ### **GitHub CLI Error Handling**
+
 ```bash
 # Pattern 1: Check authentication
 if ! gh auth status --hostname github.com >/dev/null 2>&1; then
@@ -140,6 +152,7 @@ gh repo view owner/repo --json name 2>/dev/null || echo "Repository not found"
 ## Autonomous Operation Checklist
 
 ### **Pre-Command Validation**
+
 - [ ] Add `--no-paginate` and `--no-cli-pager` to AWS commands
 - [ ] Add `--json` and `--limit` to GitHub commands
 - [ ] Include timeout for long-running operations
@@ -147,12 +160,14 @@ gh repo view owner/repo --json name 2>/dev/null || echo "Repository not found"
 - [ ] Use `--query` to limit AWS output size
 
 ### **During Execution**
+
 - [ ] Monitor for hanging commands (use timeouts)
 - [ ] Capture both stdout and stderr
 - [ ] Provide meaningful error messages
 - [ ] Continue execution even if non-critical commands fail
 
 ### **Post-Command Processing**
+
 - [ ] Parse JSON output programmatically
 - [ ] Log command results for debugging
 - [ ] Validate expected outcomes
@@ -161,6 +176,7 @@ gh repo view owner/repo --json name 2>/dev/null || echo "Repository not found"
 ## Common Failure Patterns to Avoid
 
 ### **❌ Blocking Operations**
+
 ```bash
 # These will hang or prompt for input
 aws cloudformation list-stacks                    # Pagination
@@ -169,6 +185,7 @@ aws logs tail /aws/lambda/function                # Streaming output
 ```
 
 ### **✅ Autonomous Alternatives**
+
 ```bash
 # Non-blocking equivalents
 aws cloudformation list-stacks --no-paginate --no-cli-pager --max-items 20
@@ -179,6 +196,7 @@ aws logs describe-log-streams --log-group-name /aws/lambda/function --no-paginat
 ## Integration with Async Command Pattern
 
 ### **Long-Running Operations**
+
 ```bash
 # Start deployment in background
 nohup aws cloudformation deploy \
@@ -201,6 +219,7 @@ done
 ## Configuration Management
 
 ### **AWS CLI Configuration**
+
 ```bash
 # Set default configuration to avoid interactive prompts
 aws configure set default.region us-east-1
@@ -210,6 +229,7 @@ aws configure set default.cli_auto_prompt off
 ```
 
 ### **GitHub CLI Configuration**
+
 ```bash
 # Set non-interactive defaults
 gh config set editor ""
@@ -220,6 +240,7 @@ gh config set pager cat
 ## Testing and Validation
 
 ### **Autonomous Testing Pattern**
+
 ```bash
 # Test AWS connectivity
 echo "Testing AWS connectivity..."
@@ -241,6 +262,7 @@ fi
 ## Emergency Recovery
 
 ### **When Commands Get Stuck**
+
 ```bash
 # Kill hanging processes
 pkill -f "aws cloudformation"
@@ -254,13 +276,16 @@ unset GH_PAGER
 ## Enforcement
 
 ### **Pre-Execution Checklist**
+
 Before executing any AWS or GitHub CLI command, AI agents must:
+
 1. Verify all required flags are present
 2. Confirm timeout is set for long operations
 3. Ensure error handling is in place
 4. Test command syntax with `--help` if uncertain
 
 ### **Monitoring Requirements**
+
 - Log all CLI commands executed
 - Track command execution time
 - Monitor for hanging processes
@@ -271,6 +296,7 @@ Before executing any AWS or GitHub CLI command, AI agents must:
 ## Summary
 
 **NEVER execute AWS or GitHub CLI commands without:**
+
 - `--no-paginate --no-cli-pager` (AWS)
 - `--json --limit N` (GitHub)
 - Proper error handling (`2>&1` or `2>/dev/null`)

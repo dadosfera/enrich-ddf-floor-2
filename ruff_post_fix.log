@@ -1,3 +1,61 @@
+advanced_auto_fix.py:43:9: B007 Loop control variable `i` not used within loop body
+   |
+41 |     fixed_lines = []
+42 |
+43 |     for i, line in enumerate(lines):
+   |         ^ B007
+44 |         if "for " in line and " in " in line and "=" in line:
+45 |             # Check if this line overwrites the loop variable
+   |
+   = help: Rename unused `i` to `_i`
+
+advanced_auto_fix.py:49:17: PLW2901 `for` loop variable `line` overwritten by assignment target
+   |
+47 |             if f"{loop_var} =" in line:
+48 |                 # Rename the loop variable to avoid conflict
+49 |                 line = line.replace(f"for {loop_var} in", f"for {loop_var}_item in")
+   |                 ^^^^ PLW2901
+50 |                 # Replace all occurrences of the original variable with the new one
+51 |                 line = line.replace(f"{loop_var} =", f"{loop_var}_item =")
+   |
+
+advanced_auto_fix.py:51:17: PLW2901 `for` loop variable `line` overwritten by assignment target
+   |
+49 |                 line = line.replace(f"for {loop_var} in", f"for {loop_var}_item in")
+50 |                 # Replace all occurrences of the original variable with the new one
+51 |                 line = line.replace(f"{loop_var} =", f"{loop_var}_item =")
+   |                 ^^^^ PLW2901
+52 |         fixed_lines.append(line)
+   |
+
+advanced_auto_fix.py:71:17: PLW2901 `for` loop variable `line` overwritten by assignment target
+   |
+69 |             if open_count > close_count:
+70 |                 # Add missing closing braces
+71 |                 line += "}" * (open_count - close_count)
+   |                 ^^^^ PLW2901
+72 |         fixed_lines.append(line)
+   |
+
+advanced_auto_fix.py:117:25: RUF001 String contains ambiguous `ℹ` (INFORMATION SOURCE). Did you mean `i` (LATIN SMALL LETTER I)?
+    |
+115 |                 print(f"✅ Fixed {file_path}")
+116 |             else:
+117 |                 print(f"ℹ No fixes needed for {file_path}")
+    |                         ^ RUF001
+118 |
+119 |     if fixed_files:
+    |
+
+advanced_auto_fix.py:123:16: RUF001 String contains ambiguous `ℹ` (INFORMATION SOURCE). Did you mean `i` (LATIN SMALL LETTER I)?
+    |
+121 |         return True
+122 |     else:
+123 |         print("ℹ No advanced fixes were applied")
+    |                ^ RUF001
+124 |         return False
+    |
+
 core/enrichment/real_data_enrichment.py:50:9: PLC0415 `import` should be at the top-level of a file
    |
 48 |         """Initialize available API services."""
@@ -30,10 +88,10 @@ core/enrichment/real_data_enrichment.py:67:17: PLC0415 `import` should be at the
 
 core/enrichment/real_data_enrichment.py:109:17: TRY400 Use `logging.exception` instead of `logging.error`
     |
-107 |                     logger.info(f"✅ Clearbit enrichment successful for {email}")
+107 |                     logger.info(f"✅ Clearbit enrichment successful for {email!r}")
 108 |             except Exception as e:
-109 |                 logger.error(f"Clearbit error: {e}")
-    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ TRY400
+109 |                 logger.error(f"Clearbit error: {e!r}")
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ TRY400
 110 |
 111 |         # Try Hunter.io for email verification
     |
@@ -41,34 +99,23 @@ core/enrichment/real_data_enrichment.py:109:17: TRY400 Use `logging.exception` i
 
 core/enrichment/real_data_enrichment.py:125:17: TRY400 Use `logging.exception` instead of `logging.error`
     |
-123 |                     logger.info(f"✅ Hunter.io verification successful for {email}")
+123 |                     logger.info(f"✅ Hunter.io verification successful for {email!r}")
 124 |             except Exception as e:
-125 |                 logger.error(f"Hunter.io error: {e}")
-    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ TRY400
+125 |                 logger.error(f"Hunter.io error: {e!r}")
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ TRY400
 126 |
 127 |         # Calculate enrichment score based on filled fields
     |
     = help: Replace with `exception`
 
-core/enrichment/real_data_enrichment.py:202:13: PLR5501 [*] Use `elif` instead of `else` then `if`, to reduce indentation
+core/enrichment/real_data_enrichment.py:280:17: TRY400 Use `logging.exception` instead of `logging.error`
     |
-200 |                   if value:
-201 |                       filled_fields += 1
-202 | /             else:
-203 | |                 if data.get(field):
-    | |________________^ PLR5501
-204 |                       filled_fields += 1
-    |
-    = help: Convert to `elif`
-
-core/enrichment/real_data_enrichment.py:281:17: TRY400 Use `logging.exception` instead of `logging.error`
-    |
-279 |                     )
-280 |             except Exception as e:
-281 |                 logger.error(f"Clearbit company error: {e}")
-    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ TRY400
-282 |
-283 |         enriched_data["enrichment_score"] = self._calculate_company_enrichment_score(
+278 |                     )
+279 |             except Exception as e:
+280 |                 logger.error(f"Clearbit company error: {e!r}")
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ TRY400
+281 |
+282 |         enriched_data["enrichment_score"] = self._calculate_company_enrichment_score(
     |
     = help: Replace with `exception`
 
@@ -83,7 +130,7 @@ main.py:142:9: TRY300 Consider moving this statement to an `else` block
 
 main.py:168:9: TRY300 Consider moving this statement to an `else` block
     |
-167 |         logger.info(f"✅ Successfully created company with ID: {company.id}")
+167 |         logger.info(f"✅ Successfully created company with ID: {company.id!r}")
 168 |         return response
     |         ^^^^^^^^^^^^^^^ TRY300
 169 |     except Exception as e:
@@ -101,7 +148,7 @@ main.py:195:9: TRY300 Consider moving this statement to an `else` block
 
 main.py:221:9: TRY300 Consider moving this statement to an `else` block
     |
-220 |         logger.info(f"✅ Successfully created contact with ID: {contact.id}")
+220 |         logger.info(f"✅ Successfully created contact with ID: {contact.id!r}")
 221 |         return response
     |         ^^^^^^^^^^^^^^^ TRY300
 222 |     except Exception as e:
@@ -119,7 +166,7 @@ main.py:248:9: TRY300 Consider moving this statement to an `else` block
 
 main.py:274:9: TRY300 Consider moving this statement to an `else` block
     |
-273 |         logger.info(f"✅ Successfully created product with ID: {product.id}")
+273 |         logger.info(f"✅ Successfully created product with ID: {product.id!r}")
 274 |         return response
     |         ^^^^^^^^^^^^^^^ TRY300
 275 |     except Exception as e:
@@ -135,16 +182,6 @@ main.py:335:9: TRY300 Consider moving this statement to an `else` block
 337 |     except Exception as e:
     |
 
-main.py:340:66: RUF010 [*] Use explicit conversion flag
-    |
-338 |         logger.exception("❌ PDL Person enrichment failed")
-339 |         raise HTTPException(
-340 |             status_code=500, detail=f"Person enrichment failed: {str(e)}"
-    |                                                                  ^^^^^^ RUF010
-341 |         ) from e
-    |
-    = help: Replace with conversion flag
-
 main.py:385:9: TRY300 Consider moving this statement to an `else` block
     |
 384 |         logger.info("✅ PDL Company enrichment successful (mock)")
@@ -154,16 +191,6 @@ main.py:385:9: TRY300 Consider moving this statement to an `else` block
 387 |     except Exception as e:
     |
 
-main.py:390:67: RUF010 [*] Use explicit conversion flag
-    |
-388 |         logger.exception("❌ PDL Company enrichment failed")
-389 |         raise HTTPException(
-390 |             status_code=500, detail=f"Company enrichment failed: {str(e)}"
-    |                                                                   ^^^^^^ RUF010
-391 |         ) from e
-    |
-    = help: Replace with conversion flag
-
 main.py:443:9: TRY300 Consider moving this statement to an `else` block
     |
 442 |         logger.info("✅ Wiza LinkedIn enrichment successful (mock)")
@@ -172,16 +199,6 @@ main.py:443:9: TRY300 Consider moving this statement to an `else` block
 444 |
 445 |     except Exception as e:
     |
-
-main.py:448:76: RUF010 [*] Use explicit conversion flag
-    |
-446 |         logger.exception("❌ Wiza LinkedIn enrichment failed")
-447 |         raise HTTPException(
-448 |             status_code=500, detail=f"LinkedIn profile enrichment failed: {str(e)}"
-    |                                                                            ^^^^^^ RUF010
-449 |         ) from e
-    |
-    = help: Replace with conversion flag
 
 main.py:461:9: PLC0415 `import` should be at the top-level of a file
     |
@@ -207,16 +224,6 @@ main.py:487:9: TRY300 Consider moving this statement to an `else` block
 493 |       except Exception as e:
     |
 
-main.py:496:66: RUF010 [*] Use explicit conversion flag
-    |
-494 |         logger.exception("❌ Person enrichment failed")
-495 |         raise HTTPException(
-496 |             status_code=500, detail=f"Person enrichment failed: {str(e)}"
-    |                                                                  ^^^^^^ RUF010
-497 |         ) from e
-    |
-    = help: Replace with conversion flag
-
 main.py:509:9: PLC0415 `import` should be at the top-level of a file
     |
 507 |     try:
@@ -240,16 +247,6 @@ main.py:535:9: TRY300 Consider moving this statement to an `else` block
 540 |
 541 |       except Exception as e:
     |
-
-main.py:544:67: RUF010 [*] Use explicit conversion flag
-    |
-542 |         logger.exception("❌ Company enrichment failed")
-543 |         raise HTTPException(
-544 |             status_code=500, detail=f"Company enrichment failed: {str(e)}"
-    |                                                                   ^^^^^^ RUF010
-545 |         ) from e
-    |
-    = help: Replace with conversion flag
 
 services/third_party/clearbit.py:19:9: PLC0415 `import` should be at the top-level of a file
    |
@@ -8354,5 +8351,10 @@ tests/unit/test_regression_fixes.py:155:9: PLC0415 `import` should be at the top
 157 |         with Path("tests/index_tests.yaml").open("r") as f:
     |
 
-Found 809 errors.
-[*] 6 fixable with the `--fix` option (182 hidden fixes can be enabled with the `--unsafe-fixes` option).
+
+Fixed 1 error:
+- core/enrichment/real_data_enrichment.py:
+    1 × PLR5501 (collapsible-else-if)
+
+Found 810 errors (1 fixed, 809 remaining).
+No fixes available (183 hidden fixes can be enabled with the `--unsafe-fixes` option).

@@ -199,9 +199,8 @@ class RealDataEnrichmentEngine:
                         break
                 if value:
                     filled_fields += 1
-            else:
-                if data.get(field):
-                    filled_fields += 1
+            elif data.get(field):
+                filled_fields += 1
 
         return int((filled_fields / len(key_fields)) * 100)
 

@@ -1,6 +1,7 @@
 # Rule Activation Guide - Priority & Context
 
 ## Rule Priority Levels
+
 - **P1 (Critical)**: Must always be followed - preserve_all_functionality, autonomy_userhandoff
 - **P2 (High)**: Apply during major operations - folder_structure_discipline, file_lifecycle_discipline
 - **P3 (Medium)**: Apply for specific contexts - central_runsh_interface, environment_platform_configs
@@ -9,16 +10,19 @@
 ## When to Apply Rules
 
 ### File Operations Context
+
 - **Creating new files**: folderstructure_discipline (P2), avoid_duplication (P2)
 - **Moving/renaming files**: filelifecycle_discipline (P2), logging_observability (P3)
 - **Deleting files**: preserve_all_functionality (P1), filelifecycle_discipline (P2)
 
 ### Development Context
+
 - **JavaScript/TypeScript projects**: js_floor_rules (P4), dadosfera_floors (P3)
 - **Configuration changes**: configfile_editing (P3), central_runsh_interface (P3)
 - **Script creation**: minimize_new_files (P3), avoid_duplication (P2)
 
 ### Platform Context
+
 - **Replit environment**: platformspecific_notes (P3), central_runsh_interface (P3)
 - **Cursor environment**: platformspecific_notes (P3), restrictions_on_editing_ignored_files (P2)
 - **Production deployment**: dadosfera_floors (P3), dryrun_first (P2)
@@ -40,6 +44,7 @@
 ## Rule Learning and Evolution System
 
 ### Alteration History Tracking
+
 - **Purpose**: Systematically document rule violations, improvements, and learning patterns
 - **Location**: `00_alteration_history.md` in both `.clinerules/` and `.cursor/rules/` directories
 - **Key Components**:
@@ -49,6 +54,7 @@
   4. Continuous Improvement Tracking
 
 ### Tracking Categories
+
 - **Rule Violations**: Identify recurring pattern breaks
 - **Gap Identification**: Discover missing rule coverage
 - **Structure Issues**: Improve rule format and effectiveness
@@ -56,6 +62,7 @@
 - **Cross-Platform Conflicts**: Resolve inconsistencies between platforms
 
 ### Success Metrics
+
 - **Violation Reduction Rate**
 - **Rule Application Consistency**
 - **Learning Extraction Quality**
@@ -64,15 +71,18 @@
 ## Available Rules by Priority
 
 ### Priority 1 (Critical) - Always Apply
+
 - **1_01**: Preserve All Functionality (`1_01_preserve_all_functionality.md`)
 - **1_02**: Autonomy & User Handoff (`1_02_autonomy_user_handoff.md`)
 
 ### Priority 2 (High) - Major Operations
+
 - **2_01**: Branch Naming & Documentation (`2_01_branch_naming_documentation.md`)
 
 ### Priority 3 (Medium) - Specific Contexts
 
 ### Priority 4 (Low) - When Relevant
+
 - **4_01**: Folder-Structure Discipline (`4_01_folder_structure_discipline.md`)
 - **4_02**: Config-File Editing (`4_02_config_file_editing.md`)
 - **4_03**: Central `run.sh` Interface (`4_03_central_runsh_interface.md`)
@@ -95,4 +105,5 @@
 - **4_20**: Branch Protection Bypass Authorization (`4_20_branch_protection_bypass_authorization.md`)
 
 ---
-*Generated automatically from .cursor/rules/ directory on $(date)*
+
+_Generated automatically from .cursor/rules/ directory on $(date)_

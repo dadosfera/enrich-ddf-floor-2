@@ -1,7 +1,7 @@
 # === PERFORMANCE CRITICAL EXCLUSIONS ===
 # These should NEVER be indexed due to size/performance impact
 
-# Large Binary Model Files
+# Large Binary Model Files (High Priority - Prevent Large Files)
 model_cache/
 models/
 *.safetensors
@@ -13,60 +13,135 @@ models/
 *.pth
 *.weights
 *.checkpoint
+*.ckpt
+*.model
 
-# Package Dependencies
+# Package Dependencies (559MB+, 44k+ files)
 node_modules/
+.npm/
+.yarn/
+.pnpm-store/
+.pnpm-debug.log*
 venv/
+.venv/
+env/
+.env/
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py[cod]
+*$py.class
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 
-# Build Artifacts
+# Build Artifacts and Generated Content
 build/
 dist/
+out/
+.next/
+.nuxt/
+.output/
 coverage/
 test-results/
 htmlcov/
 .coverage
+.nyc_output/
+junit.xml
+test-report.xml
+.playwright/
+playwright-report/
+**/.playwright-artifacts*/
 
 # === SECURITY SENSITIVE EXCLUSIONS ===
 # These should NEVER be accessible to AI for security reasons
 
-# Credentials and Secrets
+# Credentials and Secrets (Critical Security)
 .env
 .env.*
 !.env.example
 !.env.template
+*.env
+private/
 secrets/
 credentials/
+security/secrets/
+security/backups/
+security/tokens/
+security/aws/
+security/encrypted/
+
+# Certificate and Key Files
 *.key
 *.pem
 *.crt
+*.cer
 *.p12
+*.pfx
+*.cert
 api-tokens/
 aws-credentials/
+
+# SSH Keys and Configurations
+.ssh/
+id_*
+ssh_config
+*.pub
+known_hosts
+authorized_keys
+*.ed25519
+*.rsa
+*.dsa
+*.ecdsa
+*.ppk
+ssh-agent
+ssh-agent.*
 
 # === DEVELOPMENT NOISE EXCLUSIONS ===
 # These reduce AI context pollution but may occasionally need access
 
-# Logs and Temporary Files
+# Logs and Runtime Files (131MB+)
 logs/
 *.log
+*.log.*
+.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+test_output.log
+
+# Temporary and Cache Files
 tmp/
 .tmp/
+temp/
+.temp/
 *.tmp
+*.temp
+.DS_Store
+Thumbs.db
+*.orig
+*.rej
 
-# Generated Content
+# Generated Content (30GB+)
 generated_images/
 generated_videos/
+generated_audio/
 exports/
+data/
+exports/large_models/
+exports/backup_large_files/
+exports/backups/
+exports/generated_images/
 
-# IDE Files
+# IDE and Editor Files
 .vscode/settings.json
+.cursor/settings.json
 .idea/
 *.swp
 *.swo
+*~
 
 # === CONDITIONAL EXCLUSIONS ===
 # These may need AI access occasionally - use sparingly
@@ -128,3 +203,53 @@ __pycache__/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# === LARGE MEDIA AND ASSET FILES ===
+
+# Video Files
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+*.m4v
+*.flv
+*.wmv
+
+# Audio Files  
+*.mp3
+*.wav
+*.flac
+*.aac
+
+# Large Image Files
+*.tiff
+*.tif
+*.bmp
+*.raw
+
+# Large Archives
+*.zip
+*.tar
+*.tar.gz
+*.tar.bz2
+*.rar
+*.7z
+*.gz
+*.bz2
+
+# === PERFORMANCE OPTIMIZATION NOTES ===
+# This configuration excludes approximately:
+# - Large model files and caches (3GB+)
+# - Package dependencies (559MB+, 44k+ files) 
+# - Generated content and exports (30GB+)
+# - Build artifacts and logs (131MB+)
+# - Security sensitive files (credentials, keys)
+# - Development noise (IDE files, temp files)
+#
+# Expected performance improvements:
+# - Faster indexing and search
+# - Reduced memory usage  
+# - Improved AI context quality
+# - Better IDE responsiveness
+# - Eliminated rate limiting issues

@@ -1,10 +1,13 @@
 # MDC File Editing and Creation
 
 ## Priority
+
 P1 (Critical): Must always be followed
 
 ## When to Use This Rule
+
 **USE WHEN:**
+
 - Creating or editing .mdc files (MarkDown Components)
 - Working with files that contain YAML frontmatter
 - Editing Nuxt Content files
@@ -12,15 +15,18 @@ P1 (Critical): Must always be followed
 - Need to preserve frontmatter structure
 
 ## Core Principle
+
 **Use direct Unix tools with proper timeouts to edit .mdc files to properly preserve frontmatter and MDC syntax**
 
 ## Rule Statement
+
 AI agents must use direct Unix tools (cat, echo, sed, awk, etc.) with mandatory timeouts when editing .mdc files to ensure proper handling of YAML frontmatter and MDC-specific syntax while preventing command hangs.
 
 ## MDC File Structure
 
 ### Basic .mdc File Format
-```mdc
+
+````mdc
 ---
 title: "Document Title"
 description: "Document description"
@@ -45,7 +51,7 @@ This is an MDC component
 
 ```typescript
 const example = "syntax highlighted code";
-```
+````
 
 ### Inline Components
 
@@ -56,7 +62,8 @@ Use :component-name[content] for inline components.
 ::component-name{prop="value"}
 Component content here
 ::
-```
+
+````
 
 ## Frontmatter Fields
 
@@ -91,9 +98,10 @@ timeout 30s bash -c 'sed "1,/^---$/d" filename.mdc | sed "1,/^---$/d"'
 
 # Check if file has frontmatter
 timeout 10s head -1 filename.mdc | timeout 5s grep -q '^---$'
-```
+````
 
 ### Creating New .mdc Files (With timeout protection)
+
 ```bash
 # Create with frontmatter template
 timeout 60s bash -c 'cat > new-file.mdc << "EOF"
@@ -112,6 +120,7 @@ EOF'
 ```
 
 ### Editing Frontmatter (With mandatory timeouts)
+
 ```bash
 # Update title in frontmatter
 timeout 30s sed -i 's/^title: .*/title: "New Title"/' filename.mdc
@@ -125,6 +134,7 @@ timeout 30s sed -i "s/^date: .*/date: $(date +%Y-%m-%d)/" filename.mdc
 ```
 
 ### Editing Content (Preserving Frontmatter)
+
 ```bash
 # Append content to end of file
 echo "New content" >> filename.mdc
@@ -140,12 +150,14 @@ echo "New content" >> filename.mdc
 ## MDC Syntax Patterns
 
 ### Inline Components
+
 ```mdc
 :component-name[text content]
 :component-name{prop="value"}[text content]
 ```
 
 ### Block Components
+
 ```mdc
 ::component-name
 Content here
@@ -157,6 +169,7 @@ Content with props
 ```
 
 ### Nested Components
+
 ```mdc
 ::parent-component
   :::child-component
@@ -166,6 +179,7 @@ Content with props
 ```
 
 ### Slots
+
 ```mdc
 ::component
 Default slot content
@@ -178,9 +192,11 @@ Named slot content
 ## Command Safety and Timeout Requirements
 
 ### MANDATORY: All Commands Must Use Timeouts
+
 **CRITICAL**: Every Unix command used for .mdc file editing MUST include a timeout to prevent hanging and ensure system stability.
 
 #### Timeout Guidelines
+
 - **File reading operations**: 30s max
 - **Simple editing (sed, awk)**: 30s max
 - **File creation**: 60s max
@@ -188,7 +204,9 @@ Named slot content
 - **Validation commands**: 15s max
 
 #### Pre-Execution Checklist
+
 Before running ANY command on .mdc files:
+
 1. ✅ Command includes appropriate timeout
 2. ✅ File exists and is accessible
 3. ✅ Backup created if modifying
@@ -196,6 +214,7 @@ Before running ANY command on .mdc files:
 5. ✅ Expected output/behavior confirmed
 
 ### Timeout Command Patterns
+
 ```bash
 # CORRECT - With timeout
 timeout 30s sed -i 's/old/new/' filename.mdc
@@ -213,11 +232,13 @@ timeout 15s head -1 file.mdc | timeout 10s grep pattern
 ## Safe Editing Patterns
 
 ### Always Backup First (With timeout)
+
 ```bash
 timeout 30s cp filename.mdc filename.mdc.backup
 ```
 
 ### Validate Frontmatter (With timeout)
+
 ```bash
 # Check YAML validity
 timeout 30s python3 -c "
@@ -232,6 +253,7 @@ with open('filename.mdc', 'r') as f:
 ```
 
 ### Preserve Line Endings (With timeout)
+
 ```bash
 # Use -i flag with sed for in-place editing
 timeout 30s sed -i 's/old/new/' filename.mdc
@@ -243,6 +265,7 @@ timeout 30s sed 's/old/new/' filename.mdc > temp.mdc && timeout 10s mv temp.mdc 
 ## Common Editing Tasks
 
 ### Add New Author (With timeout)
+
 ```bash
 # Add author to existing authors list
 timeout 30s sed -i '/^authors:$/a\
@@ -251,6 +274,7 @@ timeout 30s sed -i '/^authors:$/a\
 ```
 
 ### Update Tags (With timeout)
+
 ```bash
 # Replace entire tags section
 timeout 30s sed -i '/^tags:$/,/^[^ ]/ { /^tags:$/!d; }' filename.mdc
@@ -260,6 +284,7 @@ timeout 30s sed -i '/^tags:$/a\
 ```
 
 ### Add MDC Component (With timeout)
+
 ```bash
 # Append MDC component to content
 timeout 30s bash -c 'cat >> filename.mdc << "EOF"
@@ -273,12 +298,14 @@ EOF'
 ## Error Prevention
 
 ### Validate Before Editing
+
 1. Check file exists and is readable
 2. Verify frontmatter syntax
 3. Backup original file
 4. Test changes on copy first
 
 ### Common Pitfalls to Avoid
+
 - Don't break YAML frontmatter delimiters (---)
 - Preserve indentation in YAML
 - Don't mix tabs and spaces
@@ -288,11 +315,13 @@ EOF'
 ## Integration with Build Tools
 
 ### Nuxt Content Compatibility
+
 - Ensure frontmatter follows Nuxt Content schema
 - Use proper date formats (ISO 8601)
 - Follow naming conventions for components
 
 ### Validation Commands (With timeout)
+
 ```bash
 # Check file structure
 timeout 15s grep -n "^---$" filename.mdc | timeout 10s head -2
@@ -304,6 +333,7 @@ timeout 15s grep -n "::" filename.mdc
 ## Examples
 
 ### Complete File Creation (With timeout protection)
+
 ```bash
 #!/bin/bash
 create_mdc_file() {
@@ -338,6 +368,7 @@ EOF"
 ```
 
 ### Bulk Update Script (With timeout protection)
+
 ```bash
 #!/bin/bash
 update_author_info() {
@@ -350,6 +381,7 @@ update_author_info() {
 ```
 
 ## Benefits
+
 - Preserves frontmatter integrity
 - Maintains proper YAML structure
 - Handles MDC syntax correctly
@@ -360,9 +392,11 @@ update_author_info() {
 - **Ensures system stability and responsiveness**
 
 ## Enforcement
+
 **CRITICAL**: Any command executed without a timeout when working with .mdc files is a **VIOLATION** of this rule and must be immediately corrected.
 
 ### Timeout Violation Examples
+
 ```bash
 # ❌ FORBIDDEN - No timeout
 sed -i 's/old/new/' file.mdc
