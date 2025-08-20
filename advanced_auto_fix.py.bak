@@ -32,6 +32,25 @@ def fix_elif_patterns(content: str) -> str:
 
     return re.sub(pattern, replace_func, content)
 
+def fix_variable_overwrite(content: str) -> str:
+    """Fix PLW2901: Variable overwritten in loop"""
+    # Pattern: for line_item in lines: ... line_item = ...
+    lines = content.split('\n')
+    fixed_lines = []
+
+    for i, line in enumerate(lines):
+        if 'for ' in line and ' in ' in line and '=' in line:
+            # Check if this line overwrites the loop variable
+            loop_var = line.split('for ')[1].split(' in ')[0].strip()
+            if f"{loop_var} =" in line:
+                # Rename the loop variable to avoid conflict
+                line = line.replace(f"for {loop_var} in", f"for {loop_var}_item in")
+                # Replace all occurrences of the original variable with the new one
+                line = line.replace(f"{loop_var} =", f"{loop_var}_item =")
+        fixed_lines.append(line)
+
+    return '\n'.join(fixed_lines)
+
 def fix_fstring_syntax(content: str) -> str:
     """Fix f-string syntax errors by adding missing braces"""
     # Pattern: f"..." with unclosed braces
@@ -39,7 +58,6 @@ def fix_fstring_syntax(content: str) -> str:
     fixed_lines = []
 
     for line in lines:
-        # Fix f-strings with missing closing braces
         if 'f"' in line or "f'" in line:
             # Count braces
             open_count = line.count('{') - line.count('{{')
@@ -61,6 +79,7 @@ def apply_advanced_fixes(file_path: Path) -> bool:
         # Apply fixes
         content = fix_logging_exception_patterns(content)
         content = fix_elif_patterns(content)
+        content = fix_variable_overwrite(content)
         content = fix_fstring_syntax(content)
 
         if content != original_content:
