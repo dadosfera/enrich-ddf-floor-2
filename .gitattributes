@@ -1,0 +1,59 @@
+# Git attributes for enrich-ddf-floor-2
+# Defines how Git should handle different file types
+
+# Environment files are NOT shell scripts
+*.env linguist-language=Properties
+.env* linguist-language=Properties
+.env.example linguist-language=Properties
+.env.template linguist-language=Properties
+.env.local linguist-language=Properties
+.env.production linguist-language=Properties
+.env.staging linguist-language=Properties
+
+# Shell scripts
+*.sh linguist-language=Shell
+
+# Python files
+*.py linguist-language=Python
+
+# JavaScript/TypeScript files
+*.js linguist-language=JavaScript
+*.jsx linguist-language=JavaScript
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TypeScript
+
+# Configuration files
+*.json linguist-language=JSON
+*.yaml linguist-language=YAML
+*.yml linguist-language=YAML
+*.toml linguist-language=TOML
+
+# Documentation
+*.md linguist-language=Markdown
+
+# Ignore generated files from language detection
+htmlcov/** linguist-generated=true
+node_modules/** linguist-generated=true
+venv/** linguist-generated=true
+__pycache__/** linguist-generated=true
+*.pyc linguist-generated=true
+test-results/** linguist-generated=true
+
+# Line ending normalization
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary

@@ -1,0 +1,21 @@
+# Shellcheck configuration for enrich-ddf-floor-2
+# This file configures shellcheck behavior for both IDE and pre-commit hooks
+
+# Exclude specific error codes that are not relevant for this project
+# SC2034: Variable appears unused (common in .env files)
+# SC2148: Tips depend on target shell (not relevant for .env files)
+
+# Severity level - only show errors and warnings
+severity=warning
+
+# External sources (allow sourcing files from these paths)
+external-sources=true
+
+# Enable all optional checks
+enable=all
+
+# Format for output
+format=tty
+
+# Shell dialect (default to bash)
+shell=bash

@@ -52,9 +52,10 @@ repos:
     hooks:
       - id: shellcheck
         files: '\.sh$'
-        exclude: '(\.env.*|\.env\..*|config/.*\.env.*)'
+        exclude: '(\.env$|\.env\..*|.*\.env$|.*\.env\..*|config/.*\.env.*|\.env\.example$|\.env\.template$|\.env\.local$|\.env\.production$|\.env\.staging$)'
         args: ['--severity=error']
         # Shellcheck automatically only processes passed files
+        # Explicitly excludes all .env files which are NOT shell scripts
 
   # JavaScript/TypeScript formatting - OPTIMIZED for changed files only
   - repo: https://github.com/pre-commit/mirrors-prettier
@@ -64,6 +65,14 @@ repos:
         files: '\.(js|jsx|ts|tsx|json|css|scss)$'
         exclude: '(package-lock\.json|\.min\.(js|css)|node_modules/)'
         # Prettier automatically only processes passed files
+
+  # Commit message validation - REQUIRED for conventional commits
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.7.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies: ['@commitlint/config-conventional']
 
   # Custom hooks for project-specific validation - OPTIMIZED for changed files
   - repo: local
