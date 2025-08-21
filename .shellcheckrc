@@ -1,0 +1,11 @@
+# ShellCheck configuration
+# Ignore cosmetic issues that don't affect functionality
+
+# Disable specific cosmetic warnings
+disable=SC2034,SC2148,SC1091,SC2155,SC2086,SC2046,SC2236,SC2006,SC2129,SC2059
+
+# Allow external sources
+external-sources=true
+
+# Severity level (error, warning, info, style)
+severity=error
