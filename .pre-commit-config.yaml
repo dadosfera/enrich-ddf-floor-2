@@ -52,9 +52,10 @@ repos:
     hooks:
       - id: shellcheck
         files: '\.sh$'
-        exclude: '(\.env.*|\.env\..*|config/.*\.env.*)'
+        exclude: '(\.env$|\.env\..*|.*\.env$|.*\.env\..*|config/.*\.env.*|\.env\.example$|\.env\.template$|\.env\.local$|\.env\.production$|\.env\.staging$)'
         args: ['--severity=error']
         # Shellcheck automatically only processes passed files
+        # Explicitly excludes all .env files which are NOT shell scripts
 
   # JavaScript/TypeScript formatting - OPTIMIZED for changed files only
   - repo: https://github.com/pre-commit/mirrors-prettier
