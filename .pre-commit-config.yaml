@@ -49,6 +49,23 @@ repos:
         args: [--maxkb=1000]
         exclude: ^(venv/|__pycache__/|\.git/|\.mypy_cache/|\.ruff_cache/)
 
+  # Shell script linting (ignoring cosmetic issues)
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.9.0.5
+    hooks:
+      - id: shellcheck
+        files: '\.sh$'
+        exclude: '(\.env$|\.env\..*|.*\.env$|.*\.env\..*|config/.*\.env.*|\.env\.example$|\.env\.template$|\.env\.local$|\.env\.production$|\.env\.staging$)'
+        args: ['--severity=error', '--exclude=SC2034,SC2148,SC1091,SC2155,SC2086,SC2046,SC2236', '--external-sources']
+
+  # Commit message validation - REQUIRED for conventional commits  
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v9.7.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies: ['@commitlint/config-conventional']
+
 # Default settings
 default_language_version:
   python: python3

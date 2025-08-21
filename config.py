@@ -34,6 +34,24 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     metrics_enabled: bool = True
 
+    # Real Data Enrichment API Keys
+    hunter_api_key: Optional[str] = None
+    zerobounce_api_key: Optional[str] = None
+    github_token: Optional[str] = None
+    pdl_api_key: Optional[str] = None
+    apollo_api_key: Optional[str] = None
+    
+    # LinkedIn & Professional Data APIs
+    wiza_api_key: Optional[str] = None
+    surfe_api_key: Optional[str] = None
+    
+    # Brazil-Specific Data Sources
+    bigdata_corp_api_key: Optional[str] = None
+    bigdata_corp_secret: Optional[str] = None
+    
+    # Enterprise Data Providers
+    coresignal_api_key: Optional[str] = None
+
     class Config:
         """Pydantic configuration."""
 
