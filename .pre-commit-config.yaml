@@ -12,31 +12,17 @@ repos:
         language: system
         pass_filenames: false
 
-  # Python code formatting and linting
-  - repo: https://github.com/psf/black
-    rev: 24.1.1
-    hooks:
-      - id: black
-        language_version: python3
-        args: [--line-length=88, --target-version=py312]
-        types: [python]
-        exclude: ^(venv/|__pycache__/|\.git/|\.mypy_cache/|\.ruff_cache/|node_modules/)
-
-  # Import sorting
-  - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
-    hooks:
-      - id: isort
-        args: [--profile=black, --line-length=88]
-        types: [python]
-        exclude: ^(venv/|__pycache__/|\.git/|\.mypy_cache/|\.ruff_cache/|node_modules/)
-
-  # Python linting with ruff
+  # Python linting and formatting with ruff (replaces Black + isort)
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.2.1
     hooks:
+      # Ruff linter (replaces flake8, isort, pyupgrade, etc.)
       - id: ruff
-        args: [--fix, --exit-non-zero-on-fix, --ignore=I001]
+        args: [--fix, --exit-non-zero-on-fix]
+        types: [python]
+        exclude: ^(venv/|__pycache__/|\.git/|\.mypy_cache/|\.ruff_cache/|node_modules/)
+      # Ruff formatter (replaces Black)
+      - id: ruff-format
         types: [python]
         exclude: ^(venv/|__pycache__/|\.git/|\.mypy_cache/|\.ruff_cache/|node_modules/)
 
@@ -65,7 +51,12 @@ repos:
       - id: shellcheck
         files: '\.sh$'
         exclude: '(\.env$|\.env\..*|.*\.env$|.*\.env\..*|config/.*\.env.*|\.env\.example$|\.env\.template$|\.env\.local$|\.env\.production$|\.env\.staging$)'
-        args: ['--severity=error', '--exclude=SC2034,SC2148,SC1091,SC2155,SC2086,SC2046,SC2236', '--external-sources']
+        args:
+          [
+            "--severity=error",
+            "--exclude=SC2034,SC2148,SC1091,SC2155,SC2086,SC2046,SC2236",
+            "--external-sources",
+          ]
 
   # Commit message validation - REQUIRED for conventional commits
   - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
@@ -73,7 +64,7 @@ repos:
     hooks:
       - id: commitlint
         stages: [commit-msg]
-        additional_dependencies: ['@commitlint/config-conventional']
+        additional_dependencies: ["@commitlint/config-conventional"]
 
 # Default settings
 default_language_version:
