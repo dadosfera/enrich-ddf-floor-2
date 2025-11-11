@@ -76,6 +76,7 @@ Add the following to `.cursor/settings.json` (or `.vscode/settings.json`):
 ### Step 4: Verify Configuration
 
 After reloading, verify:
+
 - ✅ No "isort server crashed" errors
 - ✅ No "Pending response rejected" errors
 - ✅ Import sorting works on save (via Ruff)
@@ -83,18 +84,23 @@ After reloading, verify:
 ## Settings Explanation
 
 ### `isort.server.enabled: false`
+
 Disables the isort language server completely, preventing crashes.
 
 ### `isort.check: false`
+
 Disables isort checking on save.
 
 ### `isort.enabled: false`
+
 Completely disables the isort extension.
 
 ### `python.sortImports.provider: "none"`
+
 Tells Cursor not to use any provider for import sorting (Ruff handles it via formatter).
 
 ### Ruff Configuration
+
 - `editor.defaultFormatter: "charliermarsh.ruff"` - Uses Ruff for formatting
 - `source.organizeImports: "explicit"` - Ruff organizes imports on save
 
@@ -105,11 +111,13 @@ Tells Cursor not to use any provider for import sorting (Ruff handles it via for
 If you still see isort errors after reloading:
 
 1. **Manually disable extension**:
+
    - Press `Cmd+Shift+X` to open Extensions
    - Search for "isort"
    - Click gear icon → "Disable (Workspace)"
 
 2. **Clear extension cache** (if needed):
+
    ```bash
    rm -rf ~/Library/Application\ Support/Cursor/CachedExtensions
    ```
@@ -132,6 +140,7 @@ If imports aren't being sorted on save:
 If your project uses standalone isort (not Ruff):
 
 1. Install isort in your virtual environment:
+
    ```bash
    pip install isort
    ```
@@ -166,10 +175,12 @@ When setting up a new repository:
 ### What Changed
 
 1. **Removed tools**:
+
    - `black` - Replaced by `ruff format`
    - `isort` - Replaced by Ruff's `I` rule
 
 2. **Updated pre-commit hooks**:
+
    - Removed `black` hook
    - Removed `isort` hook
    - Added `ruff-format` hook
@@ -209,6 +220,7 @@ See [Lessons Learned: Ruff Migration](../../lessons_learned/2025-01-27_ruff-migr
 ## Quick Reference
 
 **Settings to add:**
+
 ```json
 {
   "isort.server.enabled": false,
@@ -225,6 +237,7 @@ See [Lessons Learned: Ruff Migration](../../lessons_learned/2025-01-27_ruff-migr
 ```
 
 **After updating settings:**
+
 1. Reload window: `Cmd+Shift+P` → "Developer: Reload Window"
 2. Verify no errors
 3. Test import sorting on save
