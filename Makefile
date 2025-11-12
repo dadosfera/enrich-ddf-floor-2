@@ -114,3 +114,47 @@ backend-low: ## Start backend without dev reload/timeouts
 test-low: ## Run a lighter subset of tests with lower timeouts
 	@echo "🧪 Running low-resource test suite..."
 	bash tests/run_tests.sh --unit --fail-fast --timeout=120
+
+# Docker Compose helpers
+compose-validate: ## Validate compose.yml syntax
+	@echo "🔎 Validating compose.yml..."
+	docker compose -f compose.yml config --quiet
+
+compose-up: ## Start minimal stack (profile: app)
+	@echo "🚀 Starting Docker Compose (profile: app)..."
+	docker compose --profile app up -d
+
+compose-down: ## Stop all compose services
+	@echo "🛑 Stopping Docker Compose services..."
+	docker compose down
+
+# Resource detection and adaptive testing
+detect-resources: ## Detect available system resources
+	@echo "🔍 Detecting system resources..."
+	bash scripts/detect_resources.sh
+
+detect-resources-json: ## Output resources as JSON
+	@bash scripts/detect_resources.sh --format=json
+
+test-auto: ## Run tests with auto-detected optimal settings
+	@echo "🧪 Running tests with auto-detected settings..."
+	@bash scripts/detect_resources.sh --apply --mode=balanced
+	@npm test
+
+test-auto-aggressive: ## Run tests with aggressive parallelization (if resources allow)
+	@echo "⚡ Running tests with aggressive settings..."
+	@bash scripts/detect_resources.sh --apply --mode=aggressive
+	@npm test
+
+test-auto-conservative: ## Run tests with conservative settings
+	@echo "🛡️  Running tests with conservative settings..."
+	@bash scripts/detect_resources.sh --apply --mode=conservative
+	@npm test
+
+playwright-auto: ## Update Playwright config based on available resources
+	@echo "🎭 Updating Playwright config with detected resources..."
+	@bash scripts/detect_resources.sh --update-playwright --mode=balanced
+
+playwright-auto-aggressive: ## Update Playwright for maximum parallelization
+	@echo "⚡ Updating Playwright for aggressive parallelization..."
+	@bash scripts/detect_resources.sh --update-playwright --mode=aggressive
