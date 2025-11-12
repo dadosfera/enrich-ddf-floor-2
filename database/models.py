@@ -1,9 +1,18 @@
 """Database models for Enrich DDF Floor 2."""
 
 from datetime import datetime
-from typing import Optional
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text, Boolean, Float, JSON
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.orm import relationship
 
 from .connection import Base
@@ -11,9 +20,9 @@ from .connection import Base
 
 class Company(Base):
     """Company model for storing company information."""
-    
+
     __tablename__ = "companies"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False, index=True)
     domain = Column(String(255), unique=True, index=True)
@@ -29,16 +38,16 @@ class Company(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     contacts = relationship("Contact", back_populates="company")
 
 
 class Contact(Base):
     """Contact model for storing contact information."""
-    
+
     __tablename__ = "contacts"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
@@ -54,16 +63,16 @@ class Contact(Base):
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
+
     # Relationships
     company = relationship("Company", back_populates="contacts")
 
 
 class Product(Base):
     """Product model for storing product information."""
-    
+
     __tablename__ = "products"
-    
+
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False, index=True)
     sku = Column(String(100), unique=True, index=True)

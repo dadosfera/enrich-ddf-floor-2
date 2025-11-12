@@ -37,7 +37,7 @@ repos:
       - id: check-yaml
         exclude: ^(venv/|__pycache__/|\.git/|\.mypy_cache/|\.ruff_cache/|node_modules/)
       - id: check-json
-        exclude: (venv/|__pycache__/|\.git/|\.mypy_cache/|\.ruff_cache/|node_modules/|\.vscode/)
+        exclude: (venv/|__pycache__/|\.git/|\.mypy_cache/|\.ruff_cache/|node_modules/|\.vscode/|tsconfig.*\.json)
       - id: check-merge-conflict
         exclude: ^(venv/|__pycache__/|\.git/|\.mypy_cache/|\.ruff_cache/|node_modules/)
       - id: check-added-large-files

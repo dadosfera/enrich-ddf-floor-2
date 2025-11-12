@@ -40,6 +40,7 @@ FULL=false
 TEST=false
 PORT=""
 HOST="0.0.0.0"
+START_TIMEOUT=0
 
 # Help function
 show_help() {
@@ -60,6 +61,7 @@ OPTIONS:
     --test                 Run tests only
     --port=PORT           Custom port (default: auto-detect)
     --host=HOST           Custom host (default: 0.0.0.0)
+    --timeout=SECONDS     Optional startup timeout (0 = no timeout; default: 0)
     --help                 Show this help message
 
 EXAMPLES:
@@ -115,6 +117,10 @@ parse_args() {
                 ;;
             --host=*)
                 HOST="${arg#*=}"
+                shift
+                ;;
+            --timeout=*)
+                START_TIMEOUT="${arg#*=}"
                 shift
                 ;;
             --help)
@@ -234,6 +240,9 @@ start_application() {
     export APP_HOST="$HOST"
     export APP_ENV="$ENVIRONMENT"
     export APP_DEBUG="$DEBUG"
+    # Also export standard variables consumed by pydantic-settings
+    export PORT="$app_port"
+    export HOST="$HOST"
 
     if [[ "$VERBOSE" == "true" ]]; then
         export APP_VERBOSE="true"
@@ -241,13 +250,26 @@ start_application() {
 
     source venv/bin/activate
 
-    # Start with timeout and proper error handling
-    if timeout 30 python3 main.py; then
-        log_success "Application started successfully on http://$HOST:$app_port"
-        return 0
+    # Start application with optional timeout control
+    if [[ "$START_TIMEOUT" -gt 0 ]]; then
+        log_info "Applying startup timeout: ${START_TIMEOUT}s"
+        if timeout "$START_TIMEOUT" python3 main.py; then
+            log_success "Application exited successfully within timeout"
+            return 0
+        else
+            log_error "Application failed or timed out during startup window"
+            return 1
+        fi
     else
-        log_error "Failed to start application"
-        return 1
+        # No timeout; run in foreground to allow interactive dev
+        python3 main.py
+        local exit_code=$?
+        if [[ $exit_code -eq 0 ]]; then
+            log_success "Application exited successfully"
+        else
+            log_error "Application exited with code $exit_code"
+        fi
+        return $exit_code
     fi
 }
 
