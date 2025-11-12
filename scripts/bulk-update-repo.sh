@@ -43,11 +43,15 @@ if [ -f "Dockerfile" ] || [ -d "docker" ] || [ -f "compose.yml" ] || [ -f "docke
         fi
     else
         echo "  Enhancing existing $COMPOSE_FILE"
-        # Check if resource limits exist
-        if ! grep -q "mem_limit:" "$COMPOSE_FILE" 2>/dev/null; then
-            echo "  ⚠️  Resource limits missing - manual review needed"
+        # Add resource limits if missing
+        if [ -f "$REFERENCE_REPO/scripts/enhance-compose-limits.sh" ]; then
+            bash "$REFERENCE_REPO/scripts/enhance-compose-limits.sh" "$COMPOSE_FILE" 2>/dev/null || echo "  ⚠️  Enhancement had issues (check manually)"
         else
-            echo "  ✅ Resource limits already present"
+            if ! grep -q "mem_limit:" "$COMPOSE_FILE" 2>/dev/null; then
+                echo "  ⚠️  Resource limits missing - manual review needed"
+            else
+                echo "  ✅ Resource limits already present"
+            fi
         fi
     fi
 
@@ -61,11 +65,15 @@ fi
 
 # 2. Makefile Updates
 if [ -f "Makefile" ]; then
-    echo "⏱️  Checking Makefile timeouts..."
-    if ! grep -q "timeout\|gtimeout" Makefile 2>/dev/null; then
-        echo "  ⚠️  Timeouts missing - manual review needed"
+    echo "⏱️  Adding timeout wrappers to Makefile..."
+    if [ -f "$REFERENCE_REPO/scripts/add-makefile-timeouts.sh" ]; then
+        bash "$REFERENCE_REPO/scripts/add-makefile-timeouts.sh" Makefile 2>/dev/null && echo "  ✅ Timeouts added" || echo "  ⚠️  Timeout addition had issues (check manually)"
     else
-        echo "  ✅ Timeouts already present"
+        if ! grep -q "timeout\|gtimeout" Makefile 2>/dev/null; then
+            echo "  ⚠️  Timeouts missing - manual review needed"
+        else
+            echo "  ✅ Timeouts already present"
+        fi
     fi
 
     # Add standardized targets if missing
@@ -109,11 +117,15 @@ fi
 
 # 4. Package.json Updates (if Node.js)
 if [ -f "package.json" ]; then
-    echo "📦 Checking package.json for NODE_OPTIONS..."
-    if ! grep -q "NODE_OPTIONS" package.json 2>/dev/null; then
-        echo "  ⚠️  NODE_OPTIONS missing - manual update needed"
+    echo "📦 Adding NODE_OPTIONS to package.json..."
+    if [ -f "$REFERENCE_REPO/scripts/add-node-options.js" ] && command -v node &> /dev/null; then
+        node "$REFERENCE_REPO/scripts/add-node-options.js" package.json 2>/dev/null && echo "  ✅ NODE_OPTIONS added" || echo "  ⚠️  NODE_OPTIONS addition had issues (check manually)"
     else
-        echo "  ✅ NODE_OPTIONS already present"
+        if ! grep -q "NODE_OPTIONS" package.json 2>/dev/null; then
+            echo "  ⚠️  NODE_OPTIONS missing - manual update needed"
+        else
+            echo "  ✅ NODE_OPTIONS already present"
+        fi
     fi
 fi
 

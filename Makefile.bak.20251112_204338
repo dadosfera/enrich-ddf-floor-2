@@ -121,11 +121,11 @@ compose-validate: ## Validate compose.yml syntax
 	docker compose -f compose.yml config --quiet
 
 compose-up: ## Start minimal stack (profile: app)
-	@echo "🚀 gtimeout 120 echo "🚀 Starting Docker Compose (profile: app)..."
+	@echo "🚀 Starting Docker Compose (profile: app)..."
 	docker compose --profile app up -d
 
 compose-down: ## Stop all compose services
-	@echo "🛑 gtimeout 120 echo "🛑 Stopping Docker Compose services..."
+	@echo "🛑 Stopping Docker Compose services..."
 	docker compose down
 
 # Resource detection and adaptive testing
@@ -139,17 +139,17 @@ detect-resources-json: ## Output resources as JSON
 test-auto: ## Run tests with auto-detected optimal settings
 	@echo "🧪 Running tests with auto-detected settings..."
 	@bash scripts/detect_resources.sh --apply --mode=balanced
-	@npm testgtimeout 300 npm test
+	@npm test
 
 test-auto-aggressive: ## Run tests with aggressive parallelization (if resources allow)
 	@echo "⚡ Running tests with aggressive settings..."
 	@bash scripts/detect_resources.sh --apply --mode=aggressive
-	@npm testgtimeout 300 npm test
+	@npm test
 
 test-auto-conservative: ## Run tests with conservative settings
 	@echo "🛡️  Running tests with conservative settings..."
 	@bash scripts/detect_resources.sh --apply --mode=conservative
-	@npm testgtimeout 300 npm test
+	@npm test
 
 playwright-auto: ## Update Playwright config based on available resources
 	@echo "🎭 Updating Playwright config with detected resources..."

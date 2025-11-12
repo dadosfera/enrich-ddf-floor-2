@@ -1,0 +1,45 @@
+services:
+  backend:
+    image: python:3.11-slim
+    container_name: enrich-ddf-backend
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      - PORT=8247
+      - HOST=0.0.0.0
+    command: sh -lc "pip install --no-cache-dir -r requirements-minimal.txt && python main.py"
+    ports:
+      - "8247:8247"
+    mem_limit: "512m"
+    cpus: "1.0"
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    profiles:
+      - app
+
+  frontend:
+    image: node:20-alpine
+    container_name: enrich-ddf-frontend
+    working_dir: /app/frontend
+    volumes:
+      - ./frontend:/app/frontend
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=2048
+    command: sh -lc "npm ci || npm install && npm run dev"
+    ports:
+      - "5173:5173"
+    mem_limit: "768m"
+    cpus: "1.0"
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    profiles:
+      - app
