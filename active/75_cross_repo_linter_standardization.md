@@ -36,7 +36,12 @@ Standardize linter configurations across all local repositories by:
 
 ### 1.1 Survey Existing Configurations
 
-**Script to create**: `scripts/survey-linter-configs.sh`
+**Prerequisites**: Create directory structure first
+```bash
+mkdir -p scripts/quality/linter
+```
+
+**Script to create**: `scripts/quality/linter/survey-linter-configs.sh`
 
 ```bash
 #!/bin/bash
@@ -134,7 +139,7 @@ done
 
 ### 3.1 Create Automated Migration Script
 
-**Script**: `scripts/migrate-linter-config.sh`
+**Script**: `scripts/quality/linter/migrate-linter-config.sh`
 
 ```bash
 #!/bin/bash
@@ -208,7 +213,7 @@ For each migrated repo:
 
 ### 4.1 Setup Monitoring
 
-**Script**: `scripts/monitor-linter-health.sh`
+**Script**: `scripts/quality/linter/monitor-linter-health.sh`
 
 ```bash
 #!/bin/bash
@@ -313,12 +318,34 @@ done
 
 ## 🛠️ Tools & Scripts
 
+### Taxonomy Compliance
+
+**Important**: All scripts must be organized in subdirectories per taxonomy hook requirements:
+- ✅ **Correct**: `scripts/quality/linter/survey-linter-configs.sh`
+- ❌ **Incorrect**: `scripts/survey-linter-configs.sh` (violates taxonomy)
+
+**Directory Structure**:
+```
+scripts/
+  quality/
+    linter/
+      survey-linter-configs.sh
+      migrate-linter-config.sh
+      validate-linter-config.sh
+      monitor-linter-health.sh
+      rollback-linter-config.sh
+```
+
 ### Scripts to Create
-1. `scripts/survey-linter-configs.sh` - Survey tool
-2. `scripts/migrate-linter-config.sh` - Migration tool
-3. `scripts/validate-linter-config.sh` - Validation tool
-4. `scripts/monitor-linter-health.sh` - Monitoring tool
-5. `scripts/rollback-linter-config.sh` - Rollback tool
+**Location**: `scripts/quality/linter/` (organized by category per taxonomy requirements)
+
+1. `scripts/quality/linter/survey-linter-configs.sh` - Survey tool
+2. `scripts/quality/linter/migrate-linter-config.sh` - Migration tool
+3. `scripts/quality/linter/validate-linter-config.sh` - Validation tool
+4. `scripts/quality/linter/monitor-linter-health.sh` - Monitoring tool
+5. `scripts/quality/linter/rollback-linter-config.sh` - Rollback tool
+
+**Note**: All scripts must be organized in subdirectories per taxonomy hook requirements. Scripts cannot be placed directly in `scripts/` root.
 
 ### Templates to Create
 1. `templates/pyproject.toml.template` - Python/Ruff config
