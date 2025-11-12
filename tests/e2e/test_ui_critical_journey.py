@@ -156,10 +156,7 @@ def test_ui_create_company_via_docs(page, base_url, test_data):
         response_data = json.loads(response_text)
 
         # Handle the actual response format
-        if "data" in response_data:
-            data = response_data["data"]
-        else:
-            data = response_data
+        data = response_data.get("data", response_data)
 
         assert "id" in data
         assert data["name"] == company_data["name"]
@@ -210,10 +207,7 @@ def test_ui_create_contact_via_docs(page, base_url, test_data):
         response_data = json.loads(response_text)
 
         # Handle the actual response format
-        if "data" in response_data:
-            data = response_data["data"]
-        else:
-            data = response_data
+        data = response_data.get("data", response_data)
 
         assert "id" in data
         assert data["first_name"] == contact_data["first_name"]
@@ -266,10 +260,7 @@ def test_ui_create_product_via_docs(page, base_url, test_data):
         response_data = json.loads(response_text)
 
         # Handle the actual response format
-        if "data" in response_data:
-            data = response_data["data"]
-        else:
-            data = response_data
+        data = response_data.get("data", response_data)
 
         assert "id" in data
         assert data["name"] == product_data["name"]

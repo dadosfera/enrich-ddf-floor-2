@@ -59,7 +59,7 @@ class SurfeService:
             }
 
         except Exception as e:
-            logger.error(f"Surfe people search error: {e}")
+            logger.exception(f"Surfe people search error: {e}")
             return {"success": False, "error": str(e), "people": []}
 
     async def enrich_people(
@@ -97,7 +97,7 @@ class SurfeService:
             }
 
         except Exception as e:
-            logger.error(f"Surfe people enrichment error: {e}")
+            logger.exception(f"Surfe people enrichment error: {e}")
             return {"success": False, "error": str(e), "people": []}
 
     async def search_companies(
@@ -124,7 +124,7 @@ class SurfeService:
             }
 
         except Exception as e:
-            logger.error(f"Surfe company search error: {e}")
+            logger.exception(f"Surfe company search error: {e}")
             return {"success": False, "error": str(e), "companies": []}
 
     async def enrich_companies(
@@ -150,7 +150,7 @@ class SurfeService:
             }
 
         except Exception as e:
-            logger.error(f"Surfe company enrichment error: {e}")
+            logger.exception(f"Surfe company enrichment error: {e}")
             return {"success": False, "error": str(e), "companies": []}
 
     async def get_credits(self) -> Dict[str, Any]:
@@ -169,7 +169,7 @@ class SurfeService:
             }
 
         except Exception as e:
-            logger.error(f"Surfe credits check error: {e}")
+            logger.exception(f"Surfe credits check error: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_filters(self) -> Dict[str, Any]:
@@ -188,7 +188,7 @@ class SurfeService:
             }
 
         except Exception as e:
-            logger.error(f"Surfe filters error: {e}")
+            logger.exception(f"Surfe filters error: {e}")
             return {"success": False, "error": str(e)}
 
     def test_connection(self) -> bool:
@@ -199,5 +199,5 @@ class SurfeService:
             )
             return response.status_code == 200
         except Exception as e:
-            logger.error(f"Surfe connection test failed: {e}")
+            logger.exception(f"Surfe connection test failed: {e}")
             return False

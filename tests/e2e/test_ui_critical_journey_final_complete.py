@@ -7,6 +7,7 @@ Simplified version with robust error handling
 
 import asyncio
 import logging
+import sys
 import uuid
 from datetime import datetime
 
@@ -89,16 +90,16 @@ class FinalUITest:
             try:
                 response = requests.request(method, url, timeout=20, **kwargs)
                 return response
-            except requests.exceptions.ConnectionError as e:
+            except requests.exceptions.ConnectionError:
                 if attempt == 9:  # Last attempt
-                    raise e
+                    raise
                 logger.warning(f"Connection attempt {attempt + 1} failed, retrying...")
                 # Use exponential backoff
                 wait_time = min(2**attempt, 10)
                 asyncio.run(asyncio.sleep(wait_time))
             except Exception as e:
                 if attempt == 9:
-                    raise e
+                    raise
                 logger.warning(f"Request attempt {attempt + 1} failed: {e}")
                 asyncio.run(asyncio.sleep(1))
 
@@ -159,7 +160,7 @@ class FinalUITest:
             else:
                 raise Exception(f"Health check failed: {response.status_code}")
         except Exception as e:
-            logger.error(f"❌ Server health test failed: {e}")
+            logger.exception(f"❌ Server health test failed: {e}")
             return False
 
     async def test_api_documentation_access(self) -> bool:
@@ -179,7 +180,7 @@ class FinalUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ API documentation access failed: {e}")
+            logger.exception(f"❌ API documentation access failed: {e}")
             return False
 
     async def test_health_endpoint_ui(self) -> bool:
@@ -199,7 +200,7 @@ class FinalUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Health endpoint UI test failed: {e}")
+            logger.exception(f"❌ Health endpoint UI test failed: {e}")
             return False
 
     async def test_api_data_creation(self) -> bool:
@@ -257,7 +258,7 @@ class FinalUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ API data creation failed: {e}")
+            logger.exception(f"❌ API data creation failed: {e}")
             return False
 
     async def test_api_data_verification(self) -> bool:
@@ -306,7 +307,7 @@ class FinalUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Data verification failed: {e}")
+            logger.exception(f"❌ Data verification failed: {e}")
             return False
 
     async def test_ui_navigation(self) -> bool:
@@ -343,7 +344,7 @@ class FinalUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ UI navigation test failed: {e}")
+            logger.exception(f"❌ UI navigation test failed: {e}")
             return False
 
     async def cleanup(self):
@@ -383,7 +384,7 @@ class FinalUITest:
                     result = await test_func()
                     self.test_results[test_name] = result
                 except Exception as e:
-                    logger.error(f"❌ {test_name} failed with exception: {e}")
+                    logger.exception(f"❌ {test_name} failed with exception: {e}")
                     self.test_results[test_name] = False
 
             # Calculate results
@@ -414,7 +415,7 @@ class FinalUITest:
             return success_rate == 100
 
         except Exception as e:
-            logger.error(f"❌ Final test failed: {e}")
+            logger.exception(f"❌ Final test failed: {e}")
             return False
 
         finally:
@@ -430,4 +431,4 @@ async def main():
 
 if __name__ == "__main__":
     success = asyncio.run(main())
-    exit(0 if success else 1)
+    sys.exit(0 if success else 1)

@@ -122,7 +122,7 @@ class FixedServerUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ API documentation access failed: {e}")
+            logger.exception(f"❌ API documentation access failed: {e}")
             return False
 
     async def test_health_endpoint_ui(self) -> bool:
@@ -140,7 +140,7 @@ class FixedServerUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Health endpoint UI test failed: {e}")
+            logger.exception(f"❌ Health endpoint UI test failed: {e}")
             return False
 
     async def test_api_data_creation(self) -> bool:
@@ -198,7 +198,7 @@ class FixedServerUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ API data creation failed: {e}")
+            logger.exception(f"❌ API data creation failed: {e}")
             return False
 
     async def test_api_data_verification(self) -> bool:
@@ -251,7 +251,7 @@ class FixedServerUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Data verification failed: {e}")
+            logger.exception(f"❌ Data verification failed: {e}")
             return False
 
     async def test_ui_navigation(self) -> bool:
@@ -286,7 +286,7 @@ class FixedServerUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ UI navigation test failed: {e}")
+            logger.exception(f"❌ UI navigation test failed: {e}")
             return False
 
     async def cleanup(self):
@@ -324,7 +324,7 @@ class FixedServerUITest:
                     result = await test_func()
                     self.test_results[test_name] = result
                 except Exception as e:
-                    logger.error(f"❌ {test_name} failed with exception: {e}")
+                    logger.exception(f"❌ {test_name} failed with exception: {e}")
                     self.test_results[test_name] = False
 
             passed_tests = sum(1 for result in self.test_results.values() if result)
@@ -353,7 +353,7 @@ class FixedServerUITest:
             return success_rate == 100
 
         except Exception as e:
-            logger.error(f"❌ Fixed server test failed: {e}")
+            logger.exception(f"❌ Fixed server test failed: {e}")
             return False
 
         finally:
@@ -369,4 +369,4 @@ async def main():
 
 if __name__ == "__main__":
     success = asyncio.run(main())
-    exit(0 if success else 1)
+    sys.exit(0 if success else 1)

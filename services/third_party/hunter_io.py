@@ -59,7 +59,7 @@ class HunterIOService:
                 return {"success": False, "error": "Email not found"}
 
         except Exception as e:
-            logger.error(f"Hunter.io API error: {e}")
+            logger.exception(f"Hunter.io API error: {e}")
             return {"success": False, "error": str(e)}
 
     async def verify_email(self, email: str) -> Dict[str, Any]:
@@ -92,5 +92,5 @@ class HunterIOService:
             }
 
         except Exception as e:
-            logger.error(f"Hunter.io verification error: {e}")
+            logger.exception(f"Hunter.io verification error: {e}")
             return {"success": False, "error": str(e)}

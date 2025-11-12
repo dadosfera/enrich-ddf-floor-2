@@ -112,7 +112,7 @@ class GitHubService:
             }
 
         except Exception as e:
-            logger.error(f"GitHub API error for user {username}: {e}")
+            logger.exception(f"GitHub API error for user {username}: {e}")
             return {"success": False, "error": str(e)}
 
     def enrich_organization(self, org_name: str) -> Dict[str, Any]:
@@ -196,7 +196,7 @@ class GitHubService:
             }
 
         except Exception as e:
-            logger.error(f"GitHub API error for organization {org_name}: {e}")
+            logger.exception(f"GitHub API error for organization {org_name}: {e}")
             return {"success": False, "error": str(e)}
 
     def search_users_by_email(self, email: str) -> Dict[str, Any]:
@@ -239,7 +239,7 @@ class GitHubService:
             }
 
         except Exception as e:
-            logger.error(f"GitHub search error for email {email}: {e}")
+            logger.exception(f"GitHub search error for email {email}: {e}")
             return {"success": False, "error": str(e)}
 
     def get_rate_limit_info(self) -> Dict[str, Any]:
@@ -251,5 +251,5 @@ class GitHubService:
             response.raise_for_status()
             return response.json()
         except Exception as e:
-            logger.error(f"GitHub rate limit check error: {e}")
+            logger.exception(f"GitHub rate limit check error: {e}")
             return {"error": str(e)}

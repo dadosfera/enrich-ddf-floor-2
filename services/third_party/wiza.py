@@ -64,7 +64,7 @@ class WizaService:
             }
 
         except Exception as e:
-            logger.error(f"Wiza LinkedIn profile enrichment error: {e}")
+            logger.exception(f"Wiza LinkedIn profile enrichment error: {e}")
             return {"success": False, "error": str(e)}
 
     async def find_email(
@@ -103,7 +103,7 @@ class WizaService:
             }
 
         except Exception as e:
-            logger.error(f"Wiza email finding error: {e}")
+            logger.exception(f"Wiza email finding error: {e}")
             return {"success": False, "error": str(e), "emails": []}
 
     async def enrich_company(
@@ -144,7 +144,7 @@ class WizaService:
             }
 
         except Exception as e:
-            logger.error(f"Wiza company enrichment error: {e}")
+            logger.exception(f"Wiza company enrichment error: {e}")
             return {"success": False, "error": str(e)}
 
     async def get_credits(self) -> Dict[str, Any]:
@@ -163,7 +163,7 @@ class WizaService:
             }
 
         except Exception as e:
-            logger.error(f"Wiza credits check error: {e}")
+            logger.exception(f"Wiza credits check error: {e}")
             return {"success": False, "error": str(e)}
 
     def test_connection(self) -> bool:
@@ -174,7 +174,7 @@ class WizaService:
             )
             return response.status_code == 200
         except Exception as e:
-            logger.error(f"Wiza connection test failed: {e}")
+            logger.exception(f"Wiza connection test failed: {e}")
             return False
 
     def _transform_profile_response(self, raw_data: Dict[str, Any]) -> Dict[str, Any]:

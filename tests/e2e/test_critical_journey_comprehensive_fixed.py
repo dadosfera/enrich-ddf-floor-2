@@ -316,10 +316,7 @@ def test_api_create_company(base_url, test_data):
         response_data = response.json()
 
         # Handle the actual response format
-        if "data" in response_data:
-            data = response_data["data"]
-        else:
-            data = response_data
+        data = response_data.get("data", response_data)
 
         assert "id" in data
         assert data["name"] == test_data["company"]["name"]
@@ -346,10 +343,7 @@ def test_api_create_contact(base_url, test_data):
         response_data = response.json()
 
         # Handle the actual response format
-        if "data" in response_data:
-            data = response_data["data"]
-        else:
-            data = response_data
+        data = response_data.get("data", response_data)
 
         assert "id" in data
         assert data["first_name"] == test_data["contact"]["first_name"]
@@ -377,10 +371,7 @@ def test_api_create_product(base_url, test_data):
         response_data = response.json()
 
         # Handle the actual response format
-        if "data" in response_data:
-            data = response_data["data"]
-        else:
-            data = response_data
+        data = response_data.get("data", response_data)
 
         assert "id" in data
         assert data["name"] == test_data["product"]["name"]

@@ -71,7 +71,7 @@ class ClearbitService:
                 return {"success": False, "error": f"API error: {response.status_code}"}
 
         except Exception as e:
-            logger.error(f"Clearbit person enrichment error: {e}")
+            logger.exception(f"Clearbit person enrichment error: {e}")
             return {"success": False, "error": str(e)}
 
     async def enrich_company(self, domain: str) -> Dict[str, Any]:
@@ -122,5 +122,5 @@ class ClearbitService:
                 return {"success": False, "error": f"API error: {response.status_code}"}
 
         except Exception as e:
-            logger.error(f"Clearbit company enrichment error: {e}")
+            logger.exception(f"Clearbit company enrichment error: {e}")
             return {"success": False, "error": str(e)}

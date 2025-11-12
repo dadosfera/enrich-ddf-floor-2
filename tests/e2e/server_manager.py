@@ -39,7 +39,7 @@ class ServerManager:
             logger.info("✅ Server started")
             return True
         except Exception as e:
-            logger.error(f"❌ Failed to start server: {e}")
+            logger.exception(f"❌ Failed to start server: {e}")
             return False
 
     def stop_server(self):
@@ -75,7 +75,7 @@ class ServerManager:
             raise Exception("Failed to start server")
 
         # Wait for server to be ready with exponential backoff
-        for attempt in range(5):
+        for _attempt in range(5):
             await asyncio.sleep(2)
             if self.check_server_health():
                 logger.info("✅ Server is running and healthy")
@@ -89,14 +89,14 @@ class ServerManager:
             try:
                 response = requests.request(method, url, timeout=10, **kwargs)
                 return response
-            except requests.exceptions.ConnectionError as e:
+            except requests.exceptions.ConnectionError:
                 if attempt == 2:  # Last attempt
-                    raise e
+                    raise
                 logger.warning(f"Connection attempt {attempt + 1} failed, retrying...")
                 await asyncio.sleep(1)
             except Exception as e:
                 if attempt == 2:
-                    raise e
+                    raise
                 logger.warning(f"Request attempt {attempt + 1} failed: {e}")
                 await asyncio.sleep(1)
 

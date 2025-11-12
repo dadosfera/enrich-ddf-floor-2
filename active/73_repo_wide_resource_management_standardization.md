@@ -13,6 +13,7 @@
 Standardize resource management, cost controls, and performance optimization across **30+ local repositories** based on best practices identified in `deployer-ddf-mod-open-llms`, `agent-ddf`, and `3d-ddf`.
 
 **Primary Goals**:
+
 - 🎯 **40-60% reduction** in local resource consumption
 - 🚫 **Zero runaway processes** through timeout protection
 - 💰 **60-70% cloud cost savings** via automated scheduling
@@ -20,6 +21,7 @@ Standardize resource management, cost controls, and performance optimization acr
 - 🔧 **Consistent workflows** across all repositories
 
 **Business Impact**:
+
 - **Developer Productivity**: Faster local dev, fewer crashes
 - **Infrastructure Costs**: Significant cloud savings through automation
 - **System Stability**: Predictable resource usage, no hangs
@@ -32,7 +34,9 @@ Standardize resource management, cost controls, and performance optimization acr
 ### Repositories Scanned (30+ Total)
 
 #### ✅ Exemplar Repositories (Best Practices Source)
+
 1. **deployer-ddf-mod-open-llms**
+
    - 19 Docker Compose files with GPU reservations
    - Comprehensive Makefile with gtimeout on all targets
    - Cloud cost automation (nightly stop/start)
@@ -40,6 +44,7 @@ Standardize resource management, cost controls, and performance optimization acr
    - **Lessons**: Timeout discipline, cost controls, OCI workflows
 
 2. **agent-ddf**
+
    - Multi-platform runner (docker/local/cursor/replit/dadosfera)
    - Environment-specific compose files (dev/staging/prod)
    - Central port management with conflict detection
@@ -47,6 +52,7 @@ Standardize resource management, cost controls, and performance optimization acr
    - **Lessons**: Port management, platform abstraction, health checks
 
 3. **3d-ddf**
+
    - Jenkins CI/CD with explicit JVM heap sizing
    - Blender rendering with resource constraints
    - **Lessons**: JVM tuning, long-running process management
@@ -60,6 +66,7 @@ Standardize resource management, cost controls, and performance optimization acr
 #### 📋 Repositories Requiring Standardization
 
 **High Priority** (Active Development):
+
 - [ ] gen-ddf-floor-2
 - [ ] map-ddf-floor-2
 - [ ] planner-ddf-floor-2
@@ -72,6 +79,7 @@ Standardize resource management, cost controls, and performance optimization acr
 - [ ] meta-assistant-ddf
 
 **Medium Priority** (Periodic Updates):
+
 - [ ] assessment-ddf
 - [ ] budget-ddf
 - [ ] conversor-ddf
@@ -82,6 +90,7 @@ Standardize resource management, cost controls, and performance optimization acr
 - [ ] proto-ddf
 
 **Low Priority** (Maintenance Mode):
+
 - [ ] auto-drive-v2-try-2
 - [ ] beast
 - [ ] central-forecast-ddf-group
@@ -95,15 +104,16 @@ Standardize resource management, cost controls, and performance optimization acr
 
 ### Detailed Compliance Matrix
 
-| Repository | Compose | Timeouts | Caps | Ports | Costs | Health | Logs | Tests | Score |
-|------------|---------|----------|------|-------|-------|--------|------|-------|-------|
-| deployer-ddf-mod-open-llms | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | 8/8 |
-| agent-ddf | ✅ | ⚠️ | ✅ | ✅ | ❌ | ✅ | ⚠️ | ⚠️ | 5.5/8 |
-| 3d-ddf | ✅ | ❌ | ✅ | ❌ | ❌ | ⚠️ | ❌ | ❌ | 2.5/8 |
-| enrich-ddf-floor-2 | ✅ | ✅ | ✅ | ⚠️ | ❌ | ✅ | ✅ | ✅ | 6.5/8 |
-| **Average (30 repos)** | ⚠️ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | **1.2/8** |
+| Repository                 | Compose | Timeouts | Caps | Ports | Costs | Health | Logs | Tests | Score     |
+| -------------------------- | ------- | -------- | ---- | ----- | ----- | ------ | ---- | ----- | --------- |
+| deployer-ddf-mod-open-llms | ✅      | ✅       | ✅   | ✅    | ✅    | ✅     | ✅   | ✅    | 8/8       |
+| agent-ddf                  | ✅      | ⚠️       | ✅   | ✅    | ❌    | ✅     | ⚠️   | ⚠️    | 5.5/8     |
+| 3d-ddf                     | ✅      | ❌       | ✅   | ❌    | ❌    | ⚠️     | ❌   | ❌    | 2.5/8     |
+| enrich-ddf-floor-2         | ✅      | ✅       | ✅   | ⚠️    | ❌    | ✅     | ✅   | ✅    | 6.5/8     |
+| **Average (30 repos)**     | ⚠️      | ❌       | ❌   | ❌    | ❌    | ❌     | ❌   | ❌    | **1.2/8** |
 
 **Legend**:
+
 - ✅ Fully Compliant
 - ⚠️ Partially Compliant
 - ❌ Not Compliant
@@ -128,14 +138,15 @@ Standardize resource management, cost controls, and performance optimization acr
 **Effort**: 4-6 AI hours
 **Impact**: Immediate stability improvements
 
-| Initiative | Target Repos | Success Metric | Priority |
-|------------|--------------|----------------|----------|
-| **1. Compose Resource Limits** | All with Docker (15 repos) | 100% have mem_limit + cpus | P0 |
-| **2. Makefile Timeouts** | All with Makefile (20 repos) | 100% long-running targets wrapped | P0 |
-| **3. Log Rotation** | All with Docker (15 repos) | 100% have 10m/3 file limits | P1 |
-| **4. Node Memory Caps** | All with Node.js (12 repos) | 100% have NODE_OPTIONS | P1 |
+| Initiative                     | Target Repos                 | Success Metric                    | Priority |
+| ------------------------------ | ---------------------------- | --------------------------------- | -------- |
+| **1. Compose Resource Limits** | All with Docker (15 repos)   | 100% have mem_limit + cpus        | P0       |
+| **2. Makefile Timeouts**       | All with Makefile (20 repos) | 100% long-running targets wrapped | P0       |
+| **3. Log Rotation**            | All with Docker (15 repos)   | 100% have 10m/3 file limits       | P1       |
+| **4. Node Memory Caps**        | All with Node.js (12 repos)  | 100% have NODE_OPTIONS            | P1       |
 
 **Expected Outcomes**:
+
 - ✅ Zero runaway processes
 - ✅ 30-40% memory reduction
 - ✅ Predictable disk usage (logs)
@@ -147,14 +158,15 @@ Standardize resource management, cost controls, and performance optimization acr
 **Effort**: 4-6 AI hours
 **Impact**: Long-term maintainability
 
-| Initiative | Target Repos | Success Metric | Priority |
-|------------|--------------|----------------|----------|
-| **5. Port Management** | All repos | Central registry + zero conflicts | P0 |
-| **6. Health Checks** | All with Docker (15 repos) | 100% services have healthchecks | P1 |
-| **7. Resource Detection** | All with tests (25 repos) | Adaptive testing deployed | P0 |
-| **8. Test Optimization** | All with tests (25 repos) | Low-resource targets available | P1 |
+| Initiative                | Target Repos               | Success Metric                    | Priority |
+| ------------------------- | -------------------------- | --------------------------------- | -------- |
+| **5. Port Management**    | All repos                  | Central registry + zero conflicts | P0       |
+| **6. Health Checks**      | All with Docker (15 repos) | 100% services have healthchecks   | P1       |
+| **7. Resource Detection** | All with tests (25 repos)  | Adaptive testing deployed         | P0       |
+| **8. Test Optimization**  | All with tests (25 repos)  | Low-resource targets available    | P1       |
 
 **Expected Outcomes**:
+
 - ✅ Zero port conflicts across repos
 - ✅ Automatic service health monitoring
 - ✅ 50%+ faster tests on powerful machines
@@ -166,13 +178,14 @@ Standardize resource management, cost controls, and performance optimization acr
 **Effort**: 2-3 AI hours
 **Impact**: Significant cost savings
 
-| Initiative | Target Repos | Success Metric | Priority |
-|------------|--------------|----------------|----------|
-| **9. Cost Controls** | Cloud repos (5) | Nightly automation operational | P0 |
-| **10. Resource Monitoring** | Cloud repos (5) | Daily cost reports generated | P1 |
-| **11. Auto-scaling** | Cloud repos (5) | Resource-based triggers active | P2 |
+| Initiative                  | Target Repos    | Success Metric                 | Priority |
+| --------------------------- | --------------- | ------------------------------ | -------- |
+| **9. Cost Controls**        | Cloud repos (5) | Nightly automation operational | P0       |
+| **10. Resource Monitoring** | Cloud repos (5) | Daily cost reports generated   | P1       |
+| **11. Auto-scaling**        | Cloud repos (5) | Resource-based triggers active | P2       |
 
 **Expected Outcomes**:
+
 - ✅ 60-70% cloud cost reduction
 - ✅ Automated instance scheduling
 - ✅ Cost visibility and reporting
@@ -181,6 +194,7 @@ Standardize resource management, cost controls, and performance optimization acr
 ### Overall Success Criteria
 
 **Technical Metrics**:
+
 - 📊 **Compliance Score**: 1.2/8 → 7.5/8 average across all repos
 - ⏱️ **Timeout Coverage**: 7% → 100% of long-running commands
 - 💾 **Resource Caps**: 13% → 100% of Docker services
@@ -188,12 +202,14 @@ Standardize resource management, cost controls, and performance optimization acr
 - ⚡ **Test Speed**: 50%+ improvement on powerful machines
 
 **Operational Metrics**:
+
 - 🚫 **Zero** runaway processes in 30 days
 - 🚫 **Zero** port conflicts in 30 days
 - 🚫 **Zero** out-of-memory crashes in 30 days
 - ✅ **95%+** developer satisfaction with standardization
 
 **Adoption Metrics**:
+
 - 📚 **100%** of repos have standardized Makefile targets
 - 🎓 **100%** of developers trained on new workflows
 - 📖 **100%** of documentation updated
@@ -208,6 +224,7 @@ Standardize resource management, cost controls, and performance optimization acr
 **Objective**: Add `mem_limit`, `cpus`, and log rotation to all Docker Compose services to prevent resource exhaustion and enable predictable performance.
 
 **Problem Statement**:
+
 - Unbounded containers can consume all system resources
 - No automatic cleanup of logs leads to disk space issues
 - Services crash without clear error messages
@@ -217,16 +234,16 @@ Standardize resource management, cost controls, and performance optimization acr
 
 #### Resource Allocation Guidelines
 
-| Service Type | Memory Limit | CPU Limit | Rationale |
-|--------------|--------------|-----------|-----------|
-| **Backend API** | 512MB | 1.0 | Most APIs fit in 512MB; scale if needed |
-| **Frontend (Node)** | 768MB | 1.0 | Build tools need more RAM |
-| **Database (PostgreSQL)** | 1GB | 1.5 | Needs memory for caching |
-| **Database (Redis)** | 256MB | 0.5 | In-memory cache, predictable size |
-| **Message Queue** | 512MB | 1.0 | Moderate memory for buffering |
-| **Worker/Celery** | 512MB | 1.0 | Per-worker allocation |
-| **ML/AI Service** | 2GB-4GB | 2.0-4.0 | Model loading requires more resources |
-| **Monitoring** | 256MB | 0.5 | Lightweight metrics collection |
+| Service Type              | Memory Limit | CPU Limit | Rationale                               |
+| ------------------------- | ------------ | --------- | --------------------------------------- |
+| **Backend API**           | 512MB        | 1.0       | Most APIs fit in 512MB; scale if needed |
+| **Frontend (Node)**       | 768MB        | 1.0       | Build tools need more RAM               |
+| **Database (PostgreSQL)** | 1GB          | 1.5       | Needs memory for caching                |
+| **Database (Redis)**      | 256MB        | 0.5       | In-memory cache, predictable size       |
+| **Message Queue**         | 512MB        | 1.0       | Moderate memory for buffering           |
+| **Worker/Celery**         | 512MB        | 1.0       | Per-worker allocation                   |
+| **ML/AI Service**         | 2GB-4GB      | 2.0-4.0   | Model loading requires more resources   |
+| **Monitoring**            | 256MB        | 0.5       | Lightweight metrics collection          |
 
 #### Complete Template (apply to all repos)
 
@@ -249,28 +266,29 @@ services:
       - "${BACKEND_PORT:-8000}:${BACKEND_PORT:-8000}"
 
     # Resource Limits (REQUIRED)
-    mem_limit: "512m"           # Hard limit: container killed if exceeded
-    mem_reservation: "256m"     # Soft limit: guaranteed minimum
-    cpus: "1.0"                 # CPU cores (1.0 = 1 full core)
+    mem_limit: "512m" # Hard limit: container killed if exceeded
+    mem_reservation: "256m" # Soft limit: guaranteed minimum
+    cpus: "1.0" # CPU cores (1.0 = 1 full core)
 
     # Restart Policy (REQUIRED)
-    restart: unless-stopped     # Auto-restart except manual stop
+    restart: unless-stopped # Auto-restart except manual stop
 
     # Logging (REQUIRED)
     logging:
       driver: "json-file"
       options:
-        max-size: "10m"         # Rotate at 10MB
-        max-file: "3"           # Keep 3 files (30MB total)
-        compress: "true"        # Compress rotated logs
+        max-size: "10m" # Rotate at 10MB
+        max-file: "3" # Keep 3 files (30MB total)
+        compress: "true" # Compress rotated logs
 
     # Health Check (RECOMMENDED)
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${BACKEND_PORT:-8000}/health"]
-      interval: 30s             # Check every 30s
-      timeout: 10s              # Fail if no response in 10s
-      retries: 3                # Retry 3 times before marking unhealthy
-      start_period: 40s         # Grace period for startup
+      test:
+        ["CMD", "curl", "-f", "http://localhost:${BACKEND_PORT:-8000}/health"]
+      interval: 30s # Check every 30s
+      timeout: 10s # Fail if no response in 10s
+      retries: 3 # Retry 3 times before marking unhealthy
+      start_period: 40s # Grace period for startup
 
     # Dependencies (if applicable)
     depends_on:
@@ -295,7 +313,7 @@ services:
     working_dir: /app/frontend
     volumes:
       - ./frontend:/app/frontend
-      - /app/frontend/node_modules  # Prevent host node_modules conflicts
+      - /app/frontend/node_modules # Prevent host node_modules conflicts
     environment:
       - NODE_ENV=${NODE_ENV:-development}
       - NODE_OPTIONS=--max-old-space-size=768
@@ -305,7 +323,7 @@ services:
       - "${FRONTEND_PORT:-5173}:${FRONTEND_PORT:-5173}"
 
     # Resource Limits
-    mem_limit: "768m"           # Frontend needs more for build tools
+    mem_limit: "768m" # Frontend needs more for build tools
     mem_reservation: "384m"
     cpus: "1.0"
 
@@ -319,11 +337,18 @@ services:
         compress: "true"
 
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:${FRONTEND_PORT:-5173}"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--spider",
+          "-q",
+          "http://localhost:${FRONTEND_PORT:-5173}",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 60s         # Longer startup for npm install
+      start_period: 60s # Longer startup for npm install
 
     depends_on:
       - backend
@@ -349,7 +374,7 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
 
     # Resource Limits
-    mem_limit: "1g"             # Databases need more memory
+    mem_limit: "1g" # Databases need more memory
     mem_reservation: "512m"
     cpus: "1.5"
 
@@ -386,7 +411,7 @@ services:
       - redis-data:/data
 
     # Resource Limits
-    mem_limit: "256m"           # Redis is in-memory, cap it
+    mem_limit: "256m" # Redis is in-memory, cap it
     mem_reservation: "128m"
     cpus: "0.5"
 
@@ -395,7 +420,7 @@ services:
     logging:
       driver: "json-file"
       options:
-        max-size: "5m"          # Smaller logs for cache
+        max-size: "5m" # Smaller logs for cache
         max-file: "2"
         compress: "true"
 
@@ -505,6 +530,7 @@ echo "✅ Validation complete"
 #### Repositories to Update
 
 **Phase 1 (Week 1)** - High Priority:
+
 - [ ] agent-ddf (8 compose files)
   - config/docker/docker-compose.dev.yml
   - config/docker/docker-compose.prod.yml
@@ -519,6 +545,7 @@ echo "✅ Validation complete"
 - [ ] planner-ddf-floor-2 (create new)
 
 **Phase 2 (Week 2)** - Medium Priority:
+
 - [ ] 3d-ddf (1 compose file) - enhance existing
 - [ ] ai-flow-module (create new)
 - [ ] framework-ddf (create new)
@@ -526,6 +553,7 @@ echo "✅ Validation complete"
 - [ ] monitor-ddf (create new)
 
 **Acceptance Criteria**:
+
 - ✅ All services have explicit memory limits (mem_limit + mem_reservation)
 - ✅ All services have CPU caps (1.0 default, adjust per service type)
 - ✅ Log rotation configured (10m max-size, 3 files, compress enabled)
@@ -544,6 +572,7 @@ echo "✅ Validation complete"
 **Objective**: Wrap all long-running Makefile targets with timeout to prevent hangs.
 
 **Standard Timeouts**:
+
 ```makefile
 # Quick checks (5-30s)
 lint:
@@ -577,12 +606,14 @@ deploy:
 | Cloud operations | 300-1800s | 30-60s |
 
 **Repositories to Update**:
+
 - [ ] All repos with Makefile (scan for long-running targets)
 - [ ] Priority: deployer-ddf-mod-open-llms (enhance existing)
 - [ ] Priority: agent-ddf (add missing)
 - [ ] Priority: 3d-ddf (add missing)
 
 **Implementation Script**:
+
 ```bash
 # Scan all repos for Makefiles without timeouts
 for repo in ~/local_repos/*/; do
@@ -594,6 +625,7 @@ done
 ```
 
 **Acceptance Criteria**:
+
 - ✅ All long-running targets wrapped with timeout
 - ✅ Fallback to gtimeout for macOS compatibility
 - ✅ Consistent timeout values across repos
@@ -608,6 +640,7 @@ done
 **Components** (based on deployer-ddf-mod-open-llms):
 
 #### 3.1 Nightly Stop Script
+
 ```bash
 #!/bin/bash
 # scripts/cost/stop-nonprod.sh
@@ -629,6 +662,7 @@ done
 ```
 
 #### 3.2 Morning Start Script
+
 ```bash
 #!/bin/bash
 # scripts/cost/start-nonprod.sh
@@ -645,6 +679,7 @@ done
 ```
 
 #### 3.3 Cost Reporting
+
 ```bash
 #!/bin/bash
 # scripts/cost/report-nightly.sh
@@ -669,6 +704,7 @@ echo "Report saved: $REPORT_FILE"
 ```
 
 #### 3.4 Makefile Integration
+
 ```makefile
 # Cloud cost automation
 cloud-stop-night:
@@ -689,6 +725,7 @@ cloud-cost-report:
 ```
 
 #### 3.5 Cron Automation
+
 ```bash
 # Add to crontab for automated execution
 # Stop non-prod at 10 PM
@@ -702,12 +739,14 @@ cloud-cost-report:
 ```
 
 **Repositories to Implement**:
+
 - [ ] deployer-ddf-mod-open-llms (enhance existing)
 - [ ] agent-ddf (new)
 - [ ] 3d-ddf (new)
 - [ ] All repos with cloud deployments
 
 **Acceptance Criteria**:
+
 - ✅ Dry-run mode by default (safety)
 - ✅ Force mode requires explicit flag
 - ✅ Cost reports generated nightly
@@ -721,18 +760,19 @@ cloud-cost-report:
 **Objective**: Deploy centralized port registry and conflict detection across all repos.
 
 **Port Registry** (based on agent-ddf):
+
 ```javascript
 // config/ports.js
 export const PORT_REGISTRY = {
-  'enrich-ddf-floor-2': {
+  "enrich-ddf-floor-2": {
     local: { backend: 8247, frontend: 5173 },
     docker: { backend: 8247, frontend: 5173 },
   },
-  'agent-ddf': {
+  "agent-ddf": {
     local: { api: 6008, frontend: 7004, websocket: 7005 },
     docker: { api: 5003, frontend: 7004, websocket: 7005 },
   },
-  'deployer-ddf-mod-open-llms': {
+  "deployer-ddf-mod-open-llms": {
     local: { api: 9876, frontend: 3678, llm: 8002, image: 4567, video: 5678 },
     docker: { api: 9876, frontend: 3678, llm: 8002, image: 4567, video: 5678 },
   },
@@ -758,8 +798,8 @@ export async function checkPortConflicts(platform, env) {
 
 export async function displayPortSummary(platform, env) {
   console.log(`\n📊 Port Summary - ${platform}/${env}\n`);
-  console.log('Repository                    | Service    | Port');
-  console.log('------------------------------|------------|------');
+  console.log("Repository                    | Service    | Port");
+  console.log("------------------------------|------------|------");
 
   for (const [repo, config] of Object.entries(PORT_REGISTRY)) {
     const ports = config[platform] || config.local;
@@ -770,13 +810,16 @@ export async function displayPortSummary(platform, env) {
 
   const conflicts = await checkPortConflicts(platform, env);
   if (conflicts.length > 0) {
-    console.log('\n⚠️  Port Conflicts Detected:');
-    conflicts.forEach(c => console.log(`  - ${c.repo}:${c.service} (${c.port})`));
+    console.log("\n⚠️  Port Conflicts Detected:");
+    conflicts.forEach((c) =>
+      console.log(`  - ${c.repo}:${c.service} (${c.port})`)
+    );
   }
 }
 ```
 
 **Makefile Integration**:
+
 ```makefile
 port-check: ## Check for port conflicts across all repos
 	@echo "🔍 Checking port conflicts..."
@@ -788,11 +831,13 @@ port-summary: ## Show port allocation summary
 ```
 
 **Repositories to Update**:
+
 - [ ] Create central registry in shared config repo
 - [ ] Link all repos to central registry
 - [ ] Add port-check to all Makefiles
 
 **Acceptance Criteria**:
+
 - ✅ Central port registry maintained
 - ✅ Conflict detection automated
 - ✅ Port summary available via Make
@@ -805,24 +850,26 @@ port-summary: ## Show port allocation summary
 **Objective**: Optimize test execution and resource usage across all repos.
 
 #### 5.1 Playwright Configuration
+
 ```typescript
 // playwright.config.ts (standard for all repos)
 export default defineConfig({
-  testDir: './tests',
-  fullyParallel: false,  // Prevent CPU spikes
+  testDir: "./tests",
+  fullyParallel: false, // Prevent CPU spikes
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : 2,  // Local: 2, CI: 1
-  reporter: 'html',
+  workers: process.env.CI ? 1 : 2, // Local: 2, CI: 1
+  reporter: "html",
   use: {
-    baseURL: process.env.BASE_URL || 'http://127.0.0.1:5173',
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
+    baseURL: process.env.BASE_URL || "http://127.0.0.1:5173",
+    trace: "on-first-retry",
+    screenshot: "only-on-failure",
   },
 });
 ```
 
 #### 5.2 Node Memory Caps
+
 ```json
 // package.json (standard for all repos)
 {
@@ -836,6 +883,7 @@ export default defineConfig({
 ```
 
 #### 5.3 Low-Resource Test Targets
+
 ```makefile
 # Makefile (standard for all repos)
 test-low: ## Run tests with reduced resources
@@ -852,6 +900,7 @@ test-quick: ## Run quick smoke tests
 ```
 
 #### 5.4 Python Test Optimization
+
 ```ini
 # pytest.ini (standard for all repos)
 [pytest]
@@ -865,11 +914,13 @@ addopts =
 ```
 
 **Repositories to Update**:
+
 - [ ] All repos with Playwright
 - [ ] All repos with Node.js
 - [ ] All repos with Python tests
 
 **Acceptance Criteria**:
+
 - ✅ Playwright workers capped at 2 locally
 - ✅ NODE_OPTIONS set globally
 - ✅ Low-resource test targets available
@@ -885,6 +936,7 @@ addopts =
 **Objective**: Establish baseline, create automation tools, prepare templates
 
 **Activities**:
+
 1. **Day 1**: Run comprehensive repo scanner
    ```bash
    bash scripts/scan-all-repos.sh > active/repo-baseline-$(date +%Y-%m-%d).md
@@ -908,6 +960,7 @@ addopts =
    - Training materials
 
 **Deliverables**:
+
 - ✅ Baseline report for all 30+ repos
 - ✅ Complete template library
 - ✅ Automation scripts tested
@@ -921,6 +974,7 @@ addopts =
 **Objective**: Validate approach with 3 pilot repos, gather feedback, refine process
 
 **Pilot Repositories**:
+
 1. **enrich-ddf-floor-2** (this repo) - Already improved, serves as reference
 2. **agent-ddf** - Complex multi-platform setup
 3. **gen-ddf-floor-2** - Typical Floor 2 repo
@@ -928,6 +982,7 @@ addopts =
 **Day-by-Day Plan**:
 
 **Day 1-2: enrich-ddf-floor-2 (Reference Implementation)**
+
 - [x] Docker Compose with resource limits ✅
 - [x] Makefile timeout standardization ✅
 - [x] Resource detection script ✅
@@ -936,6 +991,7 @@ addopts =
 - **Status**: Reference implementation ready
 
 **Day 3-4: agent-ddf (Complex Multi-Platform)**
+
 - [ ] Update 8 Docker Compose files with resource limits
 - [ ] Add timeout wrappers to 50+ Makefile targets
 - [ ] Deploy resource detection script
@@ -945,6 +1001,7 @@ addopts =
 - **Challenge**: Multiple compose files, complex workflows
 
 **Day 5: gen-ddf-floor-2 (Typical Floor 2 Repo)**
+
 - [ ] Create Docker Compose with resource limits
 - [ ] Add timeout wrappers to Makefile
 - [ ] Deploy resource detection script
@@ -953,6 +1010,7 @@ addopts =
 - **Challenge**: Starting from minimal setup
 
 **Day 6-7: Validation & Metrics**
+
 - [ ] Run validation scripts on all 3 pilot repos
 - [ ] Collect performance metrics (before/after)
 - [ ] Gather developer feedback
@@ -960,6 +1018,7 @@ addopts =
 - [ ] Refine templates based on findings
 
 **Success Criteria**:
+
 - ✅ All 3 pilot repos pass validation
 - ✅ 40%+ resource reduction measured
 - ✅ Zero runaway processes in 7 days
@@ -973,6 +1032,7 @@ addopts =
 **Objective**: Deploy to 10 high-priority repos with active development
 
 **Target Repositories** (Active Development):
+
 1. [ ] map-ddf-floor-2
 2. [ ] planner-ddf-floor-2
 3. [ ] news-ddf-floor-2
@@ -987,6 +1047,7 @@ addopts =
 **Week 2: Batch 1 (5 repos)**
 
 **Day 8-9: Automated Bulk Update**
+
 ```bash
 # Run bulk updater for first batch
 for repo in map-ddf-floor-2 planner-ddf-floor-2 news-ddf-floor-2 ai-flow-module framework-ddf; do
@@ -996,18 +1057,21 @@ done
 ```
 
 **Day 10: Manual Review & Adjustments**
+
 - Review auto-generated configs
 - Adjust resource limits per repo needs
 - Fix any edge cases
 - Test locally
 
 **Day 11: Validation & Commit**
+
 - Run validation scripts
 - Test compose up/down
 - Run test suites
 - Commit changes with standardized message
 
 **Day 12: Documentation & Training**
+
 - Update repo READMEs
 - Add migration notes
 - Brief developers on changes
@@ -1015,6 +1079,7 @@ done
 **Week 3: Batch 2 (5 repos)**
 
 **Day 13-14: Automated Bulk Update**
+
 ```bash
 # Run bulk updater for second batch
 for repo in monitor-ddf assistant-ddf cline-ddf meta-assistant-ddf deployer-ddf-mod-open-llms; do
@@ -1024,11 +1089,13 @@ done
 ```
 
 **Day 15-17: Review, Validate, Document**
+
 - Same process as Batch 1
 - Collect metrics across all 10 repos
 - Update compliance dashboard
 
 **Success Criteria**:
+
 - ✅ 10/10 high-priority repos compliant
 - ✅ All validation scripts pass
 - ✅ Compliance score: 7.5/8 average
@@ -1042,6 +1109,7 @@ done
 **Objective**: Deploy to 8 medium-priority repos with periodic updates
 
 **Target Repositories** (Periodic Updates):
+
 1. [ ] assessment-ddf
 2. [ ] budget-ddf
 3. [ ] conversor-ddf
@@ -1052,22 +1120,26 @@ done
 8. [ ] proto-ddf
 
 **Day 18-19: Automated Bulk Update**
+
 ```bash
 # Run bulk updater for all medium-priority repos
 bash scripts/bulk-update-batch.sh medium-priority
 ```
 
 **Day 20: Validation & Testing**
+
 - Automated validation across all 8 repos
 - Spot-check 2-3 repos manually
 - Fix any issues
 
 **Day 21: Documentation Update**
+
 - Update all READMEs
 - Add standardized commands
 - Update central registry
 
 **Success Criteria**:
+
 - ✅ 8/8 medium-priority repos compliant
 - ✅ Automated validation passes
 - ✅ Documentation updated
@@ -1080,6 +1152,7 @@ bash scripts/bulk-update-batch.sh medium-priority
 **Objective**: Deploy to remaining 12 repos in maintenance mode
 
 **Target Repositories** (Maintenance Mode):
+
 1. [ ] 3d-ddf (enhance existing)
 2. [ ] auto-drive-v2-try-2
 3. [ ] beast
@@ -1094,21 +1167,25 @@ bash scripts/bulk-update-batch.sh medium-priority
 12. [ ] Any remaining repos
 
 **Day 22-23: Automated Bulk Update**
+
 ```bash
 # Run bulk updater for all low-priority repos
 bash scripts/bulk-update-batch.sh low-priority
 ```
 
 **Day 24: Validation**
+
 - Automated validation only
 - Flag any failures for manual review
 
 **Day 25: Cleanup & Documentation**
+
 - Update central compliance dashboard
 - Mark all repos as migrated
 - Archive old configs
 
 **Success Criteria**:
+
 - ✅ 100% of repos standardized
 - ✅ Compliance dashboard shows 7.5/8+ average
 - ✅ All repos documented
@@ -1121,6 +1198,7 @@ bash scripts/bulk-update-batch.sh low-priority
 **Objective**: Deploy cost controls to 5 cloud-enabled repos
 
 **Target Repositories** (Cloud Deployments):
+
 1. [ ] deployer-ddf-mod-open-llms (enhance existing)
 2. [ ] agent-ddf
 3. [ ] 3d-ddf
@@ -1128,6 +1206,7 @@ bash scripts/bulk-update-batch.sh low-priority
 5. [ ] Any other cloud repos
 
 **Day 26: Cost Control Scripts**
+
 ```bash
 # Deploy cost automation to each cloud repo
 for repo in deployer-ddf-mod-open-llms agent-ddf 3d-ddf gen-ddf-floor-2; do
@@ -1138,6 +1217,7 @@ done
 ```
 
 **Day 27: Cron Configuration**
+
 ```bash
 # Add cron jobs for each repo
 # Stop non-prod at 10 PM
@@ -1151,16 +1231,19 @@ done
 ```
 
 **Day 28: Testing & Validation**
+
 - Test stop/start scripts (dry-run)
 - Verify cost reporting
 - Monitor for 24 hours
 
 **Day 29: Documentation**
+
 - Cost control guide
 - Cron setup instructions
 - Override procedures
 
 **Success Criteria**:
+
 - ✅ Cost controls deployed to all cloud repos
 - ✅ Cron automation operational
 - ✅ Cost reports generated daily
@@ -1173,6 +1256,7 @@ done
 **Objective**: Comprehensive validation, metrics collection, continuous monitoring
 
 **Day 30-32: Comprehensive Testing**
+
 ```bash
 # Run validation across all repos
 bash scripts/validate-all-repos.sh
@@ -1185,30 +1269,35 @@ bash scripts/collect-metrics.sh > active/metrics-report-$(date +%Y-%m-%d).md
 ```
 
 **Day 33-35: Metrics Analysis**
+
 - Compare before/after resource usage
 - Analyze cost savings
 - Review developer feedback
 - Identify remaining gaps
 
 **Day 36-38: Documentation Finalization**
+
 - Complete central resource management guide
 - Update all repo READMEs
 - Create troubleshooting guide
 - Publish training materials
 
 **Day 39-40: Training & Handoff**
+
 - Developer training sessions
 - Demo new workflows
 - Q&A sessions
 - Handoff to ops team
 
 **Day 41-42: Continuous Monitoring Setup**
+
 - Weekly compliance checks
 - Monthly metrics reports
 - Quarterly reviews
 - Feedback loop established
 
 **Success Criteria**:
+
 - ✅ 100% repos validated
 - ✅ Compliance score: 7.5/8+ average
 - ✅ 40-60% resource reduction achieved
@@ -1225,7 +1314,7 @@ bash scripts/collect-metrics.sh > active/metrics-report-$(date +%Y-%m-%d).md
 
 ### Bulk Update Script
 
-```bash
+````bash
 #!/bin/bash
 # scripts/bulk-update-repo.sh
 # Propagate standardization to a single repository
@@ -1328,19 +1417,21 @@ make detect-resources  # Check available resources
 make compose-up        # Start with resource limits
 make test-auto         # Run tests with optimal settings
 make compose-down      # Stop all services
-```
+````
 
 ### Resource Limits
+
 - Backend: 512MB RAM, 1.0 CPU
 - Frontend: 768MB RAM, 1.0 CPU
 - Database: 1GB RAM, 1.5 CPU
 
 See `compose.yml` for details.
 EOF
-  echo "  ✅ README updated"
+echo " ✅ README updated"
 fi
 
 # 8. Validation
+
 echo "✅ Running final validation..."
 bash "$TEMPLATE_DIR/scripts/validate-repo.sh" "$REPO_PATH"
 
@@ -1348,11 +1439,12 @@ echo ""
 echo "🎉 Repository updated successfully: $REPO_NAME"
 echo ""
 echo "Next steps:"
-echo "  1. Review changes: git diff"
-echo "  2. Test locally: make compose-up && make test-auto"
-echo "  3. Commit: git add -A && git commit -m 'feat: standardize resource management'"
+echo " 1. Review changes: git diff"
+echo " 2. Test locally: make compose-up && make test-auto"
+echo " 3. Commit: git add -A && git commit -m 'feat: standardize resource management'"
 echo ""
-```
+
+````
 
 ### Batch Update Script
 
@@ -1452,7 +1544,7 @@ if [ $FAILED -gt 0 ]; then
 else
   echo "🎉 All repositories updated successfully!"
 fi
-```
+````
 
 ---
 
@@ -1484,21 +1576,390 @@ This ensures continuous improvement across all repositories with minimal manual 
 
 ---
 
+## 🧭 Governance & Change Control
+
+### Roles and RACI
+
+- **Infra Platform (Lead)**: Owns standard, templates, automation, CI gates (R/A)
+- **Repo Owner (Maintainer)**: Applies changes, reviews exemptions, signs off (R)
+- **QA Lead**: Verifies test/resource tuning, parallel readiness (C)
+- **Security**: Reviews cost scripts, secrets handling (C)
+- **Developers**: Adopt workflows, report issues (I)
+
+R = Responsible, A = Accountable, C = Consulted, I = Informed
+
+### Decision Gates
+
+1. RFC created (lightweight) with proposed limits and impacts
+2. ADR recorded per repo (why this limit, alternatives considered)
+3. Pilot validation evidence attached (before/after metrics)
+4. Sign-off: Infra (performance) + Repo Owner (functionality) + QA (tests)
+
+### Versioning and Change Policy
+
+- Standard is SemVer’d: Resource Standard v1.0.0
+- Backwards-compatible updates: minor versions (v1.1.x)
+- Breaking changes: major versions (v2.0.0) with migration guide
+- All distributed templates carry a version header:
+
+```yaml
+# Resource-Standard: v1.0.0
+# Source: dadosfera/standards/resource-mgmt@v1.0.0
+# Last-Sync: 2025-01-12
+```
+
+---
+
+## ✅ CI/CD Enforcement and Compliance Gates
+
+### Pre-commit (local)
+
+```bash
+# .pre-commit-config.yaml (excerpt)
+- repo: local
+  hooks:
+    - id: resource-compliance-fast
+      name: Resource Compliance (fast)
+      entry: bash scripts/quality/resource-compliance-fast.sh
+      language: system
+      pass_filenames: false
+      stages: [commit]
+```
+
+Minimal fast checks: presence of `mem_limit`, `cpus`, Makefile `timeout|gtimeout`, Playwright workers.
+
+### Jenkins Pipeline (Local & OCI Cloud)
+
+**Local Jenkins** (port 17843):
+
+- Shared instance across all repos
+- Runs on developer machines
+- Validates before commits/pushes
+
+**OCI Cloud Jenkins**:
+
+- Production CI/CD pipelines
+- Validates on PR/merge
+- Enforces compliance gates
+
+#### Jenkinsfile Template
+
+```groovy
+// Jenkinsfile (Resource Compliance Pipeline)
+pipeline {
+    agent any
+
+    environment {
+        REPO_NAME = "${env.JOB_NAME.split('/')[0]}"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Resource Compliance Check') {
+            steps {
+                script {
+                    def compliance = sh(
+                        script: '''
+                            set -euo pipefail
+                            FAILED=0
+
+                            # Validate Compose Limits
+                            if [ -f compose.yml ] || [ -f docker-compose.yml ]; then
+                                COMPOSE_FILE=""
+                                [ -f compose.yml ] && COMPOSE_FILE=compose.yml
+                                [ -z "$COMPOSE_FILE" ] && [ -f docker-compose.yml ] && COMPOSE_FILE=docker-compose.yml
+
+                                if [ -n "$COMPOSE_FILE" ]; then
+                                    echo "Checking: $COMPOSE_FILE"
+                                    if ! grep -q 'mem_limit:' "$COMPOSE_FILE"; then
+                                        echo "❌ mem_limit missing in $COMPOSE_FILE"
+                                        FAILED=1
+                                    fi
+                                    if ! grep -q 'cpus:' "$COMPOSE_FILE"; then
+                                        echo "❌ cpus missing in $COMPOSE_FILE"
+                                        FAILED=1
+                                    fi
+                                    if ! grep -q 'logging:' "$COMPOSE_FILE"; then
+                                        echo "❌ logging missing in $COMPOSE_FILE"
+                                        FAILED=1
+                                    fi
+                                    # Validate syntax
+                                    docker compose -f "$COMPOSE_FILE" config --quiet || {
+                                        echo "❌ Docker Compose syntax error"
+                                        FAILED=1
+                                    }
+                                fi
+                            fi
+
+                            # Validate Makefile Timeouts
+                            if [ -f Makefile ]; then
+                                echo "Checking: Makefile"
+                                if ! grep -Eq 'timeout|gtimeout' Makefile; then
+                                    echo "❌ timeouts missing in Makefile"
+                                    FAILED=1
+                                fi
+                            fi
+
+                            # Validate Playwright Config (if present)
+                            CFG=""
+                            [ -f frontend/playwright.config.ts ] && CFG=frontend/playwright.config.ts
+                            [ -z "$CFG" ] && [ -f playwright.config.ts ] && CFG=playwright.config.ts
+                            if [ -n "$CFG" ]; then
+                                echo "Checking: $CFG"
+                                if ! grep -q 'workers:' "$CFG"; then
+                                    echo "❌ workers not defined in $CFG"
+                                    FAILED=1
+                                fi
+                            fi
+
+                            exit $FAILED
+                        ''',
+                        returnStatus: true
+                    )
+
+                    if (compliance != 0) {
+                        error("Resource compliance check failed. See logs above.")
+                    }
+                }
+            }
+        }
+
+        stage('Resource Detection Test') {
+            steps {
+                script {
+                    if (fileExists('scripts/detect_resources.sh')) {
+                        sh '''
+                            bash scripts/detect_resources.sh --format=json > resources.json
+                            cat resources.json
+                        '''
+                        archiveArtifacts artifacts: 'resources.json', fingerprint: true
+                    }
+                }
+            }
+        }
+
+        stage('Compose Validation') {
+            steps {
+                script {
+                    if (fileExists('compose.yml') || fileExists('docker-compose.yml')) {
+                        sh '''
+                            COMPOSE_FILE=""
+                            [ -f compose.yml ] && COMPOSE_FILE=compose.yml
+                            [ -z "$COMPOSE_FILE" ] && [ -f docker-compose.yml ] && COMPOSE_FILE=docker-compose.yml
+                            if [ -n "$COMPOSE_FILE" ]; then
+                                docker compose -f "$COMPOSE_FILE" config --quiet
+                                echo "✅ Compose validation passed"
+                            fi
+                        '''
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Publish compliance report
+            publishHTML([
+                reportName: 'Resource Compliance Report',
+                reportDir: '.',
+                reportFiles: 'compliance-report.html',
+                keepAll: true,
+                allowMissing: true
+            ])
+        }
+        failure {
+            emailext(
+                subject: "Resource Compliance Failed: ${env.JOB_NAME}",
+                body: "Resource compliance check failed. Please review and fix issues.",
+                to: "${env.CHANGE_AUTHOR_EMAIL ?: 'devops@dadosfera.ai'}"
+            )
+        }
+    }
+}
+```
+
+#### Jenkins Job Configuration
+
+**Local Jenkins Setup**:
+
+```bash
+# Create job via Jenkins CLI or UI
+# Job name: <repo-name>/resource-compliance
+# Type: Pipeline
+# Pipeline script: From SCM (Jenkinsfile)
+# Triggers:
+#   - Poll SCM: H/5 * * * * (every 5 minutes)
+#   - Build on push to main/develop
+```
+
+**OCI Cloud Jenkins Setup**:
+
+```bash
+# Deploy via Jenkins Configuration as Code (JCasC)
+# Or create via OCI Jenkins webhook
+# Same pipeline, runs on OCI infrastructure
+```
+
+#### Pre-commit Integration (Local)
+
+```bash
+# .pre-commit-config.yaml (excerpt)
+- repo: local
+  hooks:
+    - id: resource-compliance-fast
+      name: Resource Compliance (fast)
+      entry: bash scripts/quality/resource-compliance-fast.sh
+      language: system
+      pass_filenames: false
+      stages: [commit]
+      # Runs before commit, catches issues early
+```
+
+**Status checks must be required before merge in protected branches** (enforced via Jenkins pipeline gates).
+
+---
+
+## 📦 Template Distribution & Versioning
+
+### Canonical Source
+
+- `dadosfera/standards/resource-mgmt` (templates, scripts, CI jobs)
+- Distributed via `scripts/sync-standards.sh` with pinned versions
+
+### Template Headers
+
+Each distributed artifact includes:
+
+- Resource-Standard version
+- Source URL + tag
+- Last sync timestamp
+
+### Drift Detection
+
+- Jenkins pipeline job compares template hashes; if drift detected → warn with diff and suggest sync
+- Runs as part of resource compliance check (see Jenkinsfile above)
+- Reports drift in compliance dashboard
+
+---
+
+## 🧩 Repo Overrides & Exemptions Policy
+
+- File: `RESOURCE_STANDARD_EXEMPTIONS.md`
+- Required fields:
+
+```markdown
+### Exemption: <short-title>
+
+- Reason: <why standard cannot be applied>
+- Scope: <files/services affected>
+- Risk: <impact and mitigations>
+- Owner: <name>
+- Start Date: YYYY-MM-DD
+- Expiry Date: YYYY-MM-DD (max 90 days)
+- Review Cadence: <e.g., bi-weekly>
+```
+
+Exemptions must have a sunset date and mitigation plan; tracked in a central index.
+
+---
+
+## 🖥️ Cross-Platform Compatibility
+
+### Timeout Wrapper
+
+```bash
+# scripts/timeout.sh
+#!/bin/bash
+set -e
+if command -v timeout >/dev/null 2>&1; then
+  timeout "$@"
+elif command -v gtimeout >/dev/null 2>&1; then
+  gtimeout "$@"
+else
+  echo "Install coreutils (gtimeout) or use GNU timeout"; exit 1
+fi
+```
+
+Use `bash scripts/timeout.sh 120 <cmd>` in Makefiles for portability.
+
+### macOS prerequisites
+
+- `brew install coreutils` (for gtimeout)
+- Prefer `node:*-alpine` images for Apple Silicon compatible dev flows
+
+---
+
+## 🔐 Security & Secrets Handling
+
+- Never commit `.env`; use `.env.example` only
+- Prefer Docker `secrets:` and environment variables injected by CI
+- Cost control scripts:
+  - Use least-privileged API keys
+  - Log actions (stop/start) to `logs/cost-control.log`
+  - Redact credentials in logs and CI output
+- Periodic secret rotation guidance added to docs
+
+---
+
+## 📈 Benchmarking, Telemetry & Reporting
+
+### Baseline vs After
+
+- Capture before/after for CPU, RAM, test duration, and cloud costs
+- Store JSON snapshots under `logs/telemetry/`:
+
+```json
+{
+  "timestamp": "2025-01-12T15:04:05Z",
+  "repo": "enrich-ddf-floor-2",
+  "phase": "pilot",
+  "resources": { "cores": 14, "ram_gb": 36.0 },
+  "tests": { "duration_s": 315, "workers": 7 },
+  "compose": { "services": 2, "mem_capped": true, "cpu_capped": true },
+  "cloud": { "cost_per_day_usd": 12.45 }
+}
+```
+
+### Reporting
+
+- Weekly compliance dashboard (pass/fail per repo)
+- Monthly cost report and resource savings trend
+
+---
+
+## 📣 Communication & Training
+
+- Kickoff briefing (30 min): goals, benefits, how to use new targets
+- Hands-on session (45 min): migrating a repo, interpreting CI feedback
+- Quick reference card in each repo README
+- Slack channel `#resource-standard` for Q&A and announcements
+
+---
+
 ## 📊 Success Metrics
 
 ### Resource Reduction Targets
+
 - **Local CPU Usage**: Reduce average by 40-50%
 - **Local Memory Usage**: Reduce peak by 50-60%
 - **Cloud Costs**: Reduce non-prod costs by 60-70% (nightly shutdowns)
 - **Build Times**: Maintain or improve (better resource allocation)
 
 ### Operational Improvements
+
 - **Zero Runaway Processes**: All commands timeout-protected
 - **Port Conflicts**: Zero conflicts across repos
 - **Test Reliability**: 95%+ pass rate with resource limits
 - **Developer Experience**: Faster local dev, fewer crashes
 
 ### Compliance
+
 - **100%** of repos with Docker have resource limits
 - **100%** of Makefiles have timeout protection
 - **100%** of Node.js projects have memory caps
@@ -1511,6 +1972,7 @@ This ensures continuous improvement across all repositories with minimal manual 
 ### Automation Scripts
 
 #### 1. Repo Scanner
+
 ```bash
 #!/bin/bash
 # scripts/scan-repos.sh
@@ -1546,6 +2008,7 @@ echo "Scan complete: $REPORT_FILE"
 ```
 
 #### 2. Bulk Updater
+
 ```bash
 #!/bin/bash
 # scripts/bulk-update-repos.sh
@@ -1579,6 +2042,7 @@ done
 ```
 
 #### 3. Validation Script
+
 ```bash
 #!/bin/bash
 # scripts/validate-compliance.sh
@@ -1621,9 +2085,11 @@ fi
 ## 📝 Documentation Requirements
 
 ### 1. Central Resource Management Guide
+
 **Location**: `docs/guides/resource-management-standard.md`
 
 **Contents**:
+
 - Overview of standardization
 - Docker Compose templates
 - Makefile timeout guidelines
@@ -1632,26 +2098,31 @@ fi
 - Troubleshooting guide
 
 ### 2. Per-Repo README Updates
+
 Add section to all repo READMEs:
 
-```markdown
+````markdown
 ## Resource Management
 
 This repository follows the [Dadosfera Resource Management Standard](../docs/guides/resource-management-standard.md).
 
 ### Local Development
+
 - **Memory Limit**: 512MB (backend), 768MB (frontend)
 - **CPU Limit**: 1.0 cores per service
 - **Ports**: See [Port Registry](../config/ports.js)
 
 ### Quick Commands
+
 ```bash
 make compose-up      # Start with resource limits
 make compose-down    # Stop all services
 make port-check      # Check for conflicts
 make test-low        # Run low-resource tests
 ```
-```
+````
+
+````
 
 ### 3. Migration Checklist
 **Location**: `docs/guides/resource-mgmt-migration-checklist.md`
@@ -1700,9 +2171,10 @@ make test-low        # Run low-resource tests
    # Restore original files from backup
    git checkout HEAD~1 compose.yml Makefile
    docker compose down && docker compose up -d
-   ```
+````
 
 2. **Partial Rollback** (specific repos)
+
    ```bash
    # Disable resource limits
    docker compose --profile unlimited up -d
@@ -1719,21 +2191,25 @@ make test-low        # Run low-resource tests
 ## 📅 Timeline & Milestones
 
 ### Week 1-2: Quick Wins
+
 - **Milestone 1**: Compose limits in 10 repos
 - **Milestone 2**: Makefile timeouts in 10 repos
 - **Deliverable**: Pilot report with metrics
 
 ### Week 3-4: Infrastructure
+
 - **Milestone 3**: Port management deployed
 - **Milestone 4**: Test tuning complete
 - **Deliverable**: Infrastructure guide
 
 ### Week 5-6: Cloud Automation
+
 - **Milestone 5**: Cost controls in 5 cloud repos
 - **Milestone 6**: Cron automation configured
 - **Deliverable**: Cost savings report
 
 ### Week 7-8: Validation & Docs
+
 - **Milestone 7**: All repos validated
 - **Milestone 8**: Documentation complete
 - **Deliverable**: Final rollout report
@@ -1743,12 +2219,15 @@ make test-low        # Run low-resource tests
 ## 🎓 Training & Handoff
 
 ### Developer Training
+
 1. **Resource Management 101** (30 min)
+
    - Why resource limits matter
    - How to use new Make targets
    - Troubleshooting common issues
 
 2. **Cloud Cost Controls** (20 min)
+
    - Nightly automation overview
    - Manual override procedures
    - Cost reporting interpretation
@@ -1759,6 +2238,7 @@ make test-low        # Run low-resource tests
    - Dynamic allocation
 
 ### Documentation Handoff
+
 - Central guide published
 - Per-repo READMEs updated
 - Migration checklist available
@@ -1769,6 +2249,7 @@ make test-low        # Run low-resource tests
 ## 📞 Support & Escalation
 
 ### Support Channels
+
 - **Quick Questions**: Slack #resource-management
 - **Issues**: GitHub Issues with `resource-mgmt` label
 - **Escalation**: Tag @infrastructure-team
@@ -1792,24 +2273,28 @@ make test-low        # Run low-resource tests
 ## ✅ Acceptance Criteria
 
 ### Phase 1 Complete When:
+
 - [ ] 100% of Docker repos have resource limits
 - [ ] 100% of Makefiles have timeout protection
 - [ ] Log rotation configured everywhere
 - [ ] Validation script passes
 
 ### Phase 2 Complete When:
+
 - [ ] Port registry covers all repos
 - [ ] Health checks added to all services
 - [ ] Test tuning applied to all test suites
 - [ ] Low-resource targets available
 
 ### Phase 3 Complete When:
+
 - [ ] Cost control scripts deployed
 - [ ] Cron automation configured
 - [ ] Cost reporting operational
 - [ ] 60%+ cost reduction achieved
 
 ### Project Complete When:
+
 - [ ] All acceptance criteria met
 - [ ] Documentation published
 - [ ] Training delivered
@@ -1821,9 +2306,11 @@ make test-low        # Run low-resource tests
 ## 📊 Appendix: Reference Templates
 
 ### A. Standard compose.yml
+
 See: `/Users/luismartins/local_repos/enrich-ddf-floor-2/compose.yml`
 
 ### B. Standard Makefile Targets
+
 ```makefile
 # Resource management targets (add to all Makefiles)
 .PHONY: compose-validate compose-up compose-down port-check test-low
@@ -1845,6 +2332,7 @@ test-low:
 ```
 
 ### C. Standard package.json Scripts
+
 ```json
 {
   "scripts": {
@@ -1857,6 +2345,7 @@ test-low:
 ```
 
 ### D. Standard Playwright Config
+
 ```typescript
 export default defineConfig({
   fullyParallel: false,
@@ -1879,6 +2368,7 @@ export default defineConfig({
 ---
 
 **Next Steps**:
+
 1. Review and approve this plan
 2. Run repo scanner to establish baseline
 3. Begin Phase 1 rollout with pilot repos

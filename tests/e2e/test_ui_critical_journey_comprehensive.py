@@ -92,7 +92,7 @@ class ComprehensiveUITest:
                 raise Exception(f"Server health check failed: {response.status_code}")
             logger.info("✅ Server is running and healthy")
         except Exception as e:
-            logger.error(f"❌ Server health check failed: {e}")
+            logger.exception(f"❌ Server health check failed: {e}")
             raise
 
         # Initialize Playwright
@@ -143,7 +143,7 @@ class ComprehensiveUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ API documentation access failed: {e}")
+            logger.exception(f"❌ API documentation access failed: {e}")
             return False
 
     async def test_health_endpoint_ui(self) -> bool:
@@ -163,7 +163,7 @@ class ComprehensiveUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Health endpoint UI test failed: {e}")
+            logger.exception(f"❌ Health endpoint UI test failed: {e}")
             return False
 
     async def test_api_endpoints_through_docs(self) -> bool:
@@ -190,7 +190,7 @@ class ComprehensiveUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ API endpoints documentation test failed: {e}")
+            logger.exception(f"❌ API endpoints documentation test failed: {e}")
             return False
 
     async def test_data_creation_through_ui(self) -> bool:
@@ -221,7 +221,7 @@ class ComprehensiveUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Data creation UI test failed: {e}")
+            logger.exception(f"❌ Data creation UI test failed: {e}")
             return False
 
     def api_request_with_retry(self, url, method="GET", **kwargs):
@@ -230,9 +230,9 @@ class ComprehensiveUITest:
             try:
                 response = requests.request(method, url, timeout=10, **kwargs)
                 return response
-            except requests.exceptions.ConnectionError as e:
+            except requests.exceptions.ConnectionError:
                 if attempt == 2:
-                    raise e
+                    raise
                 logger.warning(f"Connection attempt {attempt + 1} failed, retrying...")
                 time.sleep(1)
 
@@ -291,7 +291,7 @@ class ComprehensiveUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ API data creation failed: {e}")
+            logger.exception(f"❌ API data creation failed: {e}")
             return False
 
     async def test_data_verification_through_ui(self) -> bool:
@@ -318,7 +318,7 @@ class ComprehensiveUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Data verification UI test failed: {e}")
+            logger.exception(f"❌ Data verification UI test failed: {e}")
             return False
 
     async def test_api_data_verification(self) -> bool:
@@ -367,7 +367,7 @@ class ComprehensiveUITest:
             return True
 
         except Exception as e:
-            logger.error(f"❌ Data verification failed: {e}")
+            logger.exception(f"❌ Data verification failed: {e}")
             return False
 
     async def run_comprehensive_test(self):
@@ -421,7 +421,7 @@ class ComprehensiveUITest:
             ] = await self.test_api_data_verification()
 
         except Exception as e:
-            logger.error(f"❌ Comprehensive test failed: {e}")
+            logger.exception(f"❌ Comprehensive test failed: {e}")
         finally:
             # Teardown
             await self.teardown()

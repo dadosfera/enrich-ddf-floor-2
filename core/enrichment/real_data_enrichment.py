@@ -119,7 +119,7 @@ class RealDataEnrichmentEngine:
                     enriched_data["data_sources"].append("clearbit")
                     logger.info(f"✅ Clearbit enrichment successful for {email!r}")
             except Exception as e:
-                logger.error(f"Clearbit error: {e!r}")
+                logger.exception(f"Clearbit error: {e!r}")
 
         # Try Hunter.io for email verification
         if (
@@ -135,7 +135,7 @@ class RealDataEnrichmentEngine:
                     enriched_data["data_sources"].append("hunter")
                     logger.info(f"✅ Hunter.io verification successful for {email!r}")
             except Exception as e:
-                logger.error(f"Hunter.io error: {e!r}")
+                logger.exception(f"Hunter.io error: {e!r}")
 
         # Try GitHub for developer profile enrichment
         github_username = person_data.get("github_username") or person_data.get(
@@ -158,7 +158,7 @@ class RealDataEnrichmentEngine:
                         f"✅ GitHub enrichment successful for {github_username!r}"
                     )
             except Exception as e:
-                logger.error(f"GitHub error: {e!r}")
+                logger.exception(f"GitHub error: {e!r}")
 
         # Calculate enrichment score based on filled fields
         enriched_data["enrichment_score"] = self._calculate_enrichment_score(
@@ -370,7 +370,7 @@ class RealDataEnrichmentEngine:
                         f"✅ Clearbit company enrichment successful for {domain!r}"
                     )
             except Exception as e:
-                logger.error(f"Clearbit company error: {e!r}")
+                logger.exception(f"Clearbit company error: {e!r}")
 
         enriched_data["enrichment_score"] = self._calculate_company_enrichment_score(
             enriched_data
