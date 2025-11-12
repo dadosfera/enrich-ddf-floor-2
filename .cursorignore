@@ -63,7 +63,7 @@ generated_videos/
 exports/
 
 # IDE Files
-.vscode/settings.json
+# .vscode/settings.json  # COMMENTED OUT: Allow editing for terminal profile sync
 .idea/
 *.swp
 *.swo
