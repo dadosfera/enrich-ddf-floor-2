@@ -4,10 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "NODE_OPTIONS=--max-old-space-size=2048 vite",
+    "build": "NODE_OPTIONS=--max-old-space-size=2048 tsc -b && NODE_OPTIONS=--max-old-space-size=2048 vite build",
+    "lint": "NODE_OPTIONS=--max-old-space-size=2048 eslint .",
+    "preview": "NODE_OPTIONS=--max-old-space-size=2048 vite preview"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

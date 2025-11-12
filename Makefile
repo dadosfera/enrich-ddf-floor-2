@@ -101,3 +101,16 @@ logs: ## Show logs (if any log files exist)
 	@tail -n 20 *.log 2>/dev/null || echo "No log files found"
 
 restart: stop run ## Restart the application
+
+# Low-resource targets
+frontend-low: ## Start frontend with lower memory usage
+	@echo "🎨 Starting frontend (low-resource)..."
+	cd frontend && NODE_OPTIONS=--max-old-space-size=1536 npm run dev
+
+backend-low: ## Start backend without dev reload/timeouts
+	@echo "🔧 Starting backend (low-resource)..."
+	bash workflows/run.sh --platform=local-macos --env=dev --verbose --timeout=0
+
+test-low: ## Run a lighter subset of tests with lower timeouts
+	@echo "🧪 Running low-resource test suite..."
+	bash tests/run_tests.sh --unit --fail-fast --timeout=120
