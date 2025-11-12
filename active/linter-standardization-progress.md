@@ -68,3 +68,20 @@ Based on similarity to enrich-ddf-floor-2:
 - Scripts created: ✅
 - Survey complete: ✅
 - Ready for migration: ✅
+
+## ✅ Wave 1 Complete (2025-11-12)
+
+**Repos Migrated**: 5/5
+1. gen-ddf-floor-2 ✅ (11 errors remaining)
+2. budget-ddf ✅ (1 error remaining)
+3. enrich-ddf-mod-ncm ✅ (6 errors remaining)
+4. solver-mod-bet ⚠️ (25,468 errors - needs review)
+5. dataapp-data-input ⚠️ (22,673 errors - needs review)
+
+**Total Auto-fixed**: ~25,000+ errors across all repos
+
+**Issues Found**:
+- Pre-commit hook installation blocked by `core.hooksPath` setting
+- Some repos have many remaining errors (may need additional ignores)
+
+**See**: `active/wave1-migration-summary.md` for details
