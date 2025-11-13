@@ -1,0 +1,142 @@
+Linter Health Report - Wed Nov 12 21:03:16 -03 2025
+==================================
+
+📁 3d-ddf
+   ❌ Python: 42 errors
+   ✅ Pre-commit: Configured
+
+📁 agent-ddf
+   ❌ Python: 2 errors
+   ✅ Pre-commit: Configured
+
+📁 ai-flow-module
+   ℹ️  No Python config
+   ✅ Pre-commit: Configured
+
+📁 assessment-ddf
+   ❌ Python: 115 errors
+   ✅ Pre-commit: Configured
+
+📁 assistant-ddf
+   ❌ Python: 7 errors
+   ✅ Pre-commit: Configured
+
+📁 auto-drive-v2-try-2
+   ℹ️  No Python config
+   ✅ Pre-commit: Configured
+
+📁 beast
+   ℹ️  No Python config
+   ✅ Pre-commit: Configured
+
+📁 budget-ddf
+   ❌ Python: 1 errors
+   ✅ Pre-commit: Configured
+
+📁 central-forecast-ddf-group
+   ❌ Python: 38 errors
+   ✅ Pre-commit: Configured
+
+📁 cline-ddf
+   ❌ Python: 2 errors
+   ✅ Pre-commit: Configured
+
+📁 conversor-ddf
+   ❌ Python: 1 errors
+   ✅ Pre-commit: Configured
+
+📁 crm-ddf
+   ℹ️  No Python config
+   ✅ Pre-commit: Configured
+
+📁 dataapp-data-input
+   ❌ Python: 831 errors
+   ✅ Pre-commit: Configured
+
+📁 deployer-ddf-mod-open-llms
+   ❌ Python: 97 errors
+   ✅ Pre-commit: Configured
+
+📁 docs-fera
+   ❌ Python: 21 errors
+   ✅ Pre-commit: Configured
+
+📁 enrich-ddf-floor-2
+   ❌ Python: 0
+0 errors
+   ✅ Pre-commit: Configured
+
+📁 enrich-ddf-group
+   ❌ Python: 33 errors
+   ✅ Pre-commit: Configured
+
+📁 enrich-ddf-mod-ncm
+   ❌ Python: 1 errors
+   ✅ Pre-commit: Configured
+
+📁 extractor-ddf
+   ❌ Python: 81 errors
+   ✅ Pre-commit: Configured
+
+📁 framework-ddf
+   ℹ️  No Python config
+   ✅ Pre-commit: Configured
+
+📁 gen-ddf-floor-2
+   ❌ Python: 11 errors
+   ✅ Pre-commit: Configured
+
+📁 map-ddf-floor-2
+   ℹ️  No Python config
+   ✅ Pre-commit: Configured
+
+📁 meta-assistant-ddf
+   ❌ Python: 1 errors
+   ✅ Pre-commit: Configured
+
+📁 monitor-ddf
+   ❌ Python: 1 errors
+   ✅ Pre-commit: Configured
+
+📁 news-ddf-floor-1
+   ❌ Python: 10 errors
+   ✅ Pre-commit: Configured
+
+📁 news-ddf-floor-2
+   ℹ️  No Python config
+   ✅ Pre-commit: Configured
+
+📁 planner-ddf-floor-2
+   ❌ Python: 1 errors
+   ✅ Pre-commit: Configured
+
+📁 proc-ddf
+   ❌ Python: 1 errors
+   ✅ Pre-commit: Configured
+
+📁 prompts-fera
+   ❌ Python: 3 errors
+   ✅ Pre-commit: Configured
+
+📁 proto-ddf
+   ❌ Python: 2 errors
+   ✅ Pre-commit: Configured
+
+📁 scripts-fera
+   ❌ Python: 1 errors
+   ✅ Pre-commit: Configured
+
+📁 solver-mod-bet
+   ❌ Python: 3664 errors
+   ✅ Pre-commit: Configured
+
+📁 workflows-fera
+   ❌ Python: 1 errors
+   ✅ Pre-commit: Configured
+
+==================================
+Summary:
+  Total repos: 33
+  Healthy: 0
+  Unhealthy: 26
+  No config: 0
