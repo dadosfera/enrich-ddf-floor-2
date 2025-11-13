@@ -39,6 +39,7 @@ The resource management standardization plan has been **fully executed** across 
 ## 🚀 AUTOMATION SCRIPTS
 
 **17 scripts created** in `scripts/`:
+
 - Core automation (scan, bulk-update, batch-update)
 - Enhanced automation (timeouts, NODE_OPTIONS, compose)
 - Cost control (stop/start/report)
@@ -49,6 +50,7 @@ The resource management standardization plan has been **fully executed** across 
 ## 📝 NEXT STEPS
 
 ### 1. Review Changes
+
 ```bash
 cd ~/local_repos/<repo-name>
 git status
@@ -56,6 +58,7 @@ git diff
 ```
 
 ### 2. Test Locally
+
 ```bash
 make detect-resources
 make compose-validate
@@ -63,12 +66,14 @@ make test-auto
 ```
 
 ### 3. Commit Changes
+
 ```bash
 git add -A
 git commit -m "feat: standardize resource management"
 ```
 
 ### 4. Monitor Compliance
+
 ```bash
 bash scripts/validate-all-repos.sh
 bash scripts/generate-compliance-report.sh
