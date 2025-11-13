@@ -45,6 +45,14 @@ def find_available_port(
     )
 
 
+def get_user_friendly_url(host: str, port: int) -> str:
+    """Convert bind address to user-friendly URL for browser access."""
+    # Convert 0.0.0.0 to localhost for browser access
+    # Keep other addresses as-is (e.g., 127.0.0.1, custom domains)
+    display_host = "localhost" if host == "0.0.0.0" else host
+    return f"http://{display_host}:{port}"
+
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     """Application lifespan manager."""
@@ -198,11 +206,33 @@ if __name__ == "__main__":
         else:
             available_port = settings.port
 
-        # Log startup information
+        # Get user-friendly URLs (convert 0.0.0.0 to localhost for browser access)
+        backend_url = get_user_friendly_url(settings.host, available_port)
+        frontend_url = get_user_friendly_url(
+            settings.frontend_host, settings.frontend_port
+        )
+
+        # Log startup information with clear formatting
+        print("\n" + "=" * 70)
+        print("🚀 Enrich DDF Floor 2 - Application Starting")
+        print("=" * 70)
+        print("\n📡 Backend API:")
+        print(f"   • Base URL:     {backend_url}")
+        print(f"   • API Docs:     {backend_url}/docs")
+        print(f"   • Health Check: {backend_url}/health")
+        print("\n🎨 Frontend:")
+        print(f"   • Application:  {frontend_url}")
+        print(
+            f"\n💡 Tip: Open {frontend_url} in your browser to access the application"
+        )
+        print("=" * 70 + "\n")
+
+        # Also log to logger for file logging
         logger.info(f"🌐 Server starting on {settings.host}:{available_port}")
-        logger.info(f"📋 Base URL: http://{settings.host}:{available_port}")
-        logger.info(f"📚 API Docs: http://{settings.host}:{available_port}/docs")
-        logger.info(f"❤️ Health Check: http://{settings.host}:{available_port}/health")
+        logger.info(f"📋 Backend URL: {backend_url}")
+        logger.info(f"🎨 Frontend URL: {frontend_url}")
+        logger.info(f"📚 API Docs: {backend_url}/docs")
+        logger.info(f"❤️ Health Check: {backend_url}/health")
 
         uvicorn.run(
             "main:app",

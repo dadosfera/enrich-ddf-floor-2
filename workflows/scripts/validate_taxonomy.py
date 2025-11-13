@@ -8,21 +8,21 @@ to maintain project organization standards.
 What it validates:
 1. Required directories: Checks for standard project directories (config, docs, etc.)
 2. Invalid patterns: Prevents directories with problematic names (-copy, -backup, etc.)
-3. Root-level file placement: Ensures documentation and report files are in appropriate directories
+3. Root-level directory violations: Prevents /active and /scripts directories at root level
+4. Root-level file placement: Ensures backup files, log files, and documentation files are in appropriate directories
 
 Exit codes:
     - 0: All checks passed
     - 1: Invalid directory name or file placement detected (fails pre-commit)
 
 Usage:
-    python3 scripts/validate_taxonomy.py
+    python3 workflows/scripts/validate_taxonomy.py
 
 Related documentation:
     - scripts/README.md - Script documentation
     - .pre-commit-config.yaml - Pre-commit hook configuration
     - README.md#project-structure-validation - Project structure overview
 """
-
 import fnmatch
 import sys
 from pathlib import Path
@@ -75,9 +75,6 @@ if scripts_dir.is_dir():
     )
     print("   Per folder structure discipline: 'Nothing new goes in the project root'")
     print("   Please move files from scripts/ to workflows/scripts/ or docs/scripts/")
-    print(
-        "   Note: This hook file (scripts/validate_taxonomy.py) should also be moved."
-    )
     sys.exit(1)
 
 # Recursively check all directories in the project
@@ -160,6 +157,8 @@ ROOT_LEVEL_DOCUMENTATION_EXCEPTIONS = {
 # Check root-level files
 root_path = Path()
 violations = []
+backup_files = []
+log_files = []
 
 for file_path in root_path.iterdir():
     if not file_path.is_file():
@@ -176,8 +175,24 @@ for file_path in root_path.iterdir():
     if file_path.name in ROOT_LEVEL_DOCUMENTATION_EXCEPTIONS:
         continue
 
-    # Check if it's a documentation file that should be moved
     file_name = file_path.name
+    file_suffix = file_path.suffix.lower()
+
+    # Check for backup files (.bak, .backup, etc.)
+    if (
+        file_suffix in [".bak", ".backup"]
+        or file_name.endswith(".bak")
+        or file_name.endswith(".backup")
+    ):
+        backup_files.append(file_path.name)
+        continue
+
+    # Check for log files (.log, .txt log files)
+    if file_suffix == ".log" or (file_suffix == ".txt" and "log" in file_name.lower()):
+        log_files.append(file_path.name)
+        continue
+
+    # Check if it's a documentation file that should be moved
     is_documentation = False
 
     # Check against documentation patterns
@@ -194,6 +209,29 @@ for file_path in root_path.iterdir():
     if is_documentation:
         violations.append(file_path.name)
 
+# Check for backup files at root level
+if backup_files:
+    print("❌ Root-level backup files detected that should be cleaned up or moved:")
+    for backup_file in sorted(backup_files):
+        print(f"   - {backup_file}")
+    print("\n💡 Suggested actions:")
+    print("   - Temporary backups: Move to .tmp/ or delete if no longer needed")
+    print("   - Long-term backups: Move to backup/ directory")
+    print("   - Best practice: Clean up .bak files after verifying changes")
+    sys.exit(1)
+
+# Check for log files at root level
+if log_files:
+    print("❌ Root-level log files detected that should be in logs/ directory:")
+    for log_file in sorted(log_files):
+        print(f"   - {log_file}")
+    print("\n💡 Suggested locations:")
+    print("   - Application logs: logs/ directory")
+    print("   - Temporary logs: .tmp/ directory")
+    print("   - Build/test logs: logs/build/ or logs/test/")
+    sys.exit(1)
+
+# Check for documentation files at root level
 if violations:
     print(
         "❌ Root-level documentation files detected that should be in docs/ or appropriate subdirectories:"
