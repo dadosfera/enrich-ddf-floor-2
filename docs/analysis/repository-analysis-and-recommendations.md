@@ -8,11 +8,21 @@
 ## 🔍 Repository Investigation Summary
 
 ### Primary Target: `dadosfera/dev-demo-lattes`
-- **Status**: ❌ **Not Found (404)**
-- **Possible Reasons**: Private, renamed, or archived
+
+- **Status**: ❌ **Does Not Exist (404)**
+- **GitHub CLI Confirmation**: Repository not found in Dadosfera organization
 - **Note**: "Lattes" refers to Brazilian academic CV platform
 
+### Related Repository Found: `dadosfera/apify-crawler-lattes`
+
+- **Status**: ✅ **Accessible (Private Repository)**
+- **Description**: "Crawler do Apify que obtem dados do Lates. Utiliza 2captcha para quebrar Captchas"
+- **Technology**: Apify crawler using Puppeteer
+- **Purpose**: Downloads Lattes CVs from researcher names
+- **Key Feature**: Uses 2captcha to solve CAPTCHAs
+
 ### Related Repository Found: `dadosfera/dataapp-enriquecimento`
+
 - **Status**: ✅ **Accessible**
 - **Description**: "Data app para enriquecimento de dados de pessoas" (People enrichment data app)
 - **Technology**: Streamlit-based application
@@ -25,11 +35,13 @@
 ### Key Components Found
 
 #### 1. **Enrichment Functions** (`app/enrich.py`)
+
 - **People Data Labs Integration**: LinkedIn profile enrichment
 - **Function**: `enrich(url)` - Enriches person data from LinkedIn URL
 - **Output**: JSON data with person details
 
 #### 2. **Validators** (`app/utils/validators.py`)
+
 ```python
 - validate_cpf(cpf)          # Brazilian CPF validation
 - validate_email(email)       # Email format validation
@@ -39,11 +51,13 @@
 ```
 
 #### 3. **Enrichment Services**
+
 - **ZeroBounce**: Email validation (`utils/zerobounce_single.py`)
 - **Apollo**: Person matching (`utils/apollo_single.py`)
 - **People Data Labs**: LinkedIn enrichment (`enrich.py`)
 
 #### 4. **UI Patterns** (`app/views/free.py`)
+
 - Single input field that auto-detects data type (CPF, email, phone, LinkedIn)
 - Conditional processing based on detected data type
 - Results display with enriched data
@@ -63,11 +77,13 @@
 ### 1. **People Enrichment Page** (Priority: High)
 
 #### Current State
+
 - ✅ Partially exists as `Contacts.tsx`
 - ✅ Has People Data Labs integration
 - ✅ Has BigDataCorp CPF enrichment
 
 #### Enhancements Needed
+
 ```typescript
 // New features to add:
 - Lattes CV integration (if dev-demo-lattes becomes available)
@@ -79,6 +95,7 @@
 ```
 
 #### Implementation Plan
+
 1. **Extend Contact Model** → Create enhanced Person model
 2. **Add Validators** → Import CPF/email/phone validators from dataapp-enriquecimento
 3. **Integrate Services**:
@@ -96,6 +113,7 @@
 ### 2. **Cars Enrichment Page** (Priority: Medium)
 
 #### Required Features
+
 ```typescript
 interface CarEnrichment {
   // Basic Info
@@ -116,13 +134,16 @@ interface CarEnrichment {
 ```
 
 #### Data Sources Needed
+
 - **VIN Decoding**: NHTSA VIN Decoder API
 - **Market Value**: Kelley Blue Book, Edmunds APIs
 - **History Reports**: Carfax, AutoCheck APIs
 - **Brazilian Sources**: Renavam, Detran APIs
 
 #### Implementation Pattern
+
 Follow existing `Companies.tsx` pattern:
+
 - List view with search
 - Card-based display
 - Enrichment button
@@ -133,13 +154,14 @@ Follow existing `Companies.tsx` pattern:
 ### 3. **Real Estate Enrichment Page** (Priority: Medium)
 
 #### Required Features
+
 ```typescript
 interface RealEstateEnrichment {
   // Basic Info
   address: string;
   city: string;
   state: string;
-  property_type: 'apartment' | 'house' | 'commercial' | 'land';
+  property_type: "apartment" | "house" | "commercial" | "land";
 
   // Enrichment Data
   market_value?: number;
@@ -153,12 +175,14 @@ interface RealEstateEnrichment {
 ```
 
 #### Data Sources Needed
+
 - **Property Valuation**: Zillow API, Brazilian equivalents
 - **Geographic Data**: Google Maps API, GIS data
 - **Market Analysis**: Real estate listing APIs
 - **Brazilian Sources**: Cartório databases, Receita Federal
 
 #### Implementation Pattern
+
 - List view with map integration
 - Property detail cards
 - Market analysis charts
@@ -172,6 +196,7 @@ interface RealEstateEnrichment {
 ### Database Models
 
 #### Enhanced Person Model
+
 ```python
 class Person(Base):
     __tablename__ = "people"
@@ -202,6 +227,7 @@ class Person(Base):
 ```
 
 #### Car Model
+
 ```python
 class Car(Base):
     __tablename__ = "cars"
@@ -224,6 +250,7 @@ class Car(Base):
 ```
 
 #### Real Estate Model
+
 ```python
 class RealEstate(Base):
     __tablename__ = "real_estate"
@@ -253,6 +280,7 @@ class RealEstate(Base):
 ### Backend API Endpoints
 
 #### People Endpoints
+
 ```python
 GET    /api/v1/people                    # List people
 POST   /api/v1/people                    # Create person
@@ -267,6 +295,7 @@ POST   /api/v1/people/enrich-by-lattes   # Enrich by Lattes ID
 ```
 
 #### Cars Endpoints
+
 ```python
 GET    /api/v1/cars                      # List cars
 POST   /api/v1/cars                      # Create car
@@ -279,6 +308,7 @@ POST   /api/v1/cars/enrich-by-plate     # Enrich by license plate
 ```
 
 #### Real Estate Endpoints
+
 ```python
 GET    /api/v1/real-estate               # List properties
 POST   /api/v1/real-estate               # Create property
@@ -292,6 +322,7 @@ POST   /api/v1/real-estate/enrich-by-address # Enrich by address
 ### Frontend Pages Structure
 
 #### People Page (`frontend/src/pages/People.tsx`)
+
 ```typescript
 // Follow pattern from Contacts.tsx but enhanced:
 - Auto-detection input (CPF, email, phone, LinkedIn, Lattes ID)
@@ -306,6 +337,7 @@ POST   /api/v1/real-estate/enrich-by-address # Enrich by address
 ```
 
 #### Cars Page (`frontend/src/pages/Cars.tsx`)
+
 ```typescript
 // Follow pattern from Companies.tsx:
 - List view with search (VIN, license plate, make/model)
@@ -319,6 +351,7 @@ POST   /api/v1/real-estate/enrich-by-address # Enrich by address
 ```
 
 #### Real Estate Page (`frontend/src/pages/RealEstate.tsx`)
+
 ```typescript
 // New pattern with map integration:
 - List view with search (address, city, property type)
@@ -337,6 +370,7 @@ POST   /api/v1/real-estate/enrich-by-address # Enrich by address
 ## 📋 Reusable Components from dataapp-enriquecimento
 
 ### 1. **Validators** (`utils/validators.py`)
+
 ```python
 # Can be adapted for our FastAPI backend:
 from app.utils.validators import (
@@ -348,6 +382,7 @@ from app.utils.validators import (
 ```
 
 ### 2. **Enrichment Pattern**
+
 ```python
 # Pattern from enrich.py:
 def enrich_person_by_linkedin(url: str) -> Dict:
@@ -357,6 +392,7 @@ def enrich_person_by_linkedin(url: str) -> Dict:
 ```
 
 ### 3. **Auto-Detection Pattern**
+
 ```python
 # From free.py - can be adapted for frontend:
 def detect_input_type(input_value: str) -> str:
@@ -376,6 +412,7 @@ def detect_input_type(input_value: str) -> str:
 ## 🚀 Implementation Priority
 
 ### Phase 1: People Page Enhancement (Week 1-2)
+
 1. ✅ Create enhanced Person model
 2. ✅ Add CPF/email/phone validators
 3. ✅ Integrate ZeroBounce email validation
@@ -384,6 +421,7 @@ def detect_input_type(input_value: str) -> str:
 6. ⏳ Add Lattes CV integration (if dev-demo-lattes available)
 
 ### Phase 2: Cars Page (Week 3-4)
+
 1. ✅ Create Car model
 2. ✅ Create backend APIs
 3. ✅ Research and integrate VIN decoding APIs
@@ -392,6 +430,7 @@ def detect_input_type(input_value: str) -> str:
 6. ⏳ Integrate Brazilian vehicle databases
 
 ### Phase 3: Real Estate Page (Week 5-6)
+
 1. ✅ Create RealEstate model
 2. ✅ Create backend APIs
 3. ✅ Research property valuation APIs
@@ -404,6 +443,7 @@ def detect_input_type(input_value: str) -> str:
 ## 🔗 Integration Opportunities
 
 ### Existing Services to Leverage
+
 - ✅ **People Data Labs**: Already integrated, enhance for People page
 - ✅ **Wiza**: LinkedIn enrichment, extend for People page
 - ✅ **Surfe**: Professional data, use for People page
@@ -411,6 +451,7 @@ def detect_input_type(input_value: str) -> str:
 - ✅ **GitHub**: Developer profiles, use for People page
 
 ### New Services Needed
+
 - ⏳ **ZeroBounce**: Email validation (pattern from dataapp-enriquecimento)
 - ⏳ **Apollo**: Person matching (if available)
 - ⏳ **Lattes CV API**: Academic profiles (if dev-demo-lattes provides)

@@ -54,6 +54,15 @@ if missing_dirs:
 # - "-partial": Incomplete/partial directories (indicates incomplete work)
 invalid_patterns = ["-copy", "-backup", "-partial"]
 
+# Check for root-level /active directory violation
+# Active plans should be in docs/plans/active/, not at root level
+active_dir = Path("active")
+if active_dir.is_dir():
+    print("❌ Root-level 'active/' directory detected.")
+    print("   Active plans should be in docs/plans/active/, not at root level.")
+    print("   Please move files from active/ to docs/plans/active/")
+    sys.exit(1)
+
 # Recursively check all directories in the project
 # Note: We use pathlib.Path().rglob() for cross-platform compatibility
 for path in Path().rglob("*"):
