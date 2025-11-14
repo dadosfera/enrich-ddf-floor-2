@@ -17,7 +17,6 @@ enrich-ddf-floor-2/
 ├── frontend/                  # React frontend application
 ├── guides/                    # Additional guides
 ├── prioritized/               # Prioritized tasks
-├── scripts/                   # Utility scripts
 ├── services/                  # Service layer
 ├── templates/                 # Project templates
 ├── tests/                     # Test files
@@ -178,16 +177,16 @@ frontend/
 
 ---
 
-### `/scripts/`
+### `/workflows/scripts/`
 
 **Purpose**: Utility scripts
 
 **Structure**:
 ```
-scripts/
+workflows/scripts/
 ├── cost/                # Cost management scripts
 ├── quality/             # Quality assurance scripts
-├── quality_governance/  # Quality governance
+├── hooks/               # Git hooks
 ├── detect_resources.sh  # Resource detection
 ├── validate_taxonomy.py # Structure validation
 └── ...

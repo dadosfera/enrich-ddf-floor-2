@@ -1,9 +1,9 @@
 # newcomer-onboarding-improvements – next actions
 
-**Status**: backlog  
-**Created from**: Conversation review on 2025-11-13  
-**Objective**: Continue improving newcomer onboarding experience  
-**Priority**: Low  
+**Status**: backlog
+**Created from**: Conversation review on 2025-11-13
+**Objective**: Continue improving newcomer onboarding experience
+**Priority**: Low
 **Estimated effort**: 2-4 AI hours / 1-2 Human hours (review)
 
 ## Next actions (not-yet-tried / unplanned)
@@ -69,4 +69,3 @@
 
 **Conversation archive**:
 - docs/conversations/2025-11-13_newcomer-onboarding-improvements.md
-

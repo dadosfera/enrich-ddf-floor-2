@@ -77,6 +77,11 @@ node_modules/
 temp/
 *.tmp
 
+# Backup files
+*.bak
+*.backup
+backup/
+
 # Secrets and credentials
 secrets/
 credentials/

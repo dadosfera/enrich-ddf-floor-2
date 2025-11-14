@@ -18,7 +18,7 @@ Scripts in this directory are used for:
 **Usage**:
 ```bash
 # Run manually
-python3 scripts/validate_taxonomy.py
+python3 workflows/scripts/validate_taxonomy.py
 
 # Runs automatically via pre-commit hooks
 ```
@@ -27,9 +27,8 @@ python3 scripts/validate_taxonomy.py
 1. **Required directories**: Verifies presence of standard project directories:
    - `config/` - Configuration files
    - `docs/` - Documentation
-   - `scripts/` - Utility scripts
    - `tests/` - Test files
-   - `workflows/` - Workflow scripts
+   - `workflows/` - Workflow scripts (including `workflows/scripts/` for utility scripts)
 
 2. **Invalid directory names**: Prevents directories with problematic patterns:
    - `-copy` - Indicates duplicate/clone directories
@@ -74,7 +73,7 @@ python3 scripts/validate_taxonomy.py
 When adding new scripts:
 
 1. **Add documentation** to this README
-2. **Make executable**: `chmod +x scripts/your_script.sh`
+2. **Make executable**: `chmod +x workflows/scripts/your_script.sh`
 3. **Add to pre-commit** if it should run automatically
 4. **Follow naming conventions**: Use lowercase with underscores
 5. **Include usage examples** in script comments
@@ -88,7 +87,7 @@ Scripts can be integrated as pre-commit hooks by adding to `.pre-commit-config.y
   hooks:
     - id: your-script-id
       name: Your Script Description
-      entry: python3 scripts/your_script.py
+      entry: python3 workflows/scripts/your_script.py
       language: system
       pass_filenames: false
 ```
