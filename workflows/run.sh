@@ -190,26 +190,34 @@ check_dependencies() {
     log_success "Dependencies check completed"
 }
 
-# Find available port
+# Find available port using centralized port configuration
 find_available_port() {
     if [[ -n "$PORT" ]]; then
         echo "$PORT"
         return
     fi
 
-    # Default port range
-    local start_port=8000
-    local end_port=9000
+    # Use Python to get port from centralized configuration
+    # This ensures consistency with the PortConfig class
+    local python_script="
+import sys
+import os
+sys.path.insert(0, os.getcwd())
+from config.ports import PortConfig
 
-    for port in $(seq $start_port $end_port); do
-        if ! timeout 1 bash -c "</dev/tcp/localhost/$port" 2>/dev/null; then
-            echo "$port"
-            return
-        fi
-    done
+env = os.getenv('ENVIRONMENT', '${ENVIRONMENT:-dev}')
+port_config = PortConfig(environment=env, host='${HOST:-127.0.0.1}')
+port = port_config.get_backend_port()
+print(port)
+"
+    local app_port=$(python3 -c "$python_script" 2>/dev/null)
 
-    log_error "No available ports found in range $start_port-$end_port"
-    exit 1
+    if [[ -z "$app_port" ]]; then
+        log_error "Failed to get port from centralized configuration"
+        exit 1
+    fi
+
+    echo "$app_port"
 }
 
 # Run tests
@@ -238,6 +246,7 @@ start_application() {
     # Set environment variables
     export APP_PORT="$app_port"
     export APP_HOST="$HOST"
+    export ENVIRONMENT="$ENVIRONMENT"
     export APP_ENV="$ENVIRONMENT"
     export APP_DEBUG="$DEBUG"
     # Also export standard variables consumed by pydantic-settings

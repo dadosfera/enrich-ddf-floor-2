@@ -22,9 +22,16 @@ make run
 ```
 
 **The application will be available at:**
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8247
-- **API Documentation**: http://localhost:8247/docs
+- **Frontend**: http://127.0.0.1:5173 (or random port > 15000 in dev mode)
+- **Backend API**: http://127.0.0.1:8247 (or random port > 15000 in dev mode)
+- **API Documentation**: http://127.0.0.1:{PORT}/docs (check console output for actual port)
+
+**Note**: Port configuration is centralized and environment-aware:
+- **Development** (`ENVIRONMENT=dev`): Random ports > 15000 (prevents conflicts)
+- **Staging** (`ENVIRONMENT=staging`): Fixed ports (8248 backend, 5174 frontend)
+- **Production** (`ENVIRONMENT=production`): Fixed ports (8247 backend, 5173 frontend)
+
+See [Port Configuration](#port-configuration) section for details.
 
 ## 📚 Documentation
 
@@ -58,6 +65,48 @@ make run
 | `make clean` | Clean build artifacts |
 
 See [Getting Started Guide](docs/GETTING_STARTED.md#common-commands) for more commands.
+
+## 🔌 Port Configuration
+
+Port allocation is **centralized** in `config/ports.py` and automatically adapts to your environment:
+
+### Environment-Based Port Allocation
+
+| Environment | Backend Port | Frontend Port | Notes |
+|------------|--------------|---------------|-------|
+| **dev** | Random > 15000 | Random > 15000 | Prevents port conflicts during development |
+| **staging** | 8248 | 5174 | Fixed ports for staging environment |
+| **production** | 8247 | 5173 | Fixed ports for production environment |
+
+### Configuration
+
+Ports can be configured via environment variables:
+
+```bash
+# Set environment (controls port allocation strategy)
+export ENVIRONMENT=dev  # or staging, production
+
+# Optionally override ports (bypasses PortConfig)
+export PORT=9000
+export FRONTEND_PORT=6000
+```
+
+Or via `.env` file:
+
+```bash
+ENVIRONMENT=dev
+# PORT=9000  # Uncomment to override
+# FRONTEND_PORT=6000  # Uncomment to override
+```
+
+### How It Works
+
+1. **Development Mode**: Automatically finds available random ports > 15000
+2. **Staging/Production**: Uses fixed ports defined in `config/ports.py`
+3. **Override Support**: Set `PORT` or `FRONTEND_PORT` environment variables to override
+4. **No Hardcoded localhost**: All URLs use `127.0.0.1` instead of `localhost`
+
+The actual ports used are displayed in the console when the application starts.
 
 ## 🏗️ Architecture
 

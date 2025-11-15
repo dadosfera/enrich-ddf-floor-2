@@ -1,8 +1,11 @@
 """Application configuration using pydantic-settings."""
 
+import os
 from typing import Optional
 
 from pydantic_settings import BaseSettings
+
+from config.ports import PortConfig, get_user_friendly_url
 
 
 class Settings(BaseSettings):
@@ -15,11 +18,14 @@ class Settings(BaseSettings):
 
     # Server settings
     host: str = "0.0.0.0"
-    port: int = 8247  # Non-round port to avoid conflicts
+    port: Optional[int] = None  # Will be set from PortConfig if not provided
 
     # Frontend settings
     frontend_host: str = "0.0.0.0"
-    frontend_port: int = 5173  # Vite default port
+    frontend_port: Optional[int] = None  # Will be set from PortConfig if not provided
+
+    # Environment setting
+    environment: str = "dev"  # dev, staging, production
 
     # Database settings
     database_url: str = "sqlite:///./app.db"
@@ -63,13 +69,34 @@ class Settings(BaseSettings):
         env_file_encoding = "utf-8"
         case_sensitive = False
 
+    def _get_port_config(self) -> PortConfig:
+        """Get port configuration instance for current environment."""
+        env = os.getenv("ENVIRONMENT", self.environment)
+        return PortConfig(environment=env, host=self.host)
+
+    def get_port(self) -> int:
+        """Get backend port, using PortConfig if not explicitly set."""
+        if self.port is not None:
+            return self.port
+        port_config = self._get_port_config()
+        return port_config.get_backend_port()
+
+    def get_frontend_port_value(self) -> int:
+        """Get frontend port, using PortConfig if not explicitly set."""
+        if self.frontend_port is not None:
+            return self.frontend_port
+        port_config = self._get_port_config()
+        return port_config.get_frontend_port()
+
     def get_base_url(self) -> str:
         """Generate base URL from host and port configuration."""
-        return f"http://{self.host}:{self.port}"
+        port = self.get_port()
+        return get_user_friendly_url(self.host, port)
 
     def get_frontend_url(self) -> str:
         """Generate frontend URL from host and port configuration."""
-        return f"http://{self.frontend_host}:{self.frontend_port}"
+        port = self.get_frontend_port_value()
+        return get_user_friendly_url(self.frontend_host, port)
 
 
 # Global settings instance

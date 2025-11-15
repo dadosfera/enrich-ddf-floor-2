@@ -37,7 +37,8 @@ test.describe('Basic Application Functionality', () => {
 
   test('should have working API connection', async ({ page }) => {
     // Test direct API connection
-    const response = await page.request.get('http://localhost:8247/health');
+    const API_BASE_URL = process.env.VITE_API_URL || process.env.API_URL || 'http://127.0.0.1:8247';
+    const response = await page.request.get(`${API_BASE_URL}/health`);
     expect(response.status()).toBe(200);
 
     const healthData = await response.json();

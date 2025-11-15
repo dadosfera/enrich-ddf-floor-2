@@ -1,5 +1,8 @@
 import { test, expect } from '@playwright/test';
 
+// Get API URL from environment variable or use default
+const API_BASE_URL = process.env.VITE_API_URL || process.env.API_URL || 'http://127.0.0.1:8247';
+
 test.describe('Data Enrichment Functionality Tests', () => {
   test.beforeEach(async ({ page }) => {
     // Set a longer timeout for enrichment operations
@@ -8,7 +11,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
 
   test.describe('Person Enrichment API', () => {
     test('should successfully enrich person data via API', async ({ request }) => {
-      const response = await request.post('http://localhost:8247/api/v1/enrich/person', {
+      const response = await request.post(`${API_BASE_URL}/api/v1/enrich/person`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -38,7 +41,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
       ];
 
       for (const person of people) {
-        const response = await request.post('http://localhost:8247/api/v1/enrich/person', {
+        const response = await request.post(`${API_BASE_URL}/api/v1/enrich/person`, {
           headers: { 'Content-Type': 'application/json' },
           data: person
         });
@@ -53,7 +56,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
 
   test.describe('Company Enrichment API', () => {
     test('should successfully enrich company data via API', async ({ request }) => {
-      const response = await request.post('http://localhost:8247/api/v1/enrich/company', {
+      const response = await request.post(`${API_BASE_URL}/api/v1/enrich/company`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -75,7 +78,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
 
   test.describe('Integration Service Endpoints', () => {
     test('should test People Data Labs integration', async ({ request }) => {
-      const response = await request.post('http://localhost:8247/api/v1/integrations/pdl/enrich-person', {
+      const response = await request.post(`${API_BASE_URL}/api/v1/integrations/pdl/enrich-person`, {
         headers: { 'Content-Type': 'application/json' },
         data: {
           first_name: 'Sarah',
@@ -90,7 +93,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
     });
 
     test('should test Wiza integration', async ({ request }) => {
-      const response = await request.post('http://localhost:8247/api/v1/integrations/wiza/enrich-profile', {
+      const response = await request.post(`${API_BASE_URL}/api/v1/integrations/wiza/enrich-profile`, {
         headers: { 'Content-Type': 'application/json' },
         data: {
           linkedin_url: 'https://linkedin.com/in/elon-musk'
@@ -103,7 +106,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
     });
 
     test('should test BigData Corp integration', async ({ request }) => {
-      const response = await request.post('http://localhost:8247/api/v1/integrations/bigdata/lookup-cpf', {
+      const response = await request.post(`${API_BASE_URL}/api/v1/integrations/bigdata/lookup-cpf`, {
         headers: { 'Content-Type': 'application/json' },
         data: {
           cpf: '12345678901'
@@ -118,7 +121,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
 
   test.describe('Data Quality and Validation', () => {
     test('should validate enrichment score ranges', async ({ request }) => {
-      const response = await request.post('http://localhost:8247/api/v1/enrich/person', {
+      const response = await request.post(`${API_BASE_URL}/api/v1/enrich/person`, {
         headers: { 'Content-Type': 'application/json' },
         data: {
           first_name: 'Test',
@@ -133,7 +136,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
     });
 
     test('should include required enriched fields', async ({ request }) => {
-      const response = await request.post('http://localhost:8247/api/v1/enrich/person', {
+      const response = await request.post(`${API_BASE_URL}/api/v1/enrich/person`, {
         headers: { 'Content-Type': 'application/json' },
         data: {
           first_name: 'Professional',
@@ -158,7 +161,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
 
   test.describe('Error Handling', () => {
     test('should handle invalid person data gracefully', async ({ request }) => {
-      const response = await request.post('http://localhost:8247/api/v1/enrich/person', {
+      const response = await request.post(`${API_BASE_URL}/api/v1/enrich/person`, {
         headers: { 'Content-Type': 'application/json' },
         data: {
           first_name: '',
@@ -172,7 +175,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
     });
 
     test('should handle missing required fields', async ({ request }) => {
-      const response = await request.post('http://localhost:8247/api/v1/enrich/person', {
+      const response = await request.post(`${API_BASE_URL}/api/v1/enrich/person`, {
         headers: { 'Content-Type': 'application/json' },
         data: {}
       });
@@ -188,7 +191,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
 
       for (let i = 0; i < 5; i++) {
         promises.push(
-          request.post('http://localhost:8247/api/v1/enrich/person', {
+          request.post(`${API_BASE_URL}/api/v1/enrich/person`, {
             headers: { 'Content-Type': 'application/json' },
             data: {
               first_name: `User${i}`,
@@ -211,7 +214,7 @@ test.describe('Data Enrichment Functionality Tests', () => {
     test('should complete enrichment within reasonable time', async ({ request }) => {
       const startTime = Date.now();
 
-      const response = await request.post('http://localhost:8247/api/v1/enrich/person', {
+      const response = await request.post(`${API_BASE_URL}/api/v1/enrich/person`, {
         headers: { 'Content-Type': 'application/json' },
         data: {
           first_name: 'Speed',

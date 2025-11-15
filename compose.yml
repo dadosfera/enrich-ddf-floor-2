@@ -6,11 +6,12 @@ services:
     volumes:
       - ./:/app
     environment:
-      - PORT=8247
+      - PORT=${BACKEND_PORT:-8247}
       - HOST=0.0.0.0
+      - ENVIRONMENT=${ENVIRONMENT:-production}
     command: sh -lc "pip install --no-cache-dir -r requirements-minimal.txt && python main.py"
     ports:
-      - "8247:8247"
+      - "${BACKEND_PORT:-8247}:${BACKEND_PORT:-8247}"
     mem_limit: "512m"
     cpus: "1.0"
     restart: unless-stopped
@@ -30,9 +31,11 @@ services:
       - ./frontend:/app/frontend
     environment:
       - NODE_OPTIONS=--max-old-space-size=2048
+      - VITE_API_URL=http://backend:${BACKEND_PORT:-8247}
+      - FRONTEND_PORT=${FRONTEND_PORT:-5173}
     command: sh -lc "npm ci || npm install && npm run dev"
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT:-5173}:${FRONTEND_PORT:-5173}"
     mem_limit: "768m"
     cpus: "1.0"
     restart: unless-stopped

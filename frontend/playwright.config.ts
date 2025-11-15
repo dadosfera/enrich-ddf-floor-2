@@ -1,5 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
+// Get frontend port from environment variable or use default
+const FRONTEND_PORT = process.env.FRONTEND_PORT || '5173';
+const FRONTEND_URL = `http://127.0.0.1:${FRONTEND_PORT}`;
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: false,
@@ -8,7 +12,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : 2,
   reporter: 'html',
   use: {
-    baseURL: 'http://127.0.0.1:5173',
+    baseURL: FRONTEND_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -30,7 +34,7 @@ export default defineConfig({
 
   webServer: {
     command: 'npm run dev',
-    url: 'http://127.0.0.1:5173',
+    url: FRONTEND_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },

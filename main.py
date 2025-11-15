@@ -4,7 +4,7 @@ Provides database integration and dynamic port configuration.
 """
 
 import logging
-import socket
+import os
 from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import Any, Dict, List
@@ -16,41 +16,9 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from config import settings
+from config.ports import PortConfig, get_user_friendly_url, is_port_available
 from database.connection import Base, engine, get_db
 from database.models import Company, Contact, Product
-
-
-def is_port_available(port: int, host: str = "localhost") -> bool:
-    """Check if a port is available for binding."""
-    try:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.settimeout(1)
-            result = s.connect_ex((host, port))
-            return result != 0
-    except Exception:
-        return False
-
-
-def find_available_port(
-    start_port: int, host: str = "localhost", max_attempts: int = 10
-) -> int:
-    """Find an available port starting from start_port."""
-    for i in range(max_attempts):
-        port = start_port + i
-        if is_port_available(port, host):
-            return port
-    raise RuntimeError(
-        f"No available port found in range "
-        f"{start_port}-{start_port + max_attempts - 1}"
-    )
-
-
-def get_user_friendly_url(host: str, port: int) -> str:
-    """Convert bind address to user-friendly URL for browser access."""
-    # Convert 0.0.0.0 to localhost for browser access
-    # Keep other addresses as-is (e.g., 127.0.0.1, custom domains)
-    display_host = "localhost" if host == "0.0.0.0" else host
-    return f"http://{display_host}:{port}"
 
 
 @asynccontextmanager
@@ -197,25 +165,44 @@ async def create_product(product_data: Dict[str, Any], db: Session = Depends(get
 
 
 if __name__ == "__main__":
-    # Find available port if configured port is occupied
     try:
-        if not is_port_available(settings.port, settings.host):
-            logger.warning(f"Port {settings.port} is occupied, finding alternative...")
-            available_port = find_available_port(settings.port, settings.host)
-            logger.info(f"Using alternative port: {available_port}")
-        else:
-            available_port = settings.port
+        # Get environment from environment variable or settings
+        environment = os.getenv("ENVIRONMENT", settings.environment)
 
-        # Get user-friendly URLs (convert 0.0.0.0 to localhost for browser access)
+        # Initialize port configuration
+        port_config = PortConfig(environment=environment, host=settings.host)
+
+        # Get ports from centralized configuration
+        # If port is explicitly set in settings, use it; otherwise use PortConfig
+        if settings.port is not None:
+            available_port = settings.port
+            port_config.set_backend_port(available_port)
+        else:
+            available_port = port_config.get_backend_port()
+
+        # Verify port is available
+        if not is_port_available(available_port, settings.host):
+            logger.warning(f"Port {available_port} is occupied, finding alternative...")
+            if environment == "dev":
+                # For dev, get a new random port
+                available_port = port_config.get_backend_port()
+            else:
+                # For staging/prod, try next available port
+                from config.ports import find_available_port
+
+                available_port = find_available_port(available_port, settings.host)
+            logger.info(f"Using alternative port: {available_port}")
+
+        # Get user-friendly URLs (convert 0.0.0.0 to 127.0.0.1 for browser access)
         backend_url = get_user_friendly_url(settings.host, available_port)
-        frontend_url = get_user_friendly_url(
-            settings.frontend_host, settings.frontend_port
-        )
+        frontend_port = settings.get_frontend_port_value()
+        frontend_url = get_user_friendly_url(settings.frontend_host, frontend_port)
 
         # Log startup information with clear formatting
         print("\n" + "=" * 70)
         print("🚀 Enrich DDF Floor 2 - Application Starting")
         print("=" * 70)
+        print(f"\n🌍 Environment: {environment}")
         print("\n📡 Backend API:")
         print(f"   • Base URL:     {backend_url}")
         print(f"   • API Docs:     {backend_url}/docs")
@@ -229,6 +216,7 @@ if __name__ == "__main__":
 
         # Also log to logger for file logging
         logger.info(f"🌐 Server starting on {settings.host}:{available_port}")
+        logger.info(f"🌍 Environment: {environment}")
         logger.info(f"📋 Backend URL: {backend_url}")
         logger.info(f"🎨 Frontend URL: {frontend_url}")
         logger.info(f"📚 API Docs: {backend_url}/docs")
