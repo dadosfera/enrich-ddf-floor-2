@@ -8,7 +8,10 @@ This document explains the directory structure and organization of the Enrich DD
 enrich-ddf-floor-2/
 ├── active/                    # Active plans and execution summaries
 ├── alembic/                   # Database migration files
-├── config/                    # Configuration files (if any)
+├── config/                    # Configuration package
+│   ├── ports.py              # Centralized port configuration
+│   ├── __init__.py           # Package initialization
+│   └── lint/                 # Shared linting configuration
 ├── core/                      # Core business logic
 ├── data/                      # Data layer (connectors, repositories)
 ├── database/                  # Database models and connection
@@ -310,10 +313,42 @@ workflows/
 - Middleware configuration
 - Application lifespan management
 
+#### `/config/`
+
+**Purpose**: Configuration package with centralized port management
+
+**Structure**:
+```
+config/
+├── ports.py              # Centralized port configuration (PortConfig class)
+├── __init__.py           # Package initialization (exports settings and ports)
+└── lint/                 # Shared linting configuration
+    └── ruff-shared.toml  # Shared Ruff configuration
+```
+
+**Key Files**:
+- `ports.py` - Environment-aware port allocation (dev/staging/production)
+- `__init__.py` - Exports settings and ports modules for backward compatibility
+
+**Usage**:
+```python
+from config.ports import PortConfig
+from config import settings
+
+# Get ports for current environment
+pc = PortConfig(environment="dev", host="127.0.0.1")
+backend_port = pc.get_backend_port()  # Random > 15000 for dev
+```
+
+**Related**: [Config Package README](../../config/README.md), [Port Configuration](../../README.md#-port-configuration)
+
+---
+
 #### `config.py`
 - Application configuration using Pydantic Settings
 - Environment variable management
 - API key configuration
+- Integration with PortConfig for port management
 
 #### `Makefile`
 - Common development commands

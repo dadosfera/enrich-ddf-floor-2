@@ -46,9 +46,11 @@ make run
 ```
 
 **That's it!** The application is now running:
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8247
-- **API Documentation**: http://localhost:8247/docs
+- **Frontend**: http://127.0.0.1:5173 (or random port > 15000 in dev mode)
+- **Backend API**: http://127.0.0.1:8247 (or random port > 15000 in dev mode)
+- **API Documentation**: http://127.0.0.1:{PORT}/docs (check console output for actual port)
+
+**Note**: Port configuration is centralized and environment-aware. In development mode, random ports > 15000 are used to prevent conflicts. See [Port Configuration](../../README.md#-port-configuration) for details.
 
 ---
 
@@ -68,13 +70,15 @@ A **unified data enrichment platform** that aggregates features from multiple DD
 ```
 ┌─────────────┐
 │  Frontend   │  React + TypeScript + Vite
-│  (Port 5173)│  Material-UI components
+│  (Dynamic)  │  Material-UI components
+│             │  Port: 5173 (prod), 5174 (staging), random >15000 (dev)
 └──────┬──────┘
        │ HTTP/REST
        ▼
 ┌─────────────┐
 │   Backend   │  FastAPI (Python)
-│  (Port 8247)│  SQLAlchemy + SQLite
+│  (Dynamic)  │  SQLAlchemy + SQLite
+│             │  Port: 8247 (prod), 8248 (staging), random >15000 (dev)
 └──────┬──────┘
        │
        ▼

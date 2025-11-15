@@ -191,6 +191,16 @@ check_dependencies() {
 }
 
 # Find available port using centralized port configuration
+#
+# This function uses the PortConfig class from config/ports.py to ensure
+# consistent port allocation across the application. Port allocation is
+# environment-aware:
+#   - dev: Random ports > 15000 (prevents conflicts)
+#   - staging: Fixed port 8248
+#   - production: Fixed port 8247
+#
+# The PORT environment variable can override automatic allocation.
+# See config/ports.py and config/README.md for details.
 find_available_port() {
     if [[ -n "$PORT" ]]; then
         echo "$PORT"
@@ -214,6 +224,7 @@ print(port)
 
     if [[ -z "$app_port" ]]; then
         log_error "Failed to get port from centralized configuration"
+        log_error "Ensure config/ports.py is accessible and PortConfig is importable"
         exit 1
     fi
 
