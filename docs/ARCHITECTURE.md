@@ -9,7 +9,8 @@ This document describes the architecture and design decisions of Enrich DDF Floo
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                        Frontend Layer                        │
-│  React + TypeScript + Vite (Port 5173)                     │
+│  React + TypeScript + Vite                                  │
+│  - Port: Dynamic (5173 prod, 5174 staging, random >15000 dev)│
 │  - Material-UI Components                                   │
 │  - React Router for Navigation                              │
 │  - React Query for Data Fetching                            │
@@ -19,7 +20,8 @@ This document describes the architecture and design decisions of Enrich DDF Floo
                      │
 ┌────────────────────▼────────────────────────────────────────┐
 │                      Backend Layer                          │
-│  FastAPI (Python) (Port 8247)                                │
+│  FastAPI (Python)                                           │
+│  - Port: Dynamic (8247 prod, 8248 staging, random >15000 dev)│
 │  - RESTful API Endpoints                                    │
 │  - Request Validation                                        │
 │  - Error Handling                                           │
@@ -96,6 +98,44 @@ This document describes the architecture and design decisions of Enrich DDF Floo
 - Pydantic Settings for validation
 - API key management
 - Feature flags
+
+#### 2.1. Port Configuration (`config/ports.py`)
+
+**Centralized Port Management**: All port allocation is managed through the `PortConfig` class, which provides environment-aware port allocation.
+
+**Key Features**:
+- **Environment-aware**: Different port strategies for dev/staging/production
+- **Random ports for dev**: Prevents port conflicts during development
+- **Fixed ports for staging/production**: Predictable ports for deployment
+- **No hardcoded localhost**: All URLs use `127.0.0.1` instead of `localhost`
+- **No zeros in ports**: Production/staging ports don't contain zeros (8247, 8248, etc.)
+
+**Port Allocation Strategy**:
+
+| Environment | Backend Port | Frontend Port | Notes |
+|------------|--------------|---------------|-------|
+| **dev** | Random > 15000 | Random > 15000 | Prevents conflicts, different on each startup |
+| **staging** | 8248 | 5174 | Fixed ports for staging environment |
+| **production** | 8247 | 5173 | Fixed ports for production environment |
+
+**Configuration**:
+- Ports can be overridden via `PORT` and `FRONTEND_PORT` environment variables
+- Environment is set via `ENVIRONMENT` variable (dev/staging/production)
+- Port availability is automatically checked before allocation
+- Fallback mechanisms handle port conflicts
+
+**Usage**:
+```python
+from config.ports import PortConfig
+
+# Get ports for current environment
+pc = PortConfig(environment="dev", host="127.0.0.1")
+backend_port = pc.get_backend_port()  # Random port > 15000
+frontend_port = pc.get_frontend_port()  # Random port > 15000
+```
+
+**Integration with Settings**:
+The `Settings` class in `config.py` automatically uses `PortConfig` when ports are not explicitly set, ensuring consistent port management across the application.
 
 #### 3. Database Layer (`database/`)
 
@@ -320,10 +360,12 @@ src/
 
 ```
 Local Machine
-├── Frontend: Vite dev server (Port 5173)
-├── Backend: Uvicorn (Port 8247)
+├── Frontend: Vite dev server (Random port > 15000)
+├── Backend: Uvicorn (Random port > 15000)
 └── Database: SQLite file
 ```
+
+**Port Configuration**: Development uses random ports > 15000 to prevent conflicts. Actual ports are displayed in the console on startup and can be overridden via environment variables.
 
 ### Production (Planned)
 
@@ -432,4 +474,49 @@ Docker Compose / Kubernetes
 
 ---
 
-**Last Updated**: 2025-11-13
+---
+
+## 🔌 Port Management Architecture
+
+### Overview
+
+Port allocation is **centralized** in `config/ports.py` to ensure consistency, prevent conflicts, and support environment-specific configurations.
+
+### Design Principles
+
+1. **No Hardcoded Ports**: All ports are managed through `PortConfig` class
+2. **Environment-Aware**: Different strategies for dev/staging/production
+3. **Conflict Prevention**: Random ports for dev, fixed ports for production
+4. **No Zeros**: Production/staging ports don't contain zeros (8247, 8248)
+5. **No Localhost**: All URLs use `127.0.0.1` instead of `localhost`
+
+### Implementation Details
+
+**PortConfig Class** (`config/ports.py`):
+- Manages port allocation for all environments
+- Provides port availability checking
+- Handles port conflicts with fallback mechanisms
+- Generates random ports for development (> 15000)
+
+**Integration Points**:
+- `main.py`: Uses PortConfig during application startup
+- `config.py`: Settings class integrates with PortConfig
+- `workflows/run.sh`: Uses PortConfig for port allocation
+- `compose.yml`: Environment variables for Docker deployment
+- Frontend: Uses `VITE_API_URL` environment variable
+
+**URL Generation**:
+- `get_user_friendly_url()` converts `0.0.0.0` → `127.0.0.1` for browser access
+- Ensures no "localhost" references in generated URLs
+
+### Testing
+
+Comprehensive test coverage in:
+- `tests/unit/test_port_config.py`: Unit tests for PortConfig
+- `tests/integration/test_port_config_startup.py`: Integration tests
+
+See [Port Configuration](../README.md#-port-configuration) in README for usage examples.
+
+---
+
+**Last Updated**: 2025-11-15
