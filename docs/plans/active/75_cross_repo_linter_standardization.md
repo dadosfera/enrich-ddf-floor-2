@@ -17,6 +17,19 @@ Standardize linter configurations across all local repositories by:
 4. Implementing consistent standards across all repos
 5. Focusing on functional issues over cosmetic style preferences
 
+### 📋 Taxonomy Context
+
+**This repository's structure**:
+- Uses `workflows/` for orchestration (e.g., `workflows/quality/`, `workflows/cost/`)
+- Scripts organized under `scripts/{category}/` (e.g., `scripts/quality/linter/`)
+- Shared utilities in `workflows/scripts/` (cross-repo tooling)
+
+**References to `scripts/quality/linter/...` in this plan**:
+- When describing **target repositories** being standardized: These repos should organize scripts under `scripts/{category}/` per taxonomy rules
+- When describing **this repository's tools**: The actual location in this repo is `workflows/quality/linter/` (workflow orchestration) or `scripts/quality/linter/` (if scripts exist here)
+
+**Note**: This plan was created before the workflows/scripts taxonomy refinement. The scripts mentioned (`scripts/quality/linter/*.sh`) refer to the standard location pattern for target repos, not necessarily this repo's current structure.
+
 ## 📊 Current State
 
 ### Repository Inventory

@@ -3,6 +3,19 @@
 **Date**: 2025-11-12
 **Status**: ✅ COMPLETE (97% - 32/33 repos)
 
+### 📋 Taxonomy Context
+
+**This repository's structure**:
+- Uses `workflows/` for orchestration (e.g., `workflows/quality/`, `workflows/cost/`)
+- Scripts organized under `scripts/{category}/` (e.g., `scripts/quality/linter/`)
+- Shared utilities in `workflows/scripts/` (cross-repo tooling)
+
+**References to `scripts/quality/linter/...` in this document**:
+- When describing **target repositories** being standardized: These repos should organize scripts under `scripts/{category}/` per taxonomy rules
+- When describing **this repository's tools**: The actual location in this repo is `workflows/quality/linter/` (workflow orchestration) or `scripts/quality/linter/` (if scripts exist here)
+
+**Note**: This document was created before the workflows/scripts taxonomy refinement. Script references (`scripts/quality/linter/*.sh`) refer to the standard location pattern for target repos, not necessarily this repo's current structure.
+
 ## Execution Summary
 
 ### Phase 1: Discovery & Analysis ✅

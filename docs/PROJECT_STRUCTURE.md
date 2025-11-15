@@ -36,6 +36,52 @@ enrich-ddf-floor-2/
 
 ---
 
+## 🎯 Canonical Taxonomy: Scripts & Workflows
+
+**This section defines the authoritative rules for organizing scripts and workflows in this repository.**
+
+### Scripts Organization
+
+**Scripts belong under a top-level `scripts/{category}/` layout:**
+
+- ✅ **Correct**: `scripts/quality/linter/`, `scripts/cost/`, `scripts/hooks/`
+- ❌ **Forbidden**: Root-level `scripts/` directory (loose scripts at project root)
+
+**Rationale**: Scripts are organized by category/domain. The taxonomy hook enforces that no root-level `scripts/` directory exists.
+
+### Workflows Organization
+
+**Workflows orchestrate scripts and live under `workflows/`:**
+
+- **`workflows/run.sh`**: Main application entry point
+- **`workflows/{category}/`**: Domain-specific workflow directories (e.g., `workflows/cost/`, `workflows/quality/`, `workflows/hooks/`)
+- **`workflows/{category}/{workflow}/`**: Individual workflow implementations that may include workflow-local scripts
+
+**Workflows orchestrate scripts from:**
+- `scripts/{category}/` - Reusable script families organized by category
+- `workflows/{category}/{workflow}/` - Workflow-specific scripts (if needed)
+
+### Shared Utilities: `workflows/scripts/`
+
+**`workflows/scripts/` is reserved for shared utilities and cross-repo tooling:**
+
+- Cross-repository standardization tools (e.g., `bulk-update-repo.sh`)
+- Shared infrastructure helpers (e.g., `detect_resources.sh`)
+- Repository-level validation (e.g., `validate_taxonomy.py`)
+
+**Important**: `workflows/scripts/` is **not** a primary home for domain scripts. Domain scripts belong in `scripts/{category}/` or within workflow-specific directories.
+
+### Summary
+
+| Location | Purpose | Example |
+|----------|---------|---------|
+| `scripts/{category}/` | Reusable script families organized by domain | `scripts/quality/linter/`, `scripts/cost/` |
+| `workflows/{category}/` | Workflow orchestration by domain | `workflows/cost/`, `workflows/quality/` |
+| `workflows/{category}/{workflow}/` | Workflow-specific scripts (if needed) | `workflows/cost/nightly-report/` |
+| `workflows/scripts/` | Shared utilities and cross-repo tooling only | `workflows/scripts/validate_taxonomy.py` |
+
+---
+
 ## 📂 Directory Details
 
 ### `/active/`

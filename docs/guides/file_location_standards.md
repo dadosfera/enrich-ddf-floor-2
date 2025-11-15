@@ -75,6 +75,9 @@ The following file types should **NOT** be at root level:
 - ❌ `.log` files → Move to `logs/` or `.tmp/`
 - ❌ Documentation files (`*_REPORT.md`, `*_PLAN.md`, etc.) → Move to `docs/`
 - ❌ Root-level directories: `active/`, `scripts/` → Move to appropriate locations
+  - **Scripts**: Must be organized under `scripts/{category}/` (e.g., `scripts/quality/linter/`, `scripts/cost/`)
+  - **Workflows**: Must be organized under `workflows/{category}/` (e.g., `workflows/cost/`, `workflows/quality/`)
+  - **Shared utilities**: Use `workflows/scripts/` for cross-repo tooling only
 
 ---
 
@@ -138,7 +141,7 @@ The taxonomy hook (`workflows/scripts/validate_taxonomy.py`) automatically check
 2. ✅ Root-level `.log` files
 3. ✅ Root-level documentation files
 4. ✅ Root-level `active/` directory
-5. ✅ Root-level `scripts/` directory (scripts should live under `workflows/` or `docs/scripts/`, not at root level)
+5. ✅ Root-level `scripts/` directory (scripts must be organized under `scripts/{category}/`, not as a loose root-level directory)
 
 **Pre-commit**: The hook runs automatically on every commit attempt.
 

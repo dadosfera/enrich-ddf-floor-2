@@ -6,6 +6,19 @@
 **Priority**: Low (plan execution complete)
 **Estimated effort**: 0 AI hours / 0 Human hours (maintenance only)
 
+### 📋 Taxonomy Context
+
+**This repository's structure**:
+- Uses `workflows/` for orchestration (e.g., `workflows/quality/`, `workflows/cost/`)
+- Scripts organized under `scripts/{category}/` (e.g., `scripts/quality/linter/`)
+- Shared utilities in `workflows/scripts/` (cross-repo tooling)
+
+**References to `scripts/quality/linter/...` in this document**:
+- When describing **target repositories** being standardized: These repos should organize scripts under `scripts/{category}/` per taxonomy rules
+- When describing **this repository's tools**: The actual location in this repo is `workflows/quality/linter/` (workflow orchestration) or `scripts/quality/linter/` (if scripts exist here)
+
+**Note**: This document was created before the workflows/scripts taxonomy refinement. Script references (`scripts/quality/linter/*.sh`) refer to the standard location pattern for target repos, not necessarily this repo's current structure.
+
 ## Execution Status
 
 ✅ **COMPLETE** - All 33 local repositories migrated (100% completion)

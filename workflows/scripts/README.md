@@ -1,16 +1,28 @@
-# Scripts Directory
+# Shared Utilities & Cross-Repo Tools
 
-This directory contains utility scripts for development, quality assurance, and project maintenance.
+This directory (`workflows/scripts/`) contains **shared utility scripts and cross-repo tooling only**.
+
+## ⚠️ Important: This is NOT a Primary Home for Domain Scripts
+
+**Domain scripts belong in**:
+- `scripts/{category}/` - Reusable script families organized by domain (e.g., `scripts/quality/linter/`, `scripts/cost/`)
+- `workflows/{category}/{workflow}/` - Workflow-specific scripts (if needed)
+
+**This directory (`workflows/scripts/`) is reserved for**:
+- Cross-repository standardization tools (e.g., `bulk-update-repo.sh`)
+- Shared infrastructure helpers (e.g., `detect_resources.sh`)
+- Repository-level validation (e.g., `validate_taxonomy.py`)
 
 ## Overview
 
 Domain-specific workflows live under `workflows/cost/`, `workflows/quality/`, and `workflows/hooks/`.
-This directory (`workflows/scripts/`) contains shared utility scripts and cross-repo tools that those workflows can call.
+This directory contains shared utility scripts and cross-repo tools that those workflows can call.
 
 Scripts in this directory are used for:
 - **Pre-commit hooks**: Quality checks before commits
 - **Project validation**: Ensuring project structure compliance
-- **Development utilities**: Helper scripts for common tasks
+- **Cross-repo tooling**: Standardization and maintenance across repositories
+- **Shared infrastructure**: Common helpers used by multiple workflows
 
 ## Scripts
 
@@ -74,13 +86,19 @@ python3 workflows/scripts/validate_taxonomy.py
 
 ## Adding New Scripts
 
-When adding new scripts:
+**Before adding a script here, ask**: Is this a shared utility or cross-repo tool?
 
-1. **Add documentation** to this README
-2. **Make executable**: `chmod +x workflows/scripts/your_script.sh`
-3. **Add to pre-commit** if it should run automatically
-4. **Follow naming conventions**: Use lowercase with underscores
-5. **Include usage examples** in script comments
+- ✅ **Yes** (shared/cross-repo): Add it to `workflows/scripts/`
+- ❌ **No** (domain-specific): Add it to `scripts/{category}/` instead
+
+When adding scripts to this directory:
+
+1. **Verify it's a shared utility or cross-repo tool** (not domain-specific)
+2. **Add documentation** to this README
+3. **Make executable**: `chmod +x workflows/scripts/your_script.sh`
+4. **Add to pre-commit** if it should run automatically
+5. **Follow naming conventions**: Use lowercase with underscores
+6. **Include usage examples** in script comments
 
 ## Pre-commit Integration
 

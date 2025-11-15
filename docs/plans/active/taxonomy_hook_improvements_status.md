@@ -46,34 +46,30 @@
 
 ---
 
-## 📋 Next Steps Required
+## ✅ Phase 2 – Taxonomy & documentation alignment (COMPLETE)
 
-### Immediate (to unblock commit):
+1. ✅ **Canonical taxonomy summary (short, authoritative text)**
+   - **Status**: Complete
+   - **Action Taken**: Added canonical taxonomy section to `docs/PROJECT_STRUCTURE.md` with clear rules for:
+     - Scripts organization: `scripts/{category}/` layout
+     - Workflows organization: `workflows/{category}/` and `workflows/{category}/{workflow}/`
+     - Shared utilities: `workflows/scripts/` reserved for cross-repo tooling only
+   - **Also Updated**: `docs/guides/file_location_standards.md` to clarify scripts taxonomy rules
 
-1. **Migrate scripts/ directory under workflows/**
-   - **Rationale**: Resolve taxonomy violation to allow commits
-   - **Action**: Move all files from `scripts/` to appropriate locations under `workflows/` (for example, `workflows/scripts/`, `workflows/cost/`, `workflows/quality/`, `workflows/hooks/`)
-   - **Scope**: All files in `scripts/` directory
-   - **Estimated Time**: 30-60 minutes
+2. ✅ **Align linter-standardization docs with the current layout**
+   - **Status**: Complete
+   - **Action Taken**: Added "Taxonomy Context" sections to:
+     - `docs/plans/active/75_cross_repo_linter_standardization.md`
+     - `docs/plans/active/linter-standardization-FINAL-STATUS.md`
+     - `docs/plans/backlog/cross-repo-linter-standardization-execution_next_actions_2025-11-12.md`
+   - **Clarification**: Each now explicitly distinguishes between target repos (should use `scripts/{category}/`) and this repo's structure (`workflows/` for orchestration)
 
-2. **Update all references to scripts/**
-   - **Rationale**: Update paths in scripts, Makefiles, documentation
-   - **Action**: Update references from `scripts/` to the new `workflows/` locations used in this repository (for example, `workflows/scripts/`, `workflows/cost/`, `workflows/quality/`, `workflows/hooks/`)
-   - **Scope**: All files referencing `scripts/` path
-   - **Estimated Time**: 30-60 minutes
-
-3. **Test after migration**
-   - **Rationale**: Ensure all scripts still work after move
-   - **Action**: Run tests, verify Makefile targets, check documentation
-   - **Scope**: Full repository validation
-   - **Estimated Time**: 15-30 minutes
-
-### After Migration:
-
-4. **Commit taxonomy hook improvements**
-   - **Rationale**: Save completed work
-   - **Action**: Commit hook improvements, documentation, and cleanup
-   - **Scope**: Single commit
+3. ✅ **Review `workflows/scripts/README.md` against the latest guidance**
+   - **Status**: Complete
+   - **Action Taken**: Updated README with:
+     - Clear warning that `workflows/scripts/` is NOT a primary home for domain scripts
+     - Explicit guidance: domain scripts → `scripts/{category}/`, shared utilities → `workflows/scripts/`
+     - Decision tree in "Adding New Scripts" section to help determine correct location
 
 ---
 
@@ -114,13 +110,19 @@
 
 ## 🎯 Summary
 
-**Status**: All code improvements complete, but commit blocked by `scripts/` directory violation.
+**Status**: ✅ **COMPLETE** - All hook improvements, migrations, and documentation alignment finished.
 
-**Completed**: Hook improvements, file cleanup, documentation, `.gitignore` updates
+**Completed**:
+- ✅ Hook improvements (`.bak`, `.log`, `scripts/` detection)
+- ✅ File cleanup (moved backups and logs to proper locations)
+- ✅ Documentation (file location standards guide)
+- ✅ `.gitignore` updates
+- ✅ Migration away from root-level `scripts/` to `workflows/` layout
+- ✅ Canonical taxonomy summary in `docs/PROJECT_STRUCTURE.md`
+- ✅ Alignment of linter-standardization docs with current taxonomy
+- ✅ Review and update of `workflows/scripts/README.md` with clear guidance
 
-**Blocked**: Cannot commit until `scripts/` directory is migrated to `workflows/scripts/`
-
-**Next Action**: Migrate `scripts/` directory to resolve violation and enable commit
+**Taxonomy Enforcement**: Active and consistent across all documentation, hooks, and code.
 
 ---
 
