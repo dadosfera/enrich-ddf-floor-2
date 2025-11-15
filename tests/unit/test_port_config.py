@@ -58,11 +58,9 @@ class TestPortAvailabilityFunctions:
 
     def test_find_available_port_no_ports_available(self):
         """Test finding available port when no ports are available."""
-        with (
-            patch("config.ports.is_port_available", return_value=False),
-            pytest.raises(RuntimeError, match="No available port found"),
-        ):
-            find_available_port(8000, "127.0.0.1", max_attempts=2)
+        with patch("config.ports.is_port_available", return_value=False):  # noqa: SIM117
+            with pytest.raises(RuntimeError, match="No available port found"):
+                find_available_port(8000, "127.0.0.1", max_attempts=2)
 
 
 class TestRandomPortGeneration:
@@ -89,11 +87,9 @@ class TestRandomPortGeneration:
 
     def test_find_available_random_port_no_ports_available(self):
         """Test finding random port when no ports are available."""
-        with (
-            patch("config.ports.is_port_available", return_value=False),
-            pytest.raises(RuntimeError, match="No available port found"),
-        ):
-            find_available_random_port(15001, 20000, "127.0.0.1", max_attempts=5)
+        with patch("config.ports.is_port_available", return_value=False):  # noqa: SIM117
+            with pytest.raises(RuntimeError, match="No available port found"):
+                find_available_random_port(15001, 20000, "127.0.0.1", max_attempts=5)
 
 
 class TestPortConfig:
@@ -179,23 +175,19 @@ class TestPortConfig:
         """Test port conflict handling for dev environment."""
         pc = PortConfig(environment="dev", host="127.0.0.1")
         # Mock first port as unavailable, second as available
-        with (
-            patch("config.ports.is_port_available", side_effect=[False, True]),
-            patch("config.ports.find_available_random_port", return_value=16000),
-        ):
-            port = pc.get_backend_port()
-            assert port == 16000
+        with patch("config.ports.is_port_available", side_effect=[False, True]):  # noqa: SIM117
+            with patch("config.ports.find_available_random_port", return_value=16000):
+                port = pc.get_backend_port()
+                assert port == 16000
 
     def test_port_conflict_handling_staging(self):
         """Test port conflict handling for staging environment."""
         pc = PortConfig(environment="staging", host="127.0.0.1")
         # Mock staging port as unavailable, should find next available
-        with (
-            patch("config.ports.is_port_available", side_effect=[False, True]),
-            patch("config.ports.find_available_port", return_value=8249),
-        ):
-            port = pc.get_backend_port()
-            assert port == 8249
+        with patch("config.ports.is_port_available", side_effect=[False, True]):  # noqa: SIM117
+            with patch("config.ports.find_available_port", return_value=8249):
+                port = pc.get_backend_port()
+                assert port == 8249
 
     def test_environment_case_insensitive(self):
         """Test that environment names are case-insensitive."""

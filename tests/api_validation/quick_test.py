@@ -2,6 +2,7 @@
 """
 Quick API Validation - Test only the working APIs for rapid feedback
 """
+
 import os
 
 import requests

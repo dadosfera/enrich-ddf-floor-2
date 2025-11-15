@@ -3,6 +3,7 @@
 Enhanced API Key Testing Script - Test all configured data enrichment APIs
 with correct endpoints and comprehensive validation
 """
+
 import os
 import time
 from typing import Tuple
