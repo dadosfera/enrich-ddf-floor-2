@@ -4,6 +4,9 @@ This directory contains utility scripts for development, quality assurance, and 
 
 ## Overview
 
+Domain-specific workflows live under `workflows/cost/`, `workflows/quality/`, and `workflows/hooks/`.
+This directory (`workflows/scripts/`) contains shared utility scripts and cross-repo tools that those workflows can call.
+
 Scripts in this directory are used for:
 - **Pre-commit hooks**: Quality checks before commits
 - **Project validation**: Ensuring project structure compliance
@@ -67,6 +70,7 @@ python3 workflows/scripts/validate_taxonomy.py
 - `cursor_ignore_restore.sh` - Restore cursor ignore patterns
 - `test_dynamic_ports.sh` - Test dynamic port allocation
 - `update_documentation_ports.sh` - Update port documentation
+- `bulk-update-repo.sh` - Cross-repo standardization helper (expects this repo to use `workflows/` layout)
 
 ## Adding New Scripts
 

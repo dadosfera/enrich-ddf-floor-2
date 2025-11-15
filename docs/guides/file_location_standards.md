@@ -138,7 +138,7 @@ The taxonomy hook (`workflows/scripts/validate_taxonomy.py`) automatically check
 2. ✅ Root-level `.log` files
 3. ✅ Root-level documentation files
 4. ✅ Root-level `active/` directory
-5. ✅ Root-level `scripts/` directory
+5. ✅ Root-level `scripts/` directory (scripts should live under `workflows/` or `docs/scripts/`, not at root level)
 
 **Pre-commit**: The hook runs automatically on every commit attempt.
 

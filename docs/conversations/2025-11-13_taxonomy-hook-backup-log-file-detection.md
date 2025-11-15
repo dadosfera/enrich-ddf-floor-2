@@ -57,8 +57,8 @@ This conversation focused on improving the taxonomy hook to catch `.bak` files a
 
 ### Next Steps
 
-1. Migrate `scripts/` directory to `workflows/scripts/`
-2. Update all references to `scripts/` path
+1. Migrate `scripts/` directory under `workflows/` (for example, into `workflows/scripts/`, `workflows/cost/`, `workflows/quality/`, `workflows/hooks/`)
+2. Update all references to `scripts/` path to point to the new `workflows/` locations
 3. Test after migration
 4. Commit taxonomy hook improvements
 

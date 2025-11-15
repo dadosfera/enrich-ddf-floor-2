@@ -179,23 +179,21 @@ frontend/
 
 ### `/workflows/scripts/`
 
-**Purpose**: Utility scripts
+**Purpose**: Shared utility scripts and cross-repo tooling
 
 **Structure**:
 ```
 workflows/scripts/
-├── cost/                # Cost management scripts
-├── quality/             # Quality assurance scripts
-├── hooks/               # Git hooks
-├── detect_resources.sh  # Resource detection
-├── validate_taxonomy.py # Structure validation
+├── detect_resources.sh      # Resource detection helper
+├── bulk-update-repo.sh      # Cross-repo standardization
+├── validate_taxonomy.py     # Structure validation (pre-commit hook)
 └── ...
 ```
 
 **Key Scripts**:
 - `detect_resources.sh` - Detect system resources
 - `validate_taxonomy.py` - Validate project structure
-- `bulk-update-repo.sh` - Update repository
+- `bulk-update-repo.sh` - Update repository configuration
 - `add-makefile-timeouts.sh` - Add timeouts to Makefile
 
 ---
@@ -239,13 +237,16 @@ tests/
 
 ### `/workflows/`
 
-**Purpose**: Execution scripts
+**Purpose**: Execution workflows and orchestration
 
 **Structure**:
 ```
 workflows/
-├── run.sh              # Main application runner
-└── scripts/            # Workflow scripts
+├── run.sh          # Main application runner
+├── cost/           # Cost management workflows
+├── quality/        # Quality & linter governance workflows
+├── hooks/          # Git hook tooling
+└── scripts/        # Shared utility scripts (cross-repo tools, taxonomy, etc.)
 ```
 
 **Key Files**:
@@ -378,7 +379,7 @@ workflows/
 - [Getting Started Guide](./GETTING_STARTED.md)
 - [Architecture Documentation](./ARCHITECTURE.md)
 - [Contributing Guide](./CONTRIBUTING.md)
-- [Scripts README](../scripts/README.md)
+- [Scripts README](../workflows/scripts/README.md)
 
 ---
 

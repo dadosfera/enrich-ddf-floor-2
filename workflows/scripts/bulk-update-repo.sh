@@ -1,12 +1,12 @@
 #!/bin/bash
-# scripts/bulk-update-repo.sh
-# Propagate standardization to a single repository
+# workflows/scripts/bulk-update-repo.sh
+# Propagate standardization to a single repository using the workflows/ layout in the template repo
 
 set -euo pipefail
 
 REPO_PATH=${1:-""}
 if [ -z "$REPO_PATH" ]; then
-    echo "Usage: bash scripts/bulk-update-repo.sh <repo-path>"
+    echo "Usage: bash workflows/scripts/bulk-update-repo.sh <repo-path>"
     exit 1
 fi
 

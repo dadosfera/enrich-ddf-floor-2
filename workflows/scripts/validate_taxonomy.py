@@ -23,6 +23,7 @@ Related documentation:
     - .pre-commit-config.yaml - Pre-commit hook configuration
     - README.md#project-structure-validation - Project structure overview
 """
+
 import fnmatch
 import sys
 from pathlib import Path
@@ -65,16 +66,18 @@ if active_dir.is_dir():
     sys.exit(1)
 
 # Check for root-level /scripts directory violation
-# Scripts should be in workflows/scripts/ or docs/scripts/, not at root level
+# Scripts should live under workflows/ (e.g., workflows/scripts/, workflows/cost/, workflows/quality/) or docs/scripts/, not at root level
 # Per folder structure discipline: "Nothing new goes in the project root"
 scripts_dir = Path("scripts")
 if scripts_dir.is_dir():
     print("❌ Root-level 'scripts/' directory detected.")
     print(
-        "   Scripts should be in workflows/scripts/ or docs/scripts/, not at root level."
+        "   Scripts should live under workflows/ (e.g., workflows/scripts/, workflows/cost/, workflows/quality/) or docs/scripts/, not at root level."
     )
     print("   Per folder structure discipline: 'Nothing new goes in the project root'")
-    print("   Please move files from scripts/ to workflows/scripts/ or docs/scripts/")
+    print(
+        "   Please move files from scripts/ to workflows/ (for example, workflows/scripts/, workflows/cost/, workflows/quality/) or docs/scripts/."
+    )
     sys.exit(1)
 
 # Recursively check all directories in the project

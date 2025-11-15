@@ -1,7 +1,7 @@
 # Taxonomy Hook Improvements - Execution Status
 
 **Date**: 2025-11-13
-**Status**: ✅ **Code Complete** | ⚠️ **Commit Blocked by scripts/ Violation**
+**Status**: ✅ **Code & Migration Complete** | ✅ **Taxonomy Hook Unblocked**
 
 ---
 
@@ -34,15 +34,15 @@
 
 ## ⚠️ Current Blocker
 
-**Issue**: Cannot commit changes because taxonomy hook detects `scripts/` directory violation
+**Issue**: (Resolved) Taxonomy hook previously failed due to `scripts/` directory violation
 
-**Root Cause**: The `scripts/` directory exists at root level, violating "Nothing new goes in root" rule
+**Root Cause**: The `scripts/` directory existed at root level, violating "Nothing new goes in root" rule
 
-**Impact**:
-- Hook improvements are complete and tested
-- File cleanup completed
-- Documentation created
-- But cannot commit until `scripts/` directory is migrated
+**Impact** (before migration):
+- Hook improvements were complete and tested
+- File cleanup was completed
+- Documentation was created
+- But commits were blocked until `scripts/` directory was migrated under `workflows/`
 
 ---
 
@@ -50,15 +50,15 @@
 
 ### Immediate (to unblock commit):
 
-1. **Migrate scripts/ directory to workflows/scripts/**
+1. **Migrate scripts/ directory under workflows/**
    - **Rationale**: Resolve taxonomy violation to allow commits
-   - **Action**: Move all files from `scripts/` to `workflows/scripts/`
+   - **Action**: Move all files from `scripts/` to appropriate locations under `workflows/` (for example, `workflows/scripts/`, `workflows/cost/`, `workflows/quality/`, `workflows/hooks/`)
    - **Scope**: All files in `scripts/` directory
    - **Estimated Time**: 30-60 minutes
 
 2. **Update all references to scripts/**
    - **Rationale**: Update paths in scripts, Makefiles, documentation
-   - **Action**: Find and replace `scripts/` with `workflows/scripts/`
+   - **Action**: Update references from `scripts/` to the new `workflows/` locations used in this repository (for example, `workflows/scripts/`, `workflows/cost/`, `workflows/quality/`, `workflows/hooks/`)
    - **Scope**: All files referencing `scripts/` path
    - **Estimated Time**: 30-60 minutes
 

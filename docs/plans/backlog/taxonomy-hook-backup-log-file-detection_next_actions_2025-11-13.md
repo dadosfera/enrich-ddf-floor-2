@@ -10,15 +10,15 @@
 
 ## Next actions (not-yet-tried / unplanned)
 
-- [ ] **Migrate scripts/ directory to workflows/scripts/**
+- [x] **Migrate scripts/ directory under workflows/**
   - **Rationale**: Resolve taxonomy violation blocking commits
-  - **Scope**: Move all files from `scripts/` to `workflows/scripts/`
+  - **Scope**: Move all files from `scripts/` to appropriate locations under `workflows/` (for example, `workflows/scripts/`, `workflows/cost/`, `workflows/quality/`, `workflows/hooks/`)
   - **Owner**: AI Agent + Human Review
   - **Estimated Time**: 30-60 minutes
 
-- [ ] **Update all references to scripts/ path**
+- [x] **Update all references to scripts/ path**
   - **Rationale**: Update paths in scripts, Makefiles, documentation after migration
-  - **Scope**: Find and replace `scripts/` with `workflows/scripts/` in all files
+  - **Scope**: Replace `scripts/` references with the new `workflows/` locations used in this repository (for example, `workflows/scripts/`, `workflows/cost/`, `workflows/quality/`, `workflows/hooks/`)
   - **Owner**: AI Agent
   - **Estimated Time**: 30-60 minutes
 
