@@ -114,7 +114,7 @@ Paste this YAML under the `files:` list in the index (adjust description):
 - In each affected file, add a small “Related” or “See also” section with a link back to the new entry, for example:
 
 ```markdown
-Related: docs/recurrent*errors/${DATE}*${ERR_SLUG}.md
+Related: docs/recurrent_errors/${DATE}_${ERR_SLUG}.md
 ```
 
 9. Optional cross-index updates (when relevant)

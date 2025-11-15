@@ -66,17 +66,18 @@ if active_dir.is_dir():
     sys.exit(1)
 
 # Check for root-level /scripts directory violation
-# Scripts should live under workflows/ (e.g., workflows/scripts/, workflows/cost/, workflows/quality/) or docs/scripts/, not at root level
-# Per folder structure discipline: "Nothing new goes in the project root"
+# Scripts should use the dedicated /scripts/{category}/ layout, not live as loose scripts at the project root.
+# Workflows are responsible for orchestrating scripts from /scripts/{category}/ or from workflow-specific
+# directories under workflows/{category}/{workflow}/.
 scripts_dir = Path("scripts")
 if scripts_dir.is_dir():
     print("❌ Root-level 'scripts/' directory detected.")
     print(
-        "   Scripts should live under workflows/ (e.g., workflows/scripts/, workflows/cost/, workflows/quality/) or docs/scripts/, not at root level."
+        "   Scripts should live under the top-level 'scripts/{category}/' layout, not directly at the project root."
     )
-    print("   Per folder structure discipline: 'Nothing new goes in the project root'")
     print(
-        "   Please move files from scripts/ to workflows/ (for example, workflows/scripts/, workflows/cost/, workflows/quality/) or docs/scripts/."
+        "   Workflows should orchestrate scripts from 'scripts/{category}/' or from workflow-specific "
+        "directories (for example, 'workflows/<category>/<workflow>/')."
     )
     sys.exit(1)
 
