@@ -1,4 +1,4 @@
-# /test
+# /tes-test
 
 Create and run tests derived from this conversation’s changes. Produce unit tests, integration/E2E tests, and regression tests tied to fixes and improvements. Do not stop until all new and related existing tests pass.
 

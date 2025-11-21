@@ -21,9 +21,13 @@
   "isort.args": [],
   "python.sortImports.provider": "none",
   "[python]": {
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.rulers": [
+      88,
+      120
+    ],
     "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.codeActionsOnSave": {
-      "source.organizeImports": "explicit"
-    }
+    "editor.formatOnSave": false
   }
 }

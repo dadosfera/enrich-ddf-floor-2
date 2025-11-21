@@ -1,4 +1,4 @@
-# /document
+# /doc-document
 
 Document fixes and improvements from this conversation across multiple locations: README.md and AGENTS.md files in relevant subfolders, script console logs and helper functions, and other documentation files. Ensure comprehensive backlinking and cross-references.
 

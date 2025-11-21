@@ -1,4 +1,4 @@
-# /git-sync
+# /gis-git-sync
 
 **CRITICAL: This command displays guidance only. The AI must manually execute each step individually using terminal commands.**
 
