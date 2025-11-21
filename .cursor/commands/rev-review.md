@@ -66,7 +66,7 @@ gtimeout 5 ls -1 docs/plans 2>/dev/null | head -50
 ```markdown
 **Pending Tasks – recommended to current `/active` plan**
 
-1. Fix linter errors in `commands/gis-review.md` – introduced during command update
+1. Fix linter errors in `commands/rev-review.md` – introduced during command update
 2. Update README.md to reference new review command structure – mentioned but not completed
 
 **Proposed Tasks – recommended to current `/active` plan** 3. Add pre-commit hook to validate command format – suggested as quality improvement

@@ -23,7 +23,7 @@ When adding a new command file to this directory, you **must**:
 
 See the complete workflow with detailed instructions:
 
-- **[Adding a New Command Guide](../guides/cursor_commands_sync.md#adding-a-new-command)**
+- **[Adding a New Command Guide](docs-fera/guides/cursor_commands_sync.md#adding-a-new-command)**
 
 ### Pre-Commit Validation
 
@@ -65,5 +65,5 @@ See existing commands in this directory for examples.
 
 ## Current Commands
 
-See `guides/cursor_commands_sync.md` for the complete list of canonical commands.
+See `docs-fera/guides/cursor_commands_sync.md` for the complete list of canonical commands.
 ```

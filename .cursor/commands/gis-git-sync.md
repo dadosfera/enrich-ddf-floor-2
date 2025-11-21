@@ -23,19 +23,21 @@ gtimeout 5 git rev-parse --show-toplevel
 gtimeout 10 git fetch --all --prune
 ```
 
-2.1) **AI executes**: Review current stashes (optional)
+2.1) **AI executes**: Review current stashes (MANDATORY)
 
 ```bash
 gtimeout 10 git stash list
 ```
 
-2.2) **AI executes**: Create a temporary stash before risky operations (optional)
+**Guidance**: If stash count > 10 or old stashes exist, run `/gst-git-stash` first to triage.
+
+2.2) **AI executes**: Create a temporary stash before risky operations (MANDATORY)
 
 ```bash
 gtimeout 10 git stash push -m "WIP before git-sync"
 ```
 
-2.3) **AI executes**: Inspect or restore a stash (choose one)
+2.3) **AI executes**: Inspect or restore a stash (choose one) (MANDATORY if stashes exist)
 
 ```bash
 gtimeout 10 git stash show -p stash@{0}
@@ -45,7 +47,7 @@ gtimeout 10 git stash show -p stash@{0}
 gtimeout 30 git restore -p --source=stash@{0} -- .
 ```
 
-2.4) **AI executes**: Drop the stash when done (optional)
+2.4) **AI executes**: Drop the stash when done (MANDATORY if stash applied/empty)
 
 ```bash
 gtimeout 5 git stash drop stash@{0}
@@ -176,4 +178,4 @@ gtimeout 60 pre-commit run --all-files
 
 ---
 
-**Last updated**: 2025-11-02 18:05:00
+**Last updated**: 2025-11-21
