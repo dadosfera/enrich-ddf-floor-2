@@ -23,7 +23,7 @@ When adding a new command file to this directory, you **must**:
 
 See the complete workflow with detailed instructions:
 
-- **[Adding a New Command Guide](docs-fedocs-fera/guides/cursor_commands_sync.md#adding-a-new-command)**
+- **[Adding a New Command Guide](../guides/cursor_commands_sync.md#adding-a-new-command)**
 
 ### Pre-Commit Validation
 
@@ -65,5 +65,9 @@ See existing commands in this directory for examples.
 
 ## Current Commands
 
-See `docs-fedocs-fera/guides/cursor_commands_sync.md` for the complete list of canonical commands.
+See `guides/cursor_commands_sync.md` for the complete list of canonical commands.
+
+## Command Naming Convention
+
+All commands use unique 3-letter abbreviation prefixes (e.g., `arc-archive`, `rev-review`, `ded-dedup`). For information about the migration from `gis-*` prefixes, see the [Command Migration Guide](../guides/command_migration_guide.md).
 ```

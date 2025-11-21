@@ -49,14 +49,6 @@ gtimeout 15 git show --name-only --pretty=fuller stash@{n}^3
 
 ### 3. Triage Actions
 
-**Pre-Action Check**:
-```bash
-# Ensure working directory is clean before branching or applying
-gtimeout 10 git status --porcelain
-# If output not empty:
-# gtimeout 10 git stash push -m "WIP during triage"
-```
-
 **Option A: Convert to Branch (Recommended for valuable work)**
 
 ```bash
@@ -65,13 +57,11 @@ gtimeout 10 git status --porcelain
 gtimeout 10 git stash branch "stash/$(date +%Y%m%d)/<short-context>" stash@{n}
 ```
 
-**Option B: Selective Apply & Restore**
+**Option B: Selective Apply**
 
 ```bash
-# Restore specific file from stash
-gtimeout 15 git checkout stash@{n} -- path/to/file
-# OR
-gtimeout 15 git show stash@{n}:path/to/file > path/to/file
+# Restore into working tree
+gtimeout 30 git restore -p --source=stash@{n} -- .
 ```
 
 **Option C: Drop (Only after review)**
@@ -80,15 +70,7 @@ gtimeout 15 git show stash@{n}:path/to/file > path/to/file
 gtimeout 5 git stash drop stash@{n}
 ```
 
-### 4. Resolution & Cleanup
-
-If you created a branch or recovered files:
-
-1.  **Cherry-pick/Merge**: Bring valuable changes back to main/feature branch.
-2.  **Verify**: Ensure no data loss.
-3.  **Cleanup**: Delete temporary stash branches if merged.
-
-### 5. Validation
+### 4. Validation
 
 ```bash
 # Verify final state
