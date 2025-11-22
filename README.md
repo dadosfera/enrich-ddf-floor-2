@@ -220,3 +220,6 @@ We welcome contributions! Please see our [Contributing Guide](docs/CONTRIBUTING.
 - **Lessons Learned**: [`docs/lessons_learned/`](docs/lessons_learned/)
 - **Plans**: [`docs/plans/`](docs/plans/)
 - **Reports**: [`docs/reports/`](docs/reports/)
+
+## CI/CD
+This project uses **Jenkins** for CI/CD. GitHub Actions are disabled for security and cost reasons.
