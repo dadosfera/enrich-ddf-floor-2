@@ -91,3 +91,4 @@ credentials/
 *.cer
 *.p12
 *.pfx
+.mypy_cache/
