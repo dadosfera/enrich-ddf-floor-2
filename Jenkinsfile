@@ -24,15 +24,20 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo '🧪 Running tests...'
-                // Detect project type and run appropriate tests
+                echo '🧪 Running fast test layer...'
                 script {
-                    if (fileExists('package.json')) {
-                        sh 'npm install && npm test'
-                    } else if (fileExists('requirements.txt')) {
-                        sh 'pip install -r requirements.txt && pytest'
+                    if (fileExists('tests/run_tests.sh')) {
+                        // Use standard fast test layer if available
+                        sh 'bash tests/run_tests.sh infrastructure'
                     } else {
-                        echo '⚠️ Unknown project type, skipping tests'
+                        // Fallback for safety
+                        if (fileExists('package.json')) {
+                            sh 'npm install && npm test'
+                        } else if (fileExists('requirements.txt')) {
+                            sh 'pip install -r requirements.txt && pytest'
+                        } else {
+                            echo '⚠️ Unknown project type, skipping tests'
+                        }
                     }
                 }
             }
