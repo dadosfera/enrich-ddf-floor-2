@@ -1,3 +1,11 @@
+# Ruff Shared Configuration
+# This file is extended by pyproject.toml via: extend = "config/lint/ruff-shared.toml"
+# DO NOT wrap this in [tool.ruff] - the extend mechanism expects only nested tables
+#
+# Canonical source: docs-fera/config/lint/ruff-shared.toml
+# Reference only: scripts/repository_management/sync_shared_ruff_config.sh
+# NOTE: Bulk multi-repo operations require explicit user authorization in chat and CLI
+
 target-version = "py38"
 line-length = 88
 exclude = [

@@ -6,6 +6,15 @@
 
 set -euo pipefail
 
+# Script and project directories
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+
+# Log directory setup (Level 2 Compliance)
+LOG_DIR="$PROJECT_ROOT/logs"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/run_$(date +%Y%m%d_%H%M%S).log"
+
 # Color codes for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -13,22 +22,47 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Logging functions
+# Logging functions with timestamps (Level 2 Compliance)
 log_info() {
-    echo -e "${BLUE}[INFO]${NC} $1"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo -e "${BLUE}[$timestamp] [INFO]${NC} $1"
+    echo "[$timestamp] [INFO] $1" >> "$LOG_FILE"
 }
 
 log_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo -e "${GREEN}[$timestamp] [SUCCESS]${NC} $1"
+    echo "[$timestamp] [SUCCESS] $1" >> "$LOG_FILE"
 }
 
 log_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo -e "${YELLOW}[$timestamp] [WARNING]${NC} $1"
+    echo "[$timestamp] [WARNING] $1" >> "$LOG_FILE"
 }
 
 log_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    echo -e "${RED}[$timestamp] [ERROR]${NC} $1" >&2
+    echo "[$timestamp] [ERROR] $1" >> "$LOG_FILE"
 }
+
+log_debug() {
+    if [[ "${DEBUG:-false}" == "true" ]]; then
+        local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+        echo -e "[$timestamp] [DEBUG] $1"
+        echo "[$timestamp] [DEBUG] $1" >> "$LOG_FILE"
+    fi
+}
+
+# Signal handlers (Level 2 Compliance)
+cleanup() {
+    log_warning "Received signal, cleaning up..."
+    exit 130
+}
+
+trap cleanup SIGINT SIGTERM
+trap 'log_info "Script finished with exit code: $?"' EXIT
 
 # Default values
 PLATFORM="local-macos"

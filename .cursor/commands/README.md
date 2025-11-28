@@ -10,8 +10,9 @@ This directory contains the **canonical source** for all Cursor IDE commands. Co
 
 When adding a new command file to this directory, you **must**:
 
-1. ✅ Create command file in `commands/` (this directory) with a unique 3-letter abbreviation prefix (e.g., `arc-archive.md`)
-2. ✅ Update command count in `guides/cursor_commands_sync.md`
+1. ✅ Create command file in `commands/` (this directory) with a unique 3-letter abbreviation prefix (e.g., `arc_archive.md`)
+2. ✅ Run collision check: `python3 _dev/scripts/commands/check_command_collisions.py`
+3. ✅ Update command count in `guides/cursor_commands_sync.md`
 3. ✅ Add command to list in "Current Commands" section
 4. ✅ Update "Last Updated" date in sync guide
 5. ✅ Run: `bash scripts/distribution/distribute_platform_commands.sh`
@@ -38,7 +39,7 @@ A pre-commit hook automatically validates that new commands follow this workflow
 Commands should follow this structure:
 
 ````markdown
-# /abc-command-name
+# /abc_command_name
 
 Brief description of what the command does.
 
@@ -69,5 +70,9 @@ See `guides/cursor_commands_sync.md` for the complete list of canonical commands
 
 ## Command Naming Convention
 
-All commands use unique 3-letter abbreviation prefixes (e.g., `arc-archive`, `rev-review`, `ded-dedup`). For information about the migration from `gis-*` prefixes, see the [Command Migration Guide](../guides/command_migration_guide.md).
+All commands use unique 3-letter abbreviation prefixes (e.g., `arc_archive`, `rev_review`, `ded_dedup`).
+
+**Collision Avoidance**: Ensure your abbreviation doesn't appear as a substring in other command names (unless they share the same prefix). Use `_dev/scripts/commands/check_command_collisions.py` to verify.
+
+For information about the migration from `gis-*` prefixes, see the [Command Migration Guide](../guides/command_migration_guide.md).
 ```
