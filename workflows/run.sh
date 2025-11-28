@@ -69,6 +69,7 @@ PLATFORM="local-macos"
 ENVIRONMENT="dev"
 TOLERANT=false
 VERBOSE=false
+SETUP=false
 DEBUG=false
 FULL=false
 TEST=false
@@ -130,6 +131,7 @@ parse_args() {
                 shift
                 ;;
             --verbose)
+    --setup) SETUP=true ;;
                 VERBOSE=true
                 shift
                 ;;
