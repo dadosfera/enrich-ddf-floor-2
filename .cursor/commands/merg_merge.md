@@ -1,9 +1,9 @@
 # /merg_merge
 
 <!-- COMMAND_ID: 035 -->
-<!-- COMMAND_VERSION: 1.4.0 -->
+<!-- COMMAND_VERSION: 1.5.0 -->
 <!-- COMMAND_TYPE: me_merge -->
-<!-- UPDATED: 2025-12-11 - Added remote CI check and target branch sync -->
+<!-- UPDATED: 2025-12-11 - Enforced zero-trust data loss prevention (untracked stash, strict sync) -->
 
 Safely merge an agent branch into the default branch using zero-trust validation, isolation testing, manual conflict handling, and rollback points. This follows the practices in the referenced mini prompt and the terminal command safety guidelines (timeouts, no chaining, short commands).
 
@@ -63,7 +63,7 @@ gtimeout 10 gh api "repos/$REPO/branches/$TARGET_BRANCH/protection/required_pull
 
 Note: To configure bypass (admin-only), follow the procedure in `mini_prompt/lv2/agent_branch_merge_mini_prompt.md` (“GitHub CLI User Configuration Guide”).
 
-4. Create safety backup and stash current work
+4. Create safety backup and stash current work (including untracked files)
 
 ```bash
 gtimeout 5 git branch --show-current
@@ -74,7 +74,13 @@ gtimeout 10 git branch backup-pre-merge-$(date +%Y%m%d_%H%M%S)
 ```
 
 ```bash
-gtimeout 15 git stash push -m "Pre-merge safety backup"
+gtimeout 15 git stash push --include-untracked -m "Pre-merge safety backup (including untracked)"
+```
+
+4a. Verify working directory is clean
+
+```bash
+gtimeout 5 git status --porcelain | grep . && { echo "Working directory not clean after stash. Aborting to prevent data loss."; exit 1; } || echo "Working directory clean."
 ```
 
 5. Fetch all remote branches to ensure up-to-date branch information
@@ -204,14 +210,19 @@ gtimeout 30 grep -c "FAILED" .tmp/agent_tests.log || true
 gtimeout 30 grep -c "REGRESSION" .tmp/test_diff.log || true
 ```
 
-12. Return to target branch and ensure clean tree
+12. Return to target branch and verify synchronization
 
 ```bash
 gtimeout 10 git checkout "$TARGET_BRANCH"
 ```
 
 ```bash
-gtimeout 15 git pull origin "$TARGET_BRANCH" --ff-only
+# Zero-Trust Sync: Ensure local target branch matches remote exactly before merging
+gtimeout 15 git fetch origin "$TARGET_BRANCH"
+```
+
+```bash
+gtimeout 15 git pull origin "$TARGET_BRANCH" --ff-only || { echo "Cannot fast-forward $TARGET_BRANCH. Local branch diverged. Aborting."; exit 1; }
 ```
 
 ```bash
@@ -436,5 +447,5 @@ git push origin --delete $(git tag -l 'pre-merge-checkpoint-*') 2>/dev/null || t
 
 ---
 
-**Last updated**: 2025-12-11 (v1.4.0 - Added remote CI check and target branch sync)  
-**Previous**: 2025-12-11 (v1.3.0 - Added comprehensive cleanup warnings)
+**Last updated**: 2025-12-11 (v1.5.0 - Enforced zero-trust data loss prevention)  
+**Previous**: 2025-12-11 (v1.4.0 - Added remote CI check and target branch sync)
