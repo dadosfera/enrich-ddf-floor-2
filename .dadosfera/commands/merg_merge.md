@@ -1,9 +1,9 @@
 # /merg_merge
 
 <!-- COMMAND_ID: 035 -->
-<!-- COMMAND_VERSION: 1.5.0 -->
+<!-- COMMAND_VERSION: 1.6.0 -->
 <!-- COMMAND_TYPE: me_merge -->
-<!-- UPDATED: 2025-12-11 - Enforced zero-trust data loss prevention (untracked stash, strict sync) -->
+<!-- UPDATED: 2025-12-11 - Added mandatory final cleanup verification checklist -->
 
 Safely merge an agent branch into the default branch using zero-trust validation, isolation testing, manual conflict handling, and rollback points. This follows the practices in the referenced mini prompt and the terminal command safety guidelines (timeouts, no chaining, short commands).
 
@@ -301,6 +301,105 @@ gtimeout 15 git push origin "$AGENT_BRANCH:refs/heads/deprecated-$AGENT_BRANCH"
 gtimeout 15 git push origin --delete "$AGENT_BRANCH"
 ```
 
+21. 🧹 MANDATORY: Final Cleanup Verification Checklist
+
+**AI agents MUST complete ALL of the following before considering merge done. No exceptions.**
+
+```bash
+# ✅ STEP 1: Verify no test branches left locally
+echo "=== Checking for leftover test branches ==="
+gtimeout 10 git branch --list "test-agent-merge-*" | grep . && { echo "❌ ERROR: Test branches still exist!"; exit 1; } || echo "✅ No test branches"
+```
+
+```bash
+# ✅ STEP 2: Verify no backup branches left locally  
+echo "=== Checking for leftover backup branches ==="
+gtimeout 10 git branch --list "backup-pre-merge-*" | grep . && { echo "⚠️  WARNING: Backup branches exist (expected if using conservative cleanup)"; } || echo "✅ No backup branches"
+```
+
+```bash
+# ✅ STEP 3: Verify agent branch is deleted remotely
+echo "=== Checking if agent branch was cleaned remotely ==="
+gtimeout 10 git ls-remote origin "$AGENT_BRANCH" | grep . && { echo "⚠️  WARNING: Agent branch still exists on remote (may be intentional)"; } || echo "✅ Agent branch cleaned remotely"
+```
+
+```bash
+# ✅ STEP 4: Verify working directory is absolutely clean
+echo "=== Final working directory check ==="
+gtimeout 10 git status --porcelain | grep . && { echo "❌ ERROR: Working directory not clean!"; exit 1; } || echo "✅ Working directory clean"
+```
+
+```bash
+# ✅ STEP 5: List all merge-related artifacts for audit
+echo "=== Merge Artifacts Summary (for audit trail) ==="
+echo "Local branches with 'backup' or 'pre-merge':"
+gtimeout 10 git branch -l | grep -E "(backup|pre-merge)" || echo "  (none)"
+echo ""
+echo "Remote branches with 'deprecated':"
+gtimeout 10 git branch -r | grep deprecated || echo "  (none)"
+echo ""
+echo "Recent merge checkpoint tags:"
+gtimeout 10 git tag -l 'pre-merge-checkpoint-*' | tail -3 || echo "  (none)"
+echo ""
+echo "Recent build tags:"
+gtimeout 10 git tag -l 'build-*' | tail -3 || echo "  (none)"
+```
+
+```bash
+# ✅ STEP 6: Verify main branch is properly synced
+echo "=== Target branch sync check ==="
+LOCAL_HASH=$(git rev-parse "$TARGET_BRANCH")
+REMOTE_HASH=$(git rev-parse "origin/$TARGET_BRANCH")
+if [ "$LOCAL_HASH" = "$REMOTE_HASH" ]; then
+  echo "✅ Local $TARGET_BRANCH matches remote"
+else
+  echo "❌ ERROR: Local and remote $TARGET_BRANCH differ! This should not happen."
+  exit 1
+fi
+```
+
+```bash
+# ✅ STEP 7: Check for uncommitted work one final time
+echo "=== Uncommitted work check ==="
+STASH_COUNT=$(gtimeout 10 git stash list | wc -l)
+if [ "$STASH_COUNT" -gt 0 ]; then
+  echo "⚠️  WARNING: $STASH_COUNT stash(es) found. Review with: git stash list"
+else
+  echo "✅ No stashes"
+fi
+```
+
+```bash
+# ✅ STEP 8: Print merge summary
+echo ""
+echo "╔════════════════════════════════════════════════════════════════════════╗"
+echo "║                    ✅ MERGE COMPLETE & VERIFIED                         ║"
+echo "╠════════════════════════════════════════════════════════════════════════╣"
+echo "║ Agent Branch: $AGENT_BRANCH"
+echo "║ Target Branch: $TARGET_BRANCH ($(git rev-parse --short $TARGET_BRANCH))"
+echo "║ Merge Date: $(date)"
+echo "║                                                                         ║"
+echo "║ Post-Merge Actions Completed:                                          ║"
+echo "║   ✅ Test branches cleaned up                                          ║"
+echo "║   ✅ Working directory pristine                                        ║"
+echo "║   ✅ Target branch synchronized with remote                           ║"
+echo "║   ✅ All safety checks passed                                         ║"
+echo "║                                                                         ║"
+echo "║ Remaining Artifacts (for reference):                                   ║"
+echo "║   - Backup branches: Delete after 1-7 days                            ║"
+echo "║   - Deprecated remote branch: Delete after 1-7 days                   ║"
+echo "║   - Checkpoint tags: Delete after 30 days                             ║"
+echo "║   - Environment tags (env/dev*): Keep for deployment tracking         ║"
+echo "║                                                                         ║"
+echo "║ Next Steps:                                                             ║"
+echo "║   1. Verify tests pass in CI/CD                                       ║"
+echo "║   2. Monitor deployments                                              ║"
+echo "║   3. Schedule cleanup of temporary artifacts (see above)              ║"
+echo "║                                                                         ║"
+echo "╚════════════════════════════════════════════════════════════════════════╝"
+echo ""
+```
+
 ## ⚠️ IMPORTANT: Understanding Post-Merge Artifacts
 
 ### What Gets Left Behind
@@ -447,5 +546,5 @@ git push origin --delete $(git tag -l 'pre-merge-checkpoint-*') 2>/dev/null || t
 
 ---
 
-**Last updated**: 2025-12-11 (v1.5.0 - Enforced zero-trust data loss prevention)  
-**Previous**: 2025-12-11 (v1.4.0 - Added remote CI check and target branch sync)
+**Last updated**: 2025-12-11 (v1.6.0 - Added mandatory final cleanup checklist)  
+**Previous**: 2025-12-11 (v1.5.0 - Enforced zero-trust data loss prevention)
