@@ -1,6 +1,6 @@
 # /merg_merge
 
-<!-- COMMAND_ID: 035 -->
+<!-- COMMAND_ID: 033 -->
 <!-- COMMAND_VERSION: 1.6.0 -->
 <!-- COMMAND_TYPE: me_merge -->
 <!-- UPDATED: 2025-12-11 - Added mandatory final cleanup verification checklist -->
@@ -312,7 +312,7 @@ gtimeout 10 git branch --list "test-agent-merge-*" | grep . && { echo "❌ ERROR
 ```
 
 ```bash
-# ✅ STEP 2: Verify no backup branches left locally  
+# ✅ STEP 2: Verify no backup branches left locally
 echo "=== Checking for leftover backup branches ==="
 gtimeout 10 git branch --list "backup-pre-merge-*" | grep . && { echo "⚠️  WARNING: Backup branches exist (expected if using conservative cleanup)"; } || echo "✅ No backup branches"
 ```
@@ -546,5 +546,5 @@ git push origin --delete $(git tag -l 'pre-merge-checkpoint-*') 2>/dev/null || t
 
 ---
 
-**Last updated**: 2025-12-11 (v1.6.0 - Added mandatory final cleanup checklist)  
+**Last updated**: 2025-12-11 (v1.6.0 - Added mandatory final cleanup checklist)
 **Previous**: 2025-12-11 (v1.5.0 - Enforced zero-trust data loss prevention)

@@ -2,6 +2,17 @@
 
 This directory contains the **canonical source** for all Cursor IDE commands. Commands are distributed to platform-specific directories (`.cursor/commands/` and `.dadosfera/commands/`) and then to other repositories.
 
+## ⚠️ CRITICAL: Distribution Workflow Required
+
+**AI agents must NEVER directly edit files in:**
+
+- `.cursor/commands/`
+- `.dadosfera/commands/`
+
+**These are read-only generated directories. Always edit the source files in `commands/` and run the distribution script.**
+
+See: `guides/distribution_workflow_unified.md` for complete workflow.
+
 ## Adding a New Command
 
 **⚠️ MANDATORY WORKFLOW** - Follow all steps or your commit will be blocked by the pre-commit hook.
@@ -10,15 +21,15 @@ This directory contains the **canonical source** for all Cursor IDE commands. Co
 
 When adding a new command file to this directory, you **must**:
 
-1. ✅ Create command file in `commands/` (this directory) with a unique 3-letter abbreviation prefix (e.g., `arc_archive.md`)
+1. ✅ Create command file in `commands/` (this directory) with a unique 4-letter abbreviation prefix (e.g., `arch_archive.md`)
 2. ✅ Run collision check: `python3 _dev/scripts/commands/check_command_collisions.py`
 3. ✅ Update command count in `guides/cursor_commands_sync.md`
-3. ✅ Add command to list in "Current Commands" section
-4. ✅ Update "Last Updated" date in sync guide
-5. ✅ Run: `bash scripts/distribution/distribute_platform_commands.sh`
-6. ✅ Verify files exist in `.cursor/commands/` and `.dadosfera/commands/`
-7. ✅ Update `README.md` (if command should be discoverable)
-8. ✅ Commit all changes together
+4. ✅ Add command to list in "Current Commands" section
+5. ✅ Update "Last Updated" date in sync guide
+6. ✅ Run: `bash _dev/scripts/distribution/distribute_platform_commands.sh`
+7. ✅ Verify files exist in `.cursor/commands/` and `.dadosfera/commands/`
+8. ✅ Update `README.md` (if command should be discoverable)
+9. ✅ Commit all changes together
 
 ### Full Documentation
 
@@ -68,11 +79,112 @@ See existing commands in this directory for examples.
 
 See `guides/cursor_commands_sync.md` for the complete list of canonical commands.
 
+## Usage Examples
+
+### Expanding Plans with `/expp_xpand_plan`
+
+The `/expp_xpand_plan` command enriches existing plans with detailed guidelines, strategy validation, and research findings.
+
+**When to use**:
+- After creating a new plan that feels sparse (< 500 lines)
+- Before starting execution on complex or unfamiliar tasks
+- When tasks lack clear acceptance criteria or implementation steps
+
+**Basic usage**:
+```
+
+/expp_xpand_plan plans/active/QW_2h_HIGH_add_authentication.md
+
+```
+
+**With options**:
+```
+
+# Without web search (offline mode)
+
+/expp_xpand_plan plans/active/QW_2h_HIGH_add_authentication.md false
+
+# Minimal expansion (faster, less detail)
+
+/expp_xpand_plan plans/active/QW_2h_HIGH_add_authentication.md true minimal
+
+# Comprehensive expansion (maximum detail)
+
+/expp_xpand_plan plans/active/QW_2h_HIGH_add_authentication.md true comprehensive
+
+````
+
+**What it does**:
+1. Analyzes existing plan structure and identifies gaps
+2. Expands tasks with acceptance criteria, implementation steps, and validation methods
+3. Adds or enhances strategy validation section (macro view, alternatives, risks)
+4. Performs web searches for key technical decisions (if enabled)
+5. Adds edge cases, testing strategies, and deployment checklists
+6. Ensures plan meets minimum 500-line standard for comprehensive planning
+
+**Typical workflow**:
+1. `/reva_review_active_conversation` → Extract tasks from conversation
+2. `/pfac_plan_from_active_tasks_conversation` → Create initial plan
+3. **`/expp_xpand_plan`** → Enrich plan with details and research
+4. Execute comprehensive plan with confidence
+
+For complete documentation, see `commands/expp_xpand_plan.md`.
+
 ## Command Naming Convention
 
-All commands use unique 3-letter abbreviation prefixes (e.g., `arc_archive`, `rev_review`, `ded_dedup`).
+All commands use unique **4-letter abbreviation prefixes** (e.g., `arch_archive`, `reva_review_active_conversation`, `dedu_dedup`).
 
-**Collision Avoidance**: Ensure your abbreviation doesn't appear as a substring in other command names (unless they share the same prefix). Use `_dev/scripts/commands/check_command_collisions.py` to verify.
+**MANDATORY**: All command prefixes must be exactly 4 letters. This is enforced by the pre-commit hook.
+
+**Collision Avoidance**: Ensure your abbreviation doesn't appear as a substring in other command names (unless they share the same prefix). Use `_dev/scripts/commands/check_command_collisions.py` to verify before committing.
+
+### Using Commands in the Palette
+
+**Always use the 4-letter prefix for unique matches:**
+
+- Type **`/pfac`** → Gets only `pfac_plan_from_active_tasks_conversation`
+- Type **`/expp`** → Gets only `expp_xpand_plan`
+- Type **`/reva`** → Gets only `reva_review_active_conversation`
+
+**Why this matters**: Typing `/plan` will match multiple commands (e.g., `expp_xpand_plan` and `pfac_plan_from_active_tasks_conversation`) because "plan" appears in both names. The 4-letter prefix system ensures you get exactly one match and prevents collisions.
 
 For information about the migration from `gis-*` prefixes, see the [Command Migration Guide](../guides/command_migration_guide.md).
-```
+
+**Note**: For a sample repository implementation, refer to `solver-mod-bet` (previously `prompts-fera` was used, but it is now deprecated).
+
+## Testing Commands
+
+Command testing uses a specialized LLM testing framework with probabilistic evaluation. Testing documentation is centralized to avoid distributing test guidelines with each command file (reducing token costs).
+
+### Local Testing with CLI Tools
+
+The fastest way to test AI agent commands locally is to use the **CLI version** of the agent:
+
+| IDE / Extension | CLI Tool |
+| :--- | :--- |
+| **Cursor IDE** | `cursor` CLI |
+| **VS Code + Cline** | `cline` CLI |
+| **VS Code + AutoDriveDDF** | `autodriveddf` CLI |
+
+**Why CLI?** Faster iteration, scriptable, avoids creating real artifacts in IDE.
+
+See `tests/commands/README.md` for detailed CLI testing examples and best practices.
+
+### Testing Resources
+
+- `tests/commands/README.md` - Centralized testing guidelines (including CLI testing)
+- `tests/commands/llm_testing_framework.md` - LLM-as-judge pattern documentation
+- `tests/commands/evaluation_criteria/` - Scoring rubrics per command
+- `recurrent_errors/2025-11-27_ai_agent_command_testing_generates_real_artifacts.md` - Common testing pitfalls
+
+### Running Tests
+
+```bash
+# Full test (requires cursor-agent)
+bash tests/commands/test_xect_execute_plan.sh
+
+# Structure tests only (fast, no cursor-agent needed)
+bash tests/commands/test_xect_execute_plan.sh --structure-only
+````
+
+For details on the three-tier testing strategy (structure validation, behavior sampling, LLM-as-judge), see `tests/commands/README.md`.
