@@ -48,12 +48,10 @@ Generate a simple, read-only report:
 **Total Pending**: N
 
 N. [Status] Task description
-
-- Related context or reason (1–2 lines max)
+   - Related context or reason (1–2 lines max)
 ```
 
 **Status indicators**:
-
 - `[ ]` – Not started
 - `[~]` – In progress / Partially done
 - `[!]` – Blocked (waiting for external input, decision, or dependency)
@@ -67,11 +65,9 @@ N. [Status] Task description
 **Total Pending**: 3
 
 1. [ ] Implement user authentication endpoint
-
    - HTTP POST /auth/login; needs database schema review first
 
 2. [~] Add unit tests for payment processing
-
    - 60% done; still need to cover edge cases for refunds
 
 3. [!] Deploy to staging environment
@@ -107,7 +103,6 @@ If the conversation completed work (e.g., merged changes, archived findings), br
 ## Workflow checklist
 
 ### For AI Agent:
-
 - [ ] Scan conversation for explicit pending markers
 - [ ] Apply strict filters (no suggestions, no classification, no routing)
 - [ ] Report only conversation-scoped pending items
@@ -116,18 +111,17 @@ If the conversation completed work (e.g., merged changes, archived findings), br
 - [ ] Do NOT create or modify any files
 
 ### For User:
-
 - [ ] Review the pending list
 - [ ] Decide: continue working, archive the conversation, or defer to a plan
 - [ ] Use `/reva_review_active_conversation` if you want detailed routing suggestions
 
 ## Quick Decision Tree
 
-| **Your Need**                                           | **Use This Command**                                       |
-| ------------------------------------------------------- | ---------------------------------------------------------- |
-| "What's left to do right now?"                          | `/chkp_check_pending` ✅                                   |
-| "Show me pending + suggest routing to plans"            | `/reva_review_active_conversation`                         |
+| **Your Need** | **Use This Command** |
+|---|---|
+| "What's left to do right now?" | `/chkp_check_pending` ✅ |
+| "Show me pending + suggest routing to plans" | `/reva_review_active_conversation` |
 | "I'm closing this conversation; save findings to plans" | `/arch_archive` (after `/reva_review_active_conversation`) |
-| "Just refresh what's in the current active plan"        | `/pfac_plan_from_active_tasks_conversation`                |
+| "Just refresh what's in the current active plan" | `/pfac_plan_from_active_tasks_conversation` |
 
 --- End Command ---
