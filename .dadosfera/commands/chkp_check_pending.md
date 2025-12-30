@@ -1,10 +1,10 @@
 # /chkp_check_pending
 
 <!-- COMMAND_ID: 044 -->
-<!-- COMMAND_VERSION: 1.0.0 -->
+<!-- COMMAND_VERSION: 1.1.0 -->
 <!-- COMMAND_TYPE: ch_check_pending -->
 
-**Read-only validation.** Extract and list ONLY explicitly pending tasks from the current conversation, without analysis, classification, or scope suggestions.
+**Read-only validation.** Extract and list ONLY explicitly pending tasks from the current conversation, and **audit test evidence for completed tasks** (tests run/added, or explicitly marked N/A) — without analysis, classification, or scope suggestions.
 
 This command is strictly informational—use it to get a quick, unadorned view of what remains to be done in the conversation. No routing, no recommendations, no out-of-scope ideas.
 
@@ -28,7 +28,17 @@ Scan the conversation history for:
 
 - ✅ **Explicit "pending" markers** (e.g., `- [ ] Task`, `**Pending:**`, `TODO:`, `FIXME:`)
 - ✅ **Unfinished tasks** (e.g., marked as `in_progress`, `blocked`, `waiting`, `open`)
-- ✅ **Clearly stated next steps** that the user or AI committed to but did not complete
+- ✅ **Explicit commitments** that the user or AI committed to _in this conversation_ but did not complete (e.g., “I’ll do X next”)
+
+3. Extract completed items + test evidence (completed-only audit)
+
+Scan the conversation for:
+
+- ✅ **Completed markers** (e.g., `Done:`, `✅`, “fixed”, “implemented”, “merged”, “shipped”)
+- ✅ **Test evidence markers** (explicit only):
+  - **Tests run**: `tests/run_tests.sh`, `pytest`, `npm test`, `pnpm test`, `yarn test`, `go test`, `cargo test`, `make test`, etc.
+  - **Tests added**: explicit mention of test files/paths, or “added unit/integration tests”
+  - **Explicit N/A**: “no tests needed”, “docs-only”, “read-only change”, or similar _explicitly stated_
 
 **Strict filters (CRITICAL - do NOT override)**:
 
@@ -36,9 +46,12 @@ Scan the conversation history for:
 - **No classification**: Do not categorize (Active/Backlog/Prioritized). Just list them.
 - **No routing**: Do not suggest which plan they belong to.
 - **Conversation-scoped only**: Only include items mentioned or worked on in the current conversation.
+- **Exclude "future work / not pending" lists**: If the conversation explicitly labels a list or section as _not pending_ (e.g., "These are not pending in this conversation but were identified as future work"), **ignore the entire list** — do not include any of its items.
+- **No "Recommended Next Steps" sections**: Do not output headings/sections like "Recommended Next Steps", "Future Work", "Follow-ups", "Nice-to-haves", or similar. `/chkp_check_pending` output is only pending + optional completed.
 - **Latest status wins**: If a task status changed during the conversation (e.g., started as pending, completed later), report only the final status.
+- **No test guessing**: Only report tests as ✅ when the conversation explicitly mentions tests run/added (or explicitly marks N/A). Otherwise, mark test evidence as `⚠️ not found`.
 
-3. Output format (produce this in your message)
+4. Output format (produce this in your message)
 
 Generate a simple, read-only report:
 
@@ -48,10 +61,20 @@ Generate a simple, read-only report:
 **Total Pending**: N
 
 N. [Status] Task description
-   - Related context or reason (1–2 lines max)
+
+- Related context or reason (1–2 lines max)
+
+## Completed in This Conversation
+
+**Total Completed**: M
+**Completed Missing Test Evidence**: K
+
+1. ✅ Completed task description
+   - Tests: ✅ <explicit evidence> | ⚠️ not found | N/A (explicit)
 ```
 
 **Status indicators**:
+
 - `[ ]` – Not started
 - `[~]` – In progress / Partially done
 - `[!]` – Blocked (waiting for external input, decision, or dependency)
@@ -65,24 +88,27 @@ N. [Status] Task description
 **Total Pending**: 3
 
 1. [ ] Implement user authentication endpoint
+
    - HTTP POST /auth/login; needs database schema review first
 
 2. [~] Add unit tests for payment processing
+
    - 60% done; still need to cover edge cases for refunds
 
 3. [!] Deploy to staging environment
    - Blocked: waiting for ops team approval on resource allocation
-```
 
-4. Optional: note any completed tasks for reference
-
-If the conversation completed work (e.g., merged changes, archived findings), briefly list them as **Completed in This Conversation** so the user knows they are not pending:
-
-```markdown
 ## Completed in This Conversation
 
+**Total Completed**: 2
+**Completed Missing Test Evidence**: 1
+
 1. ✅ Fixed linter errors in src/utils.ts
+
+   - Tests: ✅ bash tests/run_tests.sh --category infrastructure
+
 2. ✅ Updated README with new endpoint docs
+   - Tests: ⚠️ not found
 ```
 
 ## Notes
@@ -103,25 +129,28 @@ If the conversation completed work (e.g., merged changes, archived findings), br
 ## Workflow checklist
 
 ### For AI Agent:
+
 - [ ] Scan conversation for explicit pending markers
 - [ ] Apply strict filters (no suggestions, no classification, no routing)
 - [ ] Report only conversation-scoped pending items
-- [ ] Note any completed work separately
+- [ ] Note completed work separately
+- [ ] For each completed item, report explicit test evidence (✅) or `⚠️ not found` / `N/A (explicit)`
 - [ ] Keep output concise and scannable
 - [ ] Do NOT create or modify any files
 
 ### For User:
+
 - [ ] Review the pending list
 - [ ] Decide: continue working, archive the conversation, or defer to a plan
 - [ ] Use `/reva_review_active_conversation` if you want detailed routing suggestions
 
 ## Quick Decision Tree
 
-| **Your Need** | **Use This Command** |
-|---|---|
-| "What's left to do right now?" | `/chkp_check_pending` ✅ |
-| "Show me pending + suggest routing to plans" | `/reva_review_active_conversation` |
+| **Your Need**                                           | **Use This Command**                                       |
+| ------------------------------------------------------- | ---------------------------------------------------------- |
+| "What's left to do right now?"                          | `/chkp_check_pending` ✅                                   |
+| "Show me pending + suggest routing to plans"            | `/reva_review_active_conversation`                         |
 | "I'm closing this conversation; save findings to plans" | `/arch_archive` (after `/reva_review_active_conversation`) |
-| "Just refresh what's in the current active plan" | `/pfac_plan_from_active_tasks_conversation` |
+| "Just refresh what's in the current active plan"        | `/pfac_plan_from_active_tasks_conversation`                |
 
 --- End Command ---

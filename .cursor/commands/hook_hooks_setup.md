@@ -6,22 +6,22 @@
 Set up and standardize git hooks (pre-commit + optional pre-push) and, when applicable, npm/yarn/pnpm lifecycle scripts that keep hooks installed automatically.
 
 **Local Reference**: `commands/hook_hooks_setup.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/hook_hooks_setup.md`
+**Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/commands/hook_hooks_setup.md
 
 Backlinks:
 
 - **Local Reference**: `standards/git/git_hooks_standard.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/git/git_hooks_standard.md`
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/standards/git/git_hooks_standard.md
 - **Local Reference**: `standards/maturity/pre_commit_maturity.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/pre_commit_maturity.md`
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/pre_commit_maturity.md
 - **Local Reference**: `templates/pre-commit-config.yaml.template`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/templates/pre-commit-config.yaml.template`
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/templates/pre-commit-config.yaml.template
 - **Local Reference**: `mini_prompt/lv1/git_hooks_optimization_mini_prompt.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv1/git_hooks_optimization_mini_prompt.md`
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv1/git_hooks_optimization_mini_prompt.md
 - **Local Reference**: `mini_prompt/ignore_files_hooks_linters_check.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/ignore_files_hooks_linters_check.md`
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/ignore_files_hooks_linters_check.md
 - **Local Reference**: `commands/lint_lint.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/lint_lint.md`
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/commands/lint_lint.md
 
 ## Purpose
 
@@ -39,6 +39,22 @@ Backlinks:
 
 - Repos that intentionally do **not** use git hooks (rare; usually not recommended).
 - CI-only enforcement scenarios where local hooks are explicitly out of scope (use CI config instead).
+
+## Pattern Selection
+
+### When to Use Pattern A (Direct Pre-commit)
+
+- Python-first projects
+- Simple projects without Node.js tooling
+- No custom pre-push infrastructure checks needed
+- Minimal setup requirements
+
+### When to Use Pattern B (Husky Hybrid)
+
+- Node.js projects with lint-staged
+- Need NVM/Node environment setup
+- Require custom pre-push checks (infrastructure, IP validation, etc.)
+- Want automatic hook installation via npm lifecycle
 
 ## Command sequence (run in order)
 
@@ -88,6 +104,8 @@ Backlinks:
 
 5. Configure npm/yarn/pnpm lifecycle scripts (only if `package.json` exists)
 
+   **For Pattern A (Direct Pre-commit):**
+
    - If the repository uses Node tooling, open `package.json` and ensure there is a lifecycle script that keeps hooks installed, for example:
 
    ```jsonc
@@ -99,9 +117,46 @@ Backlinks:
    }
    ```
 
-   - Keep this idempotent and tolerant (`|| true`) so installs don’t fail on environments without Python/pre-commit available.
+   - Keep this idempotent and tolerant (`|| true`) so installs don't fail on environments without Python/pre-commit available.
    - For **Python-first projects**, reuse your existing install/bootstrapping flow (`pip install`, `pip install -e .`, `poetry install`, `requirements*.txt`-driven setup, `make hooks-install`, etc.) and consider adding a small wrapper that runs `pre-commit install --install-hooks` as part of that flow.
    - For **other ecosystems** (Ruby, Go, Java, etc.), explicitly web-search for the appropriate lifecycle hook (for example: `"&lt;language&gt; run script after dependency install"`) and then call `pre-commit install --install-hooks` from that hook so behavior matches the Node/Python patterns.
+
+   **For Pattern B (Husky Hybrid):**
+
+   - Install Husky:
+
+   ```bash
+   gtimeout 30 npm install --save-dev husky
+   gtimeout 10 npx husky install
+   ```
+
+   - Configure `package.json`:
+
+   ```jsonc
+   {
+     "scripts": {
+       "prepare": "husky"
+     },
+     "lint-staged": {
+       "*.{js,ts,tsx}": ["eslint --fix", "prettier --write"]
+     }
+   }
+   ```
+
+   - Create `.husky/pre-commit` (see Pattern B example in `standards/git/git_hooks_standard.md`)
+   - Create `.husky/pre-push` (see Pattern B example in `standards/git/git_hooks_standard.md`)
+   - Make hooks executable:
+
+   ```bash
+   chmod +x .husky/pre-commit .husky/pre-push
+   ```
+
+   - Install pre-commit hooks:
+
+   ```bash
+   gtimeout 15 pre-commit install --hook-type pre-commit
+   gtimeout 15 pre-commit install --hook-type pre-push
+   ```
 
 6. Run hooks once on the full repo to validate setup
 

@@ -17,6 +17,38 @@ Backlinks:
 - You want to roll out a new standard across all repos
 - You need to verify compliance across the organization
 
+## Enforcement Mechanisms
+
+Hooks are just **one way** to reinforce a central solution. Use multiple mechanisms:
+
+| Mechanism | Location | When Enforced | Use Case |
+|-----------|----------|---------------|----------|
+| **Standards** | docs-fera/standards/ | Human reference | Define canonical convention |
+| **Pre-commit hooks** | scripts-fera/hooks/, _dev/hooks/ | At commit time | Block non-compliant commits |
+| **Check scripts** | scripts-fera/repo_management/ | On demand | Diagnose maturity across repos |
+| **Templates** | scripts-fera/templates/ | At creation time | Provide correct starting points |
+| **CI/CD** | .github/workflows/, .gitlab-ci.yml | At PR/push | Enforce in automation |
+
+**Choose mechanisms based on enforcement timing:**
+- **Preventive**: Hooks, templates (stop issues before they happen)
+- **Detective**: Check scripts, CI/CD (find issues after they happen)
+- **Corrective**: Convergence workflow (fix existing issues)
+
+### Index Naming & Content Example
+
+The index file standardization demonstrates a complete convergence:
+
+**Standard**: `docs-fera/standards/naming/naming_convention.md`
+
+**Hooks** (preventive):
+- `scripts-fera/hooks/source/quality/validate_index_naming.py` - Enforces naming pattern
+- `scripts-fera/hooks/source/quality/validate_index_content.py` - Enforces content structure
+
+**Check Script** (detective):
+- `scripts-fera/repo_management/check_index_naming_compliance.sh` - Audits all repos
+
+**Results**: docs-fera and scripts-fera at Level 3 (Exemplary)
+
 ## Central Plan Management
 
 **All cross-repo convergence plans live in docs-fera** (or another central -fera repo). The central plan:
@@ -115,14 +147,25 @@ gtimeout 5 cat standards/_template.md
 gtimeout 5 touch standards/{topic}_standard.md
 ```
 
-4) Check if compliance check script exists
+4) Check if enforcement mechanisms exist
 ```bash
-gtimeout 5 ls -la scripts-fera/repo-management/
+# Check for compliance check script
+gtimeout 5 ls -la scripts-fera/repo_management/ | grep -i {topic}
+
+# Check for pre-commit hook
+gtimeout 5 ls -la scripts-fera/hooks/source/quality/ | grep -i {topic}
+
+# Check for template
+gtimeout 5 ls -la scripts-fera/templates/ | grep -i {topic}
 ```
 
-5) If no check script exists, create one based on existing pattern
+5) Create missing enforcement mechanisms based on patterns
 ```bash
-gtimeout 5 cat scripts-fera/repo-management/check_folder_structure.sh
+# Check script pattern
+gtimeout 5 cat scripts-fera/repo_management/check_folder_structure.sh
+
+# Hook pattern
+gtimeout 5 cat scripts-fera/hooks/source/quality/validate_indexes.py
 ```
 
 ### Phase 2: Maturity Assessment & Collective Learning
@@ -279,6 +322,7 @@ cat _dev/docs/plans/active/QW_4h_HIGH_converge_console_log_standards.md
 ## Related
 
 - Mini Prompt: `mini_prompt/lv1/cross_repo_convergence_mini_prompt.md`
-- Example Check: `scripts-fera/repo-management/check_console_log_compliance.sh`
+- Example Check Script: `scripts-fera/repo_management/check_console_log_compliance.sh`
+- Example Hook: `scripts-fera/hooks/source/quality/validate_indexes.py`
 - Example Standard: `standards/run_sh_resource_monitoring_compliance.md`
 - Central Plans: `_dev/docs/plans/active/` (always in docs-fera for cross-repo work)
