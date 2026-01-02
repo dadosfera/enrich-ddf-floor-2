@@ -1,10 +1,10 @@
 # /chkp_check_pending
 
 <!-- COMMAND_ID: 044 -->
-<!-- COMMAND_VERSION: 1.1.0 -->
+<!-- COMMAND_VERSION: 1.2.0 -->
 <!-- COMMAND_TYPE: ch_check_pending -->
 
-**Read-only validation.** Extract and list ONLY explicitly pending tasks from the current conversation, and **audit test evidence for completed tasks** (tests run/added, or explicitly marked N/A) — without analysis, classification, or scope suggestions.
+**Read-only validation.** Extract and list ONLY explicitly pending tasks from the current conversation, and **audit test results for completed tasks** (verify tests passed, or explicitly marked N/A) — without analysis, classification, or scope suggestions. Flags incomplete/failed tests as `⚠️` warnings.
 
 This command is strictly informational—use it to get a quick, unadorned view of what remains to be done in the conversation. No routing, no recommendations, no out-of-scope ideas.
 
@@ -37,8 +37,12 @@ Scan the conversation for:
 - ✅ **Completed markers** (e.g., `Done:`, `✅`, “fixed”, “implemented”, “merged”, “shipped”)
 - ✅ **Test evidence markers** (explicit only):
   - **Tests run**: `tests/run_tests.sh`, `pytest`, `npm test`, `pnpm test`, `yarn test`, `go test`, `cargo test`, `make test`, etc.
-  - **Tests added**: explicit mention of test files/paths, or “added unit/integration tests”
-  - **Explicit N/A**: “no tests needed”, “docs-only”, “read-only change”, or similar _explicitly stated_
+    - **Status check**: Must also verify that tests **passed** (exit code 0 or explicit "✅ all tests passed")
+    - **⚠️ Flag**: If tests ran but you see `❌`, `failed`, `error`, or non-zero exit — mark as `⚠️ tests failed / incomplete`
+  - **Tests added**: explicit mention of test files/paths, or "added unit/integration tests"
+    - **Status check**: Must also confirm tests are **passing** after creation (ran successfully with 100% pass rate)
+    - **⚠️ Flag**: If tests were added but not yet run/passing — mark as `⚠️ tests created but not passing`
+  - **Explicit N/A**: "no tests needed", "docs-only", "read-only change", or similar _explicitly stated_
 
 **Strict filters (CRITICAL - do NOT override)**:
 
@@ -49,7 +53,11 @@ Scan the conversation for:
 - **Exclude "future work / not pending" lists**: If the conversation explicitly labels a list or section as _not pending_ (e.g., "These are not pending in this conversation but were identified as future work"), **ignore the entire list** — do not include any of its items.
 - **No "Recommended Next Steps" sections**: Do not output headings/sections like "Recommended Next Steps", "Future Work", "Follow-ups", "Nice-to-haves", or similar. `/chkp_check_pending` output is only pending + optional completed.
 - **Latest status wins**: If a task status changed during the conversation (e.g., started as pending, completed later), report only the final status.
-- **No test guessing**: Only report tests as ✅ when the conversation explicitly mentions tests run/added (or explicitly marks N/A). Otherwise, mark test evidence as `⚠️ not found`.
+- **No test guessing**: Only report tests as ✅ when BOTH:
+  1. The conversation explicitly mentions tests run/added (or explicitly marks N/A), AND
+  2. For tests run: Exit code is 0 or output explicitly states "all tests passed" / "tests passed" / "✅ passed"
+  3. For tests added: Tests were actually run and verified passing (not just "I created test file X")
+  - Otherwise, mark test evidence as `⚠️ not found` (if no mention), `⚠️ tests created but not passing` (if added but not run/passing), or `⚠️ tests failed / incomplete` (if run but failed).
 
 4. Output format (produce this in your message)
 
@@ -67,7 +75,10 @@ N. [Status] Task description
 ## Completed in This Conversation
 
 **Total Completed**: M
-**Completed Missing Test Evidence**: K
+**Completed Missing Test Evidence**: K (total with any issue: not found, created-not-passing, or failed)
+- Tests not found: X
+- Tests created but not passing: Y
+- Tests failed / incomplete: Z
 
 1. ✅ Completed task description
    - Tests: ✅ <explicit evidence> | ⚠️ not found | N/A (explicit)
@@ -100,15 +111,24 @@ N. [Status] Task description
 
 ## Completed in This Conversation
 
-**Total Completed**: 2
-**Completed Missing Test Evidence**: 1
+**Total Completed**: 4
+**Completed Missing Test Evidence**: 2
+- Tests not found: 0
+- Tests created but not passing: 1
+- Tests failed / incomplete: 1
 
 1. ✅ Fixed linter errors in src/utils.ts
 
-   - Tests: ✅ bash tests/run_tests.sh --category infrastructure
+   - Tests: ✅ bash tests/run_tests.sh --category infrastructure (exit 0, all passed)
 
 2. ✅ Updated README with new endpoint docs
-   - Tests: ⚠️ not found
+   - Tests: N/A (explicit: docs-only change)
+
+3. ✅ Added payment validation function
+   - Tests: ⚠️ tests created but not passing (test file added, not yet run)
+
+4. ✅ Refactored auth middleware
+   - Tests: ⚠️ tests failed / incomplete (ran `npm test` but saw 3 failures)
 ```
 
 ## Notes
