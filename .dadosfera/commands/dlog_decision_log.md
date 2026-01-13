@@ -9,17 +9,17 @@ Create (or update) an architecture-critical decision record with mandatory backg
 Backlinks:
 
 - **Local Reference**: `_dev/docs/decisions/README.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/_dev/docs/decisions/README.md`
-- **Local Reference**: `_dev/docs/decisions/decision_record.template.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/_dev/docs/decisions/decision_record.template.md`
-- **Local Reference**: `_dev/docs/inventory/decisions/README.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/_dev/docs/inventory/decisions/README.md`
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/_dev/docs/decisions/README.md
+- **Local Reference**: _dev/docs/decisions/decision_record.template.md
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/_dev/docs/decisions/decision_record.template.md
+- **Local Reference**: _dev/docs/inventory/decisions/README.md
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/_dev/docs/inventory/decisions/README.md
 
 ## Command sequence (run in order)
 
 1. **Confirm repository context**
 
-   ```bash
+   bash
    gtimeout 5 git rev-parse --show-toplevel
    ```
 
@@ -78,8 +78,8 @@ Backlinks:
    - Example transcription inside the ADR:
      ```
      - **Local Reference**: `standards/project/project_structure_standard.md`
-       **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/project/project_structure_standard.md`
-     ```
+       **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/project/project_structure_standard.md
+
 
 6. **Define options**
 
@@ -91,7 +91,7 @@ Backlinks:
    - Choose 4–6 evaluation factors that reflect the decision drivers.
    - Assign normalized weights that sum to **1.00** (or 100% if you prefer percentages, but keep the math explicit).
    - Score each option on a consistent 1–5 (or 1–10) scale where higher is better.
-   - Compute weighted scores: `Σ(weight × score)` per option.
+   - Compute weighted scores: Σ(weight × score)` per option.
    - The winning option **must** be the one with the highest weighted score. If there is a tie, document the tie-breaker analysis.
 
 8. **Instantiate the ADR from the template**

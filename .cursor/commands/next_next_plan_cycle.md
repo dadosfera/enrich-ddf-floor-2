@@ -20,7 +20,7 @@ This command is for **one-step advancement** in the plan lifecycle, not for exec
 
 ## 0. Detect Repository Type and Plans Base
 
-Use repository name to resolve the correct plans base path (no hardcoded `docs/plans` for `-fera` repos):
+Use repository name to resolve the correct plans base path (no hardcoded `docs/plans` for -fera repos):
 
 ```bash
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)

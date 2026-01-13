@@ -7,9 +7,9 @@
 Execute ALL active plans in priority order without complex validation overhead.
 
 **Local Reference**: `commands/xqpa_xqt_plan_all.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/xqpa_xqt_plan_all.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/xqpa_xqt_plan_all.md
 
-**Note**: This command is repo-aware. For `-fera` repositories (docs-fera, scripts-fera, etc.), plans are stored in `_dev/docs/plans/`. For all other repositories, plans are stored in `docs/plans/`.
+**Note**: This command is repo-aware. For -fera repositories (docs-fera, scripts-fera, etc.), plans are stored in _dev/docs/plans/. For all other repositories, plans are stored in `docs/plans/`.
 
 **Canonical Name**: `/xqpa_xqt_plan_all` (with `xqt` = execute) replaces the deprecated `/exba_execute_batch_all`, `/exba_run_all_plans`, and `/xpal_execute_plan_all`. Update any scripts, prompts, or plans that still mention the old names.
 

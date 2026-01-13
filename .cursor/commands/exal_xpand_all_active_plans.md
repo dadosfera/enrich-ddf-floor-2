@@ -6,7 +6,7 @@
 Expand all active plans with detailed guidelines, macro strategy validation, and research findings to ensure comprehensive, actionable plans with clear acceptance criteria and implementation steps.
 
 **Local Reference**: `commands/exal_xpand_all_active_plans.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/exal_xpand_all_active_plans.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/exal_xpand_all_active_plans.md
 
 Backlinks:
 - commands/expp_xpand_plan.md
@@ -15,7 +15,7 @@ Backlinks:
 
 ## Purpose
 
-This command addresses the need to expand multiple active plans at once. Unlike `/expp_xpand_plan` which expands a single plan, this command discovers all plans in the active directory and expands each one systematically. This is useful when you have multiple active plans that need enrichment before execution.
+This command addresses the need to expand multiple active plans at once. Unlike /expp_xpand_plan which expands a single plan, this command discovers all plans in the active directory and expands each one systematically. This is useful when you have multiple active plans that need enrichment before execution.
 
 ## When to Use
 
@@ -27,7 +27,7 @@ This command addresses the need to expand multiple active plans at once. Unlike 
 
 ## When NOT to Use
 
-- For expanding a single plan (use `/expp_xpand_plan` instead)
+- For expanding a single plan (use /expp_xpand_plan instead)
 - For simple, well-understood tasks (< 1 hour effort per plan)
 - When plans already have detailed acceptance criteria and steps (> 1000 lines each)
 - For urgent fixes where speed is critical

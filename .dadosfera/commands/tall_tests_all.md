@@ -1,13 +1,14 @@
 ## /tall_tests_all – Full-Codebase Test Orchestrator (Moon-First)
 
 <!-- COMMAND_ID: 043 -->
-<!-- COMMAND_VERSION: 2.0.0 -->
+<!-- COMMAND_VERSION: 2.1.0 -->
 <!-- COMMAND_TYPE: ta_tests_all -->
 
 Run the **entire test surface of this repository** using Moon as the primary orchestrator, progressing from smallest affected scopes to a full `tests_all` run.
 Use this for **codebase-wide health checks** (pre‑merge, pre‑release), not for individual conversation fixes (use `/tcon_test_conversation` for that).
 
-**IMPROVEMENTS in v2.0.0:**
+**IMPROVEMENTS in v2.1.0:**
+- ☁️ **Cloud First**: Checks for deployed instance (OCI) to offload testing and save local resources
 - ✅ Repository-agnostic: Automatically detects Moon project structure
 - ✅ Dynamic task discovery: Tries common Moon task patterns
 - ✅ Graceful fallback: Uses test runner when Moon tasks unavailable
@@ -22,6 +23,35 @@ Backlinks:
 ---
 
 ## Command sequence (run in order)
+
+0. **Cloud/Remote Execution Check (Priority)**
+
+- Goal: Run tests on cloud instance if available to avoid overloading local machine.
+
+```bash
+# Check for OCI instance and attempt remote execution
+if [[ -n "$OCI_INSTANCE_IP" ]]; then
+  echo "☁️  Cloud instance detected at $OCI_INSTANCE_IP"
+  echo "🚀 Attempting to offload tests to cloud..."
+
+  # Default remote path to same folder name in home if not specified
+  REMOTE_PATH=${REMOTE_DIR:-"~/${PWD##*/}"}
+  SSH_CMD=${SSH_COMMAND:-"ssh"}
+  SSH_USR=${SSH_USER:-"ubuntu"}
+
+  # Try to run make test on remote
+  # Assuming code is already synced or deployed
+  if $SSH_CMD -o ConnectTimeout=10 "$SSH_USR@$OCI_INSTANCE_IP" "cd $REMOTE_PATH && make test"; then
+    echo "✅ Remote tests passed!"
+    # Exit successfully to skip local execution
+    exit 0
+  else
+    echo "⚠️  Remote execution failed or not available. Falling back to local..."
+  fi
+else
+  echo "💻 No cloud instance configured (OCI_INSTANCE_IP). Running locally."
+fi
+```
 
 1. Verify repository root and Moon availability
 

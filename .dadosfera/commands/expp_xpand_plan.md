@@ -6,7 +6,7 @@
 Expand an existing plan with detailed guidelines, macro strategy validation, and research findings to ensure comprehensive, actionable plans with clear acceptance criteria and implementation steps.
 
 **Local Reference**: `commands/expp_xpand_plan.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/expp_xpand_plan.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/expp_xpand_plan.md
 
 Backlinks:
 - commands/pfac_plan_from_active_tasks_conversation.md
@@ -24,13 +24,13 @@ Enriches sparse plans (< 500 lines) into comprehensive, execution-ready document
 ## Command Sequence
 
 ### 1. Validate inputs and read plan
-```bash
+bash
 PLAN_PATH="$1"
 WEB_SEARCH="${2:-true}"
 DEPTH="${3:-standard}"
 
 # Validation logic...
-```
+``
 
 ### 2. Analyze structure
 ```bash

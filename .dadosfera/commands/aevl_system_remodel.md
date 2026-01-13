@@ -8,17 +8,17 @@ Use the Architecture Evolution & Deprecation Review mini prompt to decide when t
 Backlinks:
 
 - **Local Reference**: `mini_prompt/lv2/architecture_simplification_review_mini_prompt.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv2/architecture_simplification_review_mini_prompt.md`
-- **Local Reference**: `commands/reva_review_active_conversation.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/reva_review_active_conversation.md`
-- **Local Reference**: `commands/dlog_decision_log.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/dlog_decision_log.md`
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv2/architecture_simplification_review_mini_prompt.md
+- **Local Reference**: commands/reva_review_active_conversation.md
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/commands/reva_review_active_conversation.md
+- **Local Reference**: commands/dlog_decision_log.md
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/commands/dlog_decision_log.md
 
 ## Command sequence (run in order)
 
 1. **Confirm repository context and gather current work signals**
 
-   ```bash
+   bash
    gtimeout 5 git rev-parse --show-toplevel
    gtimeout 5 git status --short
    ```

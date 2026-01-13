@@ -10,32 +10,32 @@
 
 Backlinks:
 
-- **Local Reference**: `standards/maturity/index_maturity.yaml`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/index_maturity.yaml`
-- **Local Reference**: `standards/maturity/deployment_maturity.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/deployment_maturity.md`
-- **Local Reference**: `standards/maturity/software_lifecycle_maturity.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/software_lifecycle_maturity.md`
-- **Local Reference**: `standards/maturity/testing_maturity.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/testing_maturity.md`
-- **Local Reference**: `standards/maturity/pre_commit_maturity.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/pre_commit_maturity.md`
-- **Local Reference**: `standards/maturity/logging_maturity.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/logging_maturity.md`
-- **Local Reference**: `standards/maturity/architecture_maturity.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/architecture_maturity.md`
-- **Local Reference**: `mini_prompt/index_mini_prompt.yaml`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/index_mini_prompt.yaml`
-- **Local Reference**: `mini_prompt/lv2/repo_maturity_analysis_and_learning_mini_prompt.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv2/repo_maturity_analysis_and_learning_mini_prompt.md`
+- **Local Reference**: `standards/maturity/index_standards__maturity.yaml`
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/index_standards__maturity.yaml
+- **Local Reference**: standards/maturity/deployment_maturity.md
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/deployment_maturity.md
+- **Local Reference**: standards/maturity/software_lifecycle_maturity.md
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/software_lifecycle_maturity.md
+- **Local Reference**: standards/maturity/testing_maturity.md
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/testing_maturity.md
+- **Local Reference**: standards/maturity/pre_commit_maturity.md
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/pre_commit_maturity.md
+- **Local Reference**: standards/maturity/logging_maturity.md
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/logging_maturity.md
+- **Local Reference**: standards/maturity/architecture_maturity.md
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/architecture_maturity.md
+- **Local Reference**: mini_prompt/index_mini_prompt.yaml
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/index_mini_prompt.yaml
+- **Local Reference**: mini_prompt/lv2/repo_maturity_analysis_and_learning_mini_prompt.md
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv2/repo_maturity_analysis_and_learning_mini_prompt.md
 
 ## Command sequence (run in order)
 
 1. **Confirm repository context (for references only)**
 
-   ```bash
+   bash
    gtimeout 5 git rev-parse --show-toplevel
-   ```
+   ``
 
    - Detect whether the current repo is part of the Agents&Devs Dadosfera Framework (e.g. `*-ddf`, `*-fera`, or framework‑ddf family).
    - Record the absolute repo root path and repository name; you will need both when linking maturity results and plans.
@@ -46,7 +46,7 @@ Backlinks:
      ```bash
      gtimeout 5 ls -1 standards/maturity/ 2>/dev/null | head -50
      ```
-   - From `standards/maturity/index_maturity.yaml`, identify all domains to be scored (currently: deployment, software lifecycle, architecture, testing, pre‑commit, run.sh logging).
+   - From `standards/maturity/index_standards__maturity.yaml`, identify all domains to be scored (currently: deployment, software lifecycle, architecture, testing, pre‑commit, run.sh logging).
    - From `mini_prompt/index_mini_prompt.yaml`, map for each domain:
      - Analysis / assessment mini prompts (e.g. `repo_maturity_analysis_and_learning`, `critical_files_review`, `config_claims_vs_code_incongruence_detector`).
      - Improvement mini prompts per category (testing, pre‑commit, logging, infrastructure, architecture, etc.).

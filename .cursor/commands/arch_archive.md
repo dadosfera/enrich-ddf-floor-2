@@ -7,7 +7,7 @@ Create plan documents from a conversation review across statuses: backlog (basel
 
 **Critical rule**: this command is an end-of-journey / archival flow. It **must not leave related plans in the active plans directory**. Before archiving, it will:
 
-- Detect repository type: for `-fera` repos use `_dev/docs/plans/`, for others use `docs/plans/`
+- Detect repository type: for -fera repos use `_dev/docs/plans/`, for others use `docs/plans/`
 - scan for related plans in `{PLANS_BASE}/active/` matching `OBJ_SLUG`
 - if those plans are clearly finished based on their canonical Status field (`Status:` / `**Status**:` set to `finished`, `completed`, or `done`), automatically move them to `{PLANS_BASE}/finished/`
 - if any related plan still has an active Status, abort the `/arch_archive` flow so you can finish or reclassify work first (do not confuse "to be prioritized" or backlog items with truly in‑progress work).

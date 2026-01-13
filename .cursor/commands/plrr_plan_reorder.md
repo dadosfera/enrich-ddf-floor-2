@@ -42,9 +42,9 @@ This command is the high-level entry point for **plan reprioritization** when th
 ## Related
 
 - **Local Reference**: `mini_prompt/lv1/project_and_plans_review_reprioritize_mini_prompt.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv1/project_and_plans_review_reprioritize_mini_prompt.md`
-- `/revp_prj_portfolio_review` (ID 042) - Portfolio review with project analysis (includes project-scoped plans)
-- `/pfrb_portfolio_rebalance` (ID 046) - Portfolio-wide rebalancing across all repositories (broader scope)
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv1/project_and_plans_review_reprioritize_mini_prompt.md
+- /revp_prj_portfolio_review (ID 042) - Portfolio review with project analysis (includes project-scoped plans)
+- /pfrb_portfolio_rebalance (ID 046) - Portfolio-wide rebalancing across all repositories (broader scope)
 - `/revl_review_all_plans` - Review all plans including meta plans
 - `/next_next_plan_cycle` - Execute next plan in lifecycle
 - `/prio_investigate_codebase_priorities` - Investigate codebase priorities

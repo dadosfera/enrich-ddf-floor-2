@@ -1,30 +1,31 @@
 # /cprs_commits_prs_rules_analysis
 <!-- COMMAND_ID: 061 -->
-<!-- COMMAND_VERSION: 1.0.0 -->
+<!-- COMMAND_VERSION: 1.1.0 -->
 <!-- COMMAND_TYPE: qr_rules_review -->
 
-Analyze the last 1000 commits (in 10 chunks of 100) and the last 100 PRs, then identify recurring mistakes and propose improvements to `.cursor/rules/` (or the repo’s rules source-of-truth, if `.cursor/rules/` is generated).
+Analyze the last 1000 commits (in 10 chunks of 100) and the last 100 PRs, then identify recurring mistakes and propose improvements to `.cursor/rules/` (or the repo’s rules source-of-truth, if `.cursor/rules/` is generated). Also includes a churn/stability sweep (“frequent flyer” files) to propose systemic stability fixes.
 
 Backlinks:
 
 - **Local Reference**: `rules/cursor/4_23_rule_distribution_discipline.mdc`
 
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/rules/cursor/4_23_rule_distribution_discipline.mdc`
-- **Local Reference**: `guides/rule_distribution_workflow.md`
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/rules/cursor/4_23_rule_distribution_discipline.mdc
+- **Local Reference**: guides/rule_distribution_workflow.md
 
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/guides/rule_distribution_workflow.md`
-- **Local Reference**: `guides/distribution_workflow_unified.md`
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/guides/rule_distribution_workflow.md
+- **Local Reference**: guides/distribution_workflow_unified.md
 
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/guides/distribution_workflow_unified.md`
-- **Local Reference**: `commands/lint_lint.md`
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/guides/distribution_workflow_unified.md
+- **Local Reference**: commands/lint_lint.md
 
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/lint_lint.md`
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/commands/lint_lint.md
 
 ## Notes (read this before running anything)
 
 - This is an **analysis-first** command. Default outcome is a report + recommended rule changes (not edits).
-- If `.cursor/rules/` is **generated**, do **not** edit it directly. Update the source-of-truth (in `docs-fera`, that’s `rules/json/core/*.json`) and run the repo’s rule distribution workflow (in `docs-fera`, `bash workflows/rule_distribution/build_all_from_json.sh`).
+- If .cursor/rules/ is **generated**, do **not** edit it directly. Update the source-of-truth (in `docs-fera`, that’s `rules/json/core/*.json`) and run the repo’s rule distribution workflow (in `docs-fera`, `bash workflows/rule_distribution/build_all_from_json.sh`).
 - If you detect a mistake pattern that is “rules-appropriate” but **not enforceable** via rules, capture it as a process/guide improvement instead.
+- Not everything should become a rule. Use churn evidence to decide between: rule changes, documentation/process changes, or systemic code fixes.
 
 ## Command sequence (run in order)
 
@@ -104,17 +105,57 @@ gtimeout 20 rg -n \
 gtimeout 5 wc -l "$OUT_DIR/keyword_hits.txt" 2>/dev/null || true
 ```
 
-7. Analyze and propose `.cursor/rules/` improvements (manual reasoning; document with evidence)
+7. Analyze instability / churn patterns (systemic stability fixes)
 
-- For each recurring mistake, capture:
+Goal: identify “frequent flyer” files and recurring break/fix cycles, then propose durable stabilizations (decoupling, test determinism, config normalization, etc.).
+
+```bash
+# Fix/fail activity overview (last 12 months)
+gtimeout 10 git log --since="1 year ago" --grep="fix\\|fail\\|error\\|broken" --oneline > "$OUT_DIR/fix_fail_commits_last_year.txt" || true
+echo "Fix/fail commits (last year): $(wc -l < "$OUT_DIR/fix_fail_commits_last_year.txt" 2>/dev/null || echo 0)"
+
+# “Frequent flyer” files: files most often touched by fix/fail commits
+gtimeout 30 git log --since="1 year ago" --grep="fix\\|fail\\|error\\|broken" --name-only --format="" | \
+  grep -v "^$" | \
+  sort | uniq -c | sort -nr | head -n 50 \
+  > "$OUT_DIR/frequent_flyer_files_last_year.txt" || true
+
+echo "Top frequent flyers written to: $OUT_DIR/frequent_flyer_files_last_year.txt"
+```
+
+Optional deep dive (pick 1–3 top files from the frequent-flyer list):
+
+```bash
+# Replace FILE with an entry from frequent_flyer_files_last_year.txt (path only)
+FILE="path/to/suspect.file"
+
+gtimeout 60 git log --since="2 years ago" --date=iso-strict --pretty=format:'%H|%ad|%an|%s' --name-status -- "$FILE" \
+  > "$OUT_DIR/history_${FILE//\//_}.txt" || true
+
+gtimeout 30 git log --since="2 years ago" --oneline -- "$FILE" \
+  > "$OUT_DIR/history_${FILE//\//_}_subjects.txt" || true
+```
+
+What to extract from churn evidence:
+
+- Recurring break modes: imports/ESM-CJS, flaky timeouts, env/config coupling, global state leaks, nondeterminism, “update expectation” loops.
+- Change drivers: real evolution (feature) vs churn (maintenance loop).
+- Fix type: quick patch vs systemic fix (API contract, config normalization, test isolation harness, deterministic fixtures, etc.).
+
+8. Analyze and propose `.cursor/rules/` improvements (manual reasoning; document with evidence)
+
+- For each recurring mistake or instability pattern, capture:
   - **Symptom**: what people did wrong
   - **Evidence**: commit hashes and/or PR numbers where it happened
   - **Impact**: what broke (pre-commit, CI, distribution drift, confusing docs, wrong paths)
   - **Current rule coverage**: where (if anywhere) the rule already exists today (file path)
-  - **Proposed rule improvement**: what to change/add (rule title + concrete additions/examples)
-  - **Enforcement leverage**: can a rule prevent it, or do we need a guide/hook/test?
+  - **Proposed improvement**:
+    - Rule change (source-of-truth) or
+    - Guide/process change or
+    - Systemic stability fix (code/test architecture)
+  - **Enforcement leverage**: can a rule prevent it, or do we need a guide/hook/test/guardrail/refactor?
 
-8. Write the report (recommended location: `analysis/`)
+9. Write the report (recommended location: `analysis/`)
 
 ```bash
 DATE="$(date +%Y-%m-%d)"
@@ -126,18 +167,22 @@ Use this minimal template:
 
 ```markdown
 ### Summary
-- Scanned: last 1000 commits (10×100) + last 100 PRs
+- Scanned: last 1000 commits (10×100) + last 100 PRs + churn scan (fix/fail + frequent flyers)
 - Output dir: <paste OUT_DIR>
 
-### Top recurring mistakes (ranked)
-1. <mistake>
+### Top recurring patterns (ranked)
+1. <pattern> (rule/process or stability/churn)
    - Evidence: <commit hash(es)>; PRs: <#123, #456>
    - Current rule coverage: <path or "missing">
-   - Proposed rule improvement: <specific change>
+   - Proposed improvement: <specific change>
 
 ### Proposed changes (rules source-of-truth)
 - <rule file / JSON source>:
   - <change>
+
+### Proposed stability fixes (systemic)
+- <target file / component>:
+  - <fix proposal + why it reduces churn>
 
 ### Follow-ups
 - <optional: plan to implement rule updates and run distribution>
@@ -146,9 +191,3 @@ Use this minimal template:
 ---
 
 **Last updated**: 2025-12-27
-
-
-
-
-
-

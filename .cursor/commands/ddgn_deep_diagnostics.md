@@ -6,12 +6,12 @@
 Deep diagnostic with active instrumentation and debugging enhancements. This command modifies code to add comprehensive logging, debugging capabilities, and monitoring before attempting to diagnose root cause. Use when surface-level investigation isn't sufficient or when you need to understand system behavior in detail.
 
 **Local Reference**: `commands/ddgn_deep_diagnostics.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/ddgn_deep_diagnostics.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/ddgn_deep_diagnostics.md
 
 Backlinks:
 
-- `mini_prompt/lv2/deep_debugging_instrumentation_mini_prompt.md`
-- `commands/rcdg_root_cause_diag.md`
+- mini_prompt/lv2/deep_debugging_instrumentation_mini_prompt.md
+- commands/rcdg_root_cause_diag.md
 - `commands/bdbg_browser_debug.md`
 - `commands/xect_execute_plan.md`
 

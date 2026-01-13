@@ -5,11 +5,11 @@
 <!-- COMMAND_TYPE: pf_plan_from_active_tasks_conversation -->
 
 **Local Reference**: `commands/pfac_plan_from_active_tasks_conversation.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/pfac_plan_from_active_tasks_conversation.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/pfac_plan_from_active_tasks_conversation.md
 
 Align the current conversation with a single active plan: review the full conversation, identify (or create) the closest active plan, and fold all finished, active, backlog, and blocked tasks into that plan with clear structure and context.
 
-**Note**: This command is repo-aware. For `-fera` repositories (docs-fera, scripts-fera, etc.), plans are stored in `_dev/docs/plans/`. For all other repositories, plans are stored in `docs/plans/`.
+**Note**: This command is repo-aware. For -fera repositories (docs-fera, scripts-fera, etc.), plans are stored in _dev/docs/plans/. For all other repositories, plans are stored in `docs/plans/`.
 
 **Execution scope**: PFAC is planning-only. It never executes tasks, runs commands, or stages/commits changes. Use `/xect_execute_plan` (or a similar executor) after PFAC if you want the plan’s tasks to run.
 

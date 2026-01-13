@@ -1,10 +1,10 @@
 # /chkp_check_pending
 
 <!-- COMMAND_ID: 044 -->
-<!-- COMMAND_VERSION: 1.2.0 -->
+<!-- COMMAND_VERSION: 1.4.0 -->
 <!-- COMMAND_TYPE: ch_check_pending -->
 
-**Read-only validation.** Extract and list ONLY explicitly pending tasks from the current conversation, and **audit test results for completed tasks** (verify tests passed, or explicitly marked N/A) — without analysis, classification, or scope suggestions. Flags incomplete/failed tests as `⚠️` warnings.
+**Read-only validation.** Extract and list ONLY explicitly pending tasks from the current conversation, **check for unpushed commits and hook-related push blockers**, and **audit test results, hooks, and test tagging for completed tasks** (verify tests passed, hooks created/updated when needed, and tests properly tagged) — without analysis, classification, or scope suggestions. Flags incomplete/failed tests, missing hooks, untagged tests, and unpushed commits blocked by hooks as `⚠️` warnings.
 
 This command is strictly informational—use it to get a quick, unadorned view of what remains to be done in the conversation. No routing, no recommendations, no out-of-scope ideas.
 
@@ -16,11 +16,34 @@ Backlinks:
 
 ## Command sequence (run in order)
 
-1. Confirm repository context (for references only)
+1. Confirm repository context and check git push status
 
 ```bash
 gtimeout 5 git rev-parse --show-toplevel
 ```
+
+Check for unpushed commits and hook-related push blockers:
+
+```bash
+# Check if there are commits ahead of origin
+CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "main")
+UNPUSHED_COUNT=$(git rev-list HEAD...origin/$CURRENT_BRANCH --count 2>/dev/null || echo "0")
+
+# If there are unpushed commits, check if they're blocked by hook errors
+if [ "$UNPUSHED_COUNT" -gt 0 ]; then
+  # Check if pre-commit hooks would fail (dry-run)
+  if command -v pre-commit >/dev/null 2>&1; then
+    pre-commit run --all-files --hook-stage pre-push 2>&1 | grep -q "Failed\|error" && HOOK_ERRORS="yes" || HOOK_ERRORS="no"
+  else
+    HOOK_ERRORS="unknown"
+  fi
+fi
+```
+
+**Report unpushed commits status**:
+- ✅ **No unpushed commits**: All commits are pushed
+- ⚠️ **Unpushed commits (N)**: N commits ahead of origin (not blocked by hooks)
+- ⚠️ **Unpushed commits (N) - blocked by hook errors**: N commits ahead of origin, and pre-commit/pre-push hooks are failing
 
 2. Extract pending items from conversation
 
@@ -30,7 +53,7 @@ Scan the conversation history for:
 - ✅ **Unfinished tasks** (e.g., marked as `in_progress`, `blocked`, `waiting`, `open`)
 - ✅ **Explicit commitments** that the user or AI committed to _in this conversation_ but did not complete (e.g., “I’ll do X next”)
 
-3. Extract completed items + test evidence (completed-only audit)
+3. Extract completed items + test/hooks evidence (completed-only audit)
 
 Scan the conversation for:
 
@@ -42,7 +65,24 @@ Scan the conversation for:
   - **Tests added**: explicit mention of test files/paths, or "added unit/integration tests"
     - **Status check**: Must also confirm tests are **passing** after creation (ran successfully with 100% pass rate)
     - **⚠️ Flag**: If tests were added but not yet run/passing — mark as `⚠️ tests created but not passing`
+  - **Test tagging check**: For tests added/run, verify they are tagged with:
+    - **Category**: `infrastructure`, `integration`, `ai_testing`, `unit` (or explicit N/A if not applicable)
+    - **Criticality**: `critical`, `high`, `medium`, `low` (or explicit N/A if not applicable)
+    - **Scope**: `infra`, `integration`, `docs`, `all` (or explicit N/A if not applicable)
+    - **Subcategory/Subscope**: If applicable to the test suite
+    - **⚠️ Flag**: If tests were added but no tagging evidence found — mark as `⚠️ tests missing tags (category/criticality/scope)`
   - **Explicit N/A**: "no tests needed", "docs-only", "read-only change", or similar _explicitly stated_
+- ✅ **Hooks evidence markers** (explicit only):
+  - **Hooks created/updated**: explicit mention of hook files/paths, `.pre-commit-config.yaml` updates, or "added/updated hooks"
+    - **When hooks are needed**: Hooks should be created/updated when:
+      - New validation logic is added (file structure, naming conventions, content validation)
+      - New file types/patterns are introduced that need validation
+      - Standards require hooks for certain types of changes (e.g., index files, command files, rule files)
+      - Security checks are needed for new patterns (secrets, API keys, hardcoding)
+    - **Status check**: Must confirm hooks are **installed and configured** (in `.pre-commit-config.yaml` or `.husky/pre-commit`, and script exists)
+    - **⚠️ Flag**: If changes suggest hooks are needed but no hooks were created — mark as `⚠️ hooks may be needed (validation/security checks)`
+    - **⚠️ Flag**: If hooks were created but not installed/configured — mark as `⚠️ hooks created but not installed`
+  - **Explicit N/A**: "no hooks needed", "no validation required", or similar _explicitly stated_
 
 **Strict filters (CRITICAL - do NOT override)**:
 
@@ -58,12 +98,25 @@ Scan the conversation for:
   2. For tests run: Exit code is 0 or output explicitly states "all tests passed" / "tests passed" / "✅ passed"
   3. For tests added: Tests were actually run and verified passing (not just "I created test file X")
   - Otherwise, mark test evidence as `⚠️ not found` (if no mention), `⚠️ tests created but not passing` (if added but not run/passing), or `⚠️ tests failed / incomplete` (if run but failed).
+- **No hooks guessing**: Only report hooks as ✅ when:
+  1. The conversation explicitly mentions hooks created/updated/installed (or explicitly marks N/A), OR
+  2. Changes made clearly don't require hooks (e.g., pure documentation, read-only operations)
+  - If changes suggest hooks might be needed (new validation logic, new file patterns, security checks) but no hooks were mentioned, mark as `⚠️ hooks may be needed`.
+- **No tagging guessing**: Only report test tagging as ✅ when:
+  1. The conversation explicitly mentions test tags (category, criticality, scope) or shows test commands with `--category`, `--criticality`, `--scope` flags, OR
+  2. Tests are explicitly marked as not requiring tags (e.g., "simple smoke test", "docs-only test")
+  - If tests were added but no tagging evidence is found, mark as `⚠️ tests missing tags`.
 
 4. Output format (produce this in your message)
 
 Generate a simple, read-only report:
 
 ```markdown
+## Git Push Status
+
+**Unpushed Commits**: N
+- Status: ✅ All pushed | ⚠️ N commits ahead (not blocked) | ⚠️ N commits ahead - blocked by hook errors
+
 ## Pending Tasks from Current Conversation
 
 **Total Pending**: N
@@ -79,9 +132,15 @@ N. [Status] Task description
 - Tests not found: X
 - Tests created but not passing: Y
 - Tests failed / incomplete: Z
+**Completed Missing Hooks Evidence**: H (total with any issue: may be needed, created-not-installed)
+- Hooks may be needed: A
+- Hooks created but not installed: B
+**Completed Missing Test Tagging**: T (total with any issue: missing tags)
+- Tests missing tags: T
 
 1. ✅ Completed task description
-   - Tests: ✅ <explicit evidence> | ⚠️ not found | N/A (explicit)
+   - Tests: ✅ <explicit evidence> | ⚠️ not found | ⚠️ tests created but not passing | ⚠️ tests failed / incomplete | ⚠️ tests missing tags (category/criticality/scope) | N/A (explicit)
+   - Hooks: ✅ <explicit evidence> | ⚠️ hooks may be needed | ⚠️ hooks created but not installed | N/A (explicit)
 ```
 
 **Status indicators**:
@@ -94,6 +153,11 @@ N. [Status] Task description
 **Example output**:
 
 ```markdown
+## Git Push Status
+
+**Unpushed Commits**: 2
+- Status: ⚠️ 2 commits ahead - blocked by hook errors (pre-commit validation failing)
+
 ## Pending Tasks from Current Conversation
 
 **Total Pending**: 3
@@ -111,24 +175,40 @@ N. [Status] Task description
 
 ## Completed in This Conversation
 
-**Total Completed**: 4
+**Total Completed**: 6
 **Completed Missing Test Evidence**: 2
 - Tests not found: 0
 - Tests created but not passing: 1
 - Tests failed / incomplete: 1
+**Completed Missing Hooks Evidence**: 1
+- Hooks may be needed: 1
+- Hooks created but not installed: 0
+**Completed Missing Test Tagging**: 1
+- Tests missing tags: 1
 
 1. ✅ Fixed linter errors in src/utils.ts
-
-   - Tests: ✅ bash tests/run_tests.sh --category infrastructure (exit 0, all passed)
+   - Tests: ✅ bash tests/run_tests.sh --category infrastructure --criticality high (exit 0, all passed)
+   - Hooks: N/A (explicit: no validation logic changes)
 
 2. ✅ Updated README with new endpoint docs
    - Tests: N/A (explicit: docs-only change)
+   - Hooks: N/A (explicit: docs-only change)
 
 3. ✅ Added payment validation function
    - Tests: ⚠️ tests created but not passing (test file added, not yet run)
+   - Hooks: ⚠️ hooks may be needed (new validation logic added, may need pre-commit checks)
 
 4. ✅ Refactored auth middleware
    - Tests: ⚠️ tests failed / incomplete (ran `npm test` but saw 3 failures)
+   - Hooks: N/A (explicit: no new validation needed)
+
+5. ✅ Added new index file validation
+   - Tests: ✅ bash tests/run_tests.sh --category infrastructure --scope docs (exit 0, all passed)
+   - Hooks: ✅ Created validate_index_content.py and installed in .pre-commit-config.yaml
+
+6. ✅ Added integration tests for API endpoints
+   - Tests: ⚠️ tests missing tags (category/criticality/scope) (tests added but no --category/--criticality flags mentioned)
+   - Hooks: N/A (explicit: no validation hooks needed)
 ```
 
 ## Notes
@@ -154,7 +234,10 @@ N. [Status] Task description
 - [ ] Apply strict filters (no suggestions, no classification, no routing)
 - [ ] Report only conversation-scoped pending items
 - [ ] Note completed work separately
-- [ ] For each completed item, report explicit test evidence (✅) or `⚠️ not found` / `N/A (explicit)`
+- [ ] For each completed item, report:
+  - [ ] Explicit test evidence (✅) or `⚠️ not found` / `⚠️ tests created but not passing` / `⚠️ tests failed / incomplete` / `⚠️ tests missing tags` / `N/A (explicit)`
+  - [ ] Test tagging evidence (category, criticality, scope) or `⚠️ tests missing tags`
+  - [ ] Explicit hooks evidence (✅) or `⚠️ hooks may be needed` / `⚠️ hooks created but not installed` / `N/A (explicit)`
 - [ ] Keep output concise and scannable
 - [ ] Do NOT create or modify any files
 

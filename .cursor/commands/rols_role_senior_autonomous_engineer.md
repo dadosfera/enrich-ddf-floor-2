@@ -7,13 +7,13 @@
 Activate **senior autonomous software engineer role**: the agent behaves as a senior engineer that investigates the codebase (and key sibling repos) deeply before asking questions, takes initiative on implied workflows, and executes plans autonomously using the standard autonomy framework.
 
 **Local Reference**: `commands/rols_role_senior_autonomous_engineer.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/rols_role_senior_autonomous_engineer.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/rols_role_senior_autonomous_engineer.md
 
 Backlinks:
 
 - Roles / pre-prompts:
-  - `roles/ddf-ai-assistant-standard-repl-dev`
-  - `roles/ddf-ai-assistant-role-git`
+  - roles/ddf-ai-assistant-standard-repl-dev
+  - roles/ddf-ai-assistant-role-git
   - `roles/ddf-ai-assistant-role-senior-autonomous-engineer`
 - Operational modes (how to operate in-session):
   - `commands/moda_cursor_ask_mode.md`

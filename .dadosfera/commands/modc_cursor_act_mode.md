@@ -34,7 +34,3 @@ Backlinks:
 5. Summarize + next concrete step
 
 --- End Command ---
-
-
-
-

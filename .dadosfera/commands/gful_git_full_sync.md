@@ -179,9 +179,5 @@ fi
 - Stop immediately if any command fails and report the error
 - Ensure you return to the root directory after handling each submodule
 - Verify branch names before pushing in submodules and main repo
-- Use branch discovery to identify available branches in submodules before operations
-
-**Version History**:
-
-- 1.1.0: Added branch discovery and upstream tracking verification for submodules and main repository
+- Use branch discovery to identify available branches in submodules before operations**Version History**:- 1.1.0: Added branch discovery and upstream tracking verification for submodules and main repository
 - 1.0.0: Initial version

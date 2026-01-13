@@ -6,7 +6,7 @@
 Review and manage AI agent memories for the current workspace. This command provides analysis of all memories with suggestions for cleanup and autonomous execution capabilities.
 
 **Local Reference**: `commands/memo_memory_management.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/memo_memory_management.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/memo_memory_management.md
 
 ## Prerequisites
 
@@ -14,7 +14,7 @@ Review and manage AI agent memories for the current workspace. This command prov
 - **Claude Sonnet 4.5** or newer
 - **GPT-5.1** or newer
 
-Lower-tier models lack the `update_memory` tool and can only provide read-only analysis.
+Lower-tier models lack the update_memory tool and can only provide read-only analysis.
 
 ## Purpose
 
@@ -37,7 +37,7 @@ This command helps identify and manage these issues.
 ## When NOT to Use
 
 - During active task execution (can distract from primary goal)
-- When you need to create/update memories immediately (use `update_memory` tool directly)
+- When you need to create/update memories immediately (use update_memory tool directly)
 - When using lower-tier models that lack memory management capabilities
 
 ## Command Sequence

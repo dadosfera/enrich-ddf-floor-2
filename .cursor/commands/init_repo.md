@@ -7,7 +7,7 @@
 Initialize a new repository with standard Dadosfera folder structure, rules, and commands.
 
 **Local Reference**: `commands/init_repo.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/init_repo.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/init_repo.md
 
 Backlinks:
 
@@ -20,7 +20,7 @@ Backlinks:
 Bootstrap a new repository with the complete Dadosfera standard structure, including:
 
 - Standard folder structure based on repository type (-fera, -ddf, standard)
-- `.cursor/rules/` and `.cursor/commands/` copied from docs-fera
+- .cursor/rules/ and .cursor/commands/ copied from docs-fera
 - `.dadosfera/` configuration if available
 - README.md, AGENTS.md, Makefile, and workflows/run.sh templates
 - Proper .gitignore

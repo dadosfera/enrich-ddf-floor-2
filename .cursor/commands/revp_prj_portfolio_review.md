@@ -42,8 +42,8 @@ This command is the high-level entry point for **portfolio-wide reprioritization
 ## Related
 
 - **Local Reference**: `mini_prompt/lv1/project_and_plans_review_reprioritize_mini_prompt.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv1/project_and_plans_review_reprioritize_mini_prompt.md`
-- `/plrr_plan_reorder` (ID 048) - Plan reordering within single repository (narrower scope, plan-focused)
-- `/pfrb_portfolio_rebalance` (ID 046) - Portfolio-wide rebalancing across all repositories (broader scope, multi-repo)
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv1/project_and_plans_review_reprioritize_mini_prompt.md
+- /plrr_plan_reorder (ID 048) - Plan reordering within single repository (narrower scope, plan-focused)
+- /pfrb_portfolio_rebalance (ID 046) - Portfolio-wide rebalancing across all repositories (broader scope, multi-repo)
 - **Local Reference**: `commands/mpov_meta_plan_overview.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/mpov_meta_plan_overview.md`
+  **Git URL Reference**: `

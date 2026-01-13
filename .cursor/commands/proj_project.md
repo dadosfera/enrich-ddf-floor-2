@@ -13,7 +13,7 @@
 
 Scaffold a new project structure (`docs/projects/{status}/{slug}`) and its Meta Project plan.
 
-> **Note**: For `-fera` repositories, use `_dev/docs/projects/{status}/{slug}`.
+> **Note**: For -fera repositories, use `_dev/docs/projects/{status}/{slug}`.
 
 ```bash
 # Run the creation mini prompt

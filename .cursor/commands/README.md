@@ -13,6 +13,8 @@ This directory contains the **canonical source** for all Cursor IDE commands. Co
 
 See: `guides/distribution_workflow_unified.md` for complete workflow.
 
+**Command authoring best practices**: `guides/commands/command_authoring_best_practices.md`
+
 ## Adding a New Command
 
 **⚠️ MANDATORY WORKFLOW** - Follow all steps or your commit will be blocked by the pre-commit hook.
@@ -74,6 +76,39 @@ command here
 ```
 
 See existing commands in this directory for examples.
+
+## Roles vs Modes (IMPORTANT)
+
+- **Role**: *who* the agent should behave as (architect, project manager, tech lead, senior engineer).
+- **Mode**: *how* the agent should operate (ask/learn, plan, act/execute, debug).
+
+You can combine them in a session (example: `Role: Tech Lead` + `Mode: Plan`).
+
+## Role Commands
+
+Role commands activate distinct agent roles:
+
+| Command | Role | Focus | Use When |
+|---------|------|-------|----------|
+| `/rols_role_senior_autonomous_engineer` | Senior Engineer | Initiative + autonomous execution | You want senior judgment and autonomous delivery |
+| `/rolt_role_tech_lead` | Tech Lead | Code quality & team mentoring | Reviewing code, improving standards, mentoring teams |
+| `/rola_role_arkhitect` | Architect | System design & long-term evolution | Designing architecture, planning major migrations |
+| `/rolp_role_prj_manager` | Project Manager | Portfolio & delivery coordination | Coordinating delivery, managing dependencies, planning roadmaps |
+
+**Role docs**: `guides/role_based_commands_tech_lead_architect_pm.md`
+
+## Operational Mode Commands
+
+Mode commands constrain *how* the agent operates:
+
+| Command | Mode | What it allows |
+|---------|------|----------------|
+| `/moda_cursor_ask_mode` | Ask | Read/search/explain only (no edits, no shell) |
+| `/modp_cursor_plan_mode` | Plan | Planning only (no edits, no shell) |
+| `/modc_cursor_act_mode` | Act | Full execution (edits + shell/tests) |
+| `/modb_cursor_debug_mode` | Debug | Diagnosis (diagnostic shell ok; avoid permanent edits) |
+
+**Mode docs**: `guides/cursor/MODE_SYSTEM_OVERVIEW.md`
 
 ## Current Commands
 

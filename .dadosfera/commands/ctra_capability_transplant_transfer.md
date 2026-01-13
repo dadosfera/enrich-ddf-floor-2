@@ -131,7 +131,3 @@ When the capability is stable and validated:
 
 - This command is **coordination guidance**, not an auto-run script: each step should be executed explicitly by the agent, respecting repository-specific rules and safety standards.
 - For sensitive capabilities (e.g., authentication, payments), ensure that **security and compliance reviews** are part of the plan before considering the transplant complete.
-
-
-
-

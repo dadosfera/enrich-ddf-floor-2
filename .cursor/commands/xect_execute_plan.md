@@ -6,9 +6,9 @@
 Execute the active plan related to the current conversation, showing the absolute path at the end.
 
 **Local Reference**: `commands/xect_execute_plan.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/xect_execute_plan.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/xect_execute_plan.md
 
-**Note**: This command is repo-aware. For `-fera` repositories (docs-fera, scripts-fera, etc.), plans are stored in `_dev/docs/plans/`. For all other repositories, plans are stored in `docs/plans/`.
+**Note**: This command is repo-aware. For -fera repositories (docs-fera, scripts-fera, etc.), plans are stored in _dev/docs/plans/. For all other repositories, plans are stored in `docs/plans/`.
 
 Backlinks:
 

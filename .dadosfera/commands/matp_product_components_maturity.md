@@ -14,10 +14,10 @@
 
 ## Backlinks
 
-- **Local Reference**: `standards/maturity/index_maturity.yaml`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/index_maturity.yaml`
-- **Local Reference**: `guides/devs_agents_development_framework_overview.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/guides/devs_agents_development_framework_overview.md`
+- **Local Reference**: `standards/maturity/index_standards__maturity.yaml`
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/index_standards__maturity.yaml
+- **Local Reference**: guides/devs_agents_development_framework_overview.md
+  **Git URL Reference**: https://github.com/dadosfera/docs-fera/blob/main/guides/devs_agents_development_framework_overview.md
 
 ---
 
@@ -30,7 +30,7 @@ This command assesses a repository's **product readiness** by:
 3. **Determining the minimum development floor** the repo qualifies for
 4. **Recommending missing components** for progression to the next floor
 
-Unlike `/mass_maturity_assessment` (which evaluates code quality, testing, deployment, and architecture), `/rcmp` focuses specifically on **product components needed to serve external users**.
+Unlike /mass_maturity_assessment (which evaluates code quality, testing, deployment, and architecture), /rcmp` focuses specifically on **product components needed to serve external users**.
 
 ---
 
@@ -391,17 +391,17 @@ The command produces:
 ## Related Commands & Resources
 
 - **Related Reference**: `standards/maturity/software_lifecycle_maturity.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/software_lifecycle_maturity.md`
-- **Related Command**: `/mass_maturity_assessment` – for code quality, testing, and deployment maturity
-- **Related Mini-Prompt**: `mini_prompt/lv2/authentication_maturity_analysis_and_improvement_mini_prompt.md`
-  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv2/authentication_maturity_analysis_and_improvement_mini_prompt.md`
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/standards/maturity/software_lifecycle_maturity.md
+- **Related Command**: /mass_maturity_assessment – for code quality, testing, and deployment maturity
+- **Related Mini-Prompt**: mini_prompt/lv2/authentication_maturity_analysis_and_improvement_mini_prompt.md
+  **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/mini_prompt/lv2/authentication_maturity_analysis_and_improvement_mini_prompt.md
 
 ---
 
 ## Notes
 
 - This is a **read-only assessment command**: it scans for component presence and technology alignment without making changes.
-- Components must be **present AND functional**: finding a `package.json` with Keycloak listed is not sufficient; Keycloak must be configured and running.
+- Components must be **present AND functional**: finding a package.json with Keycloak listed is not sufficient; Keycloak must be configured and running.
 - Technology choices are **not negotiable per floor**: if you're Floor 2, you must use KrakenD for API gateway, not Kong.
 - Keep executions bounded: avoid scanning huge monorepos exhaustively; favor top-level folders and critical config files when gathering signals.
 

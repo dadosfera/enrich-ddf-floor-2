@@ -6,12 +6,12 @@
 Investigate a problem to identify its root cause and propose a solution, without planning or implementing. Use this when you need to understand what's wrong and explore potential fixes before committing to action.
 
 **Local Reference**: `commands/rciv_investigate_root_cause.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/rciv_investigate_root_cause.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/rciv_investigate_root_cause.md
 
 Backlinks:
 
-- `mini_prompt/lv1/problem_diagnosis_mini_prompt.md`
-- `commands/xect_execute_plan.md`
+- mini_prompt/lv1/problem_diagnosis_mini_prompt.md
+- commands/xect_execute_plan.md
 - `commands/pfac_plan_from_active_tasks_conversation.md`
 - `commands/depi_enhanced_deep_investigation.md`
 

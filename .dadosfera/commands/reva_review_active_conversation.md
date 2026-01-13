@@ -1,9 +1,9 @@
 # /reva_review_active_conversation
 <!-- COMMAND_ID: 041 -->
-<!-- COMMAND_VERSION: 1.0.0 -->
+<!-- COMMAND_VERSION: 1.2.0 -->
 <!-- COMMAND_TYPE: re_review -->
 
-**Analysis only - no files modified.** Extract and classify ALL tasks from the conversation into logical sections.
+**Analysis only - no files modified.** Extract and classify ALL tasks from the conversation into logical sections. **Checks for unpushed commits and hook-related push blockers** before classification.
 
 The command MUST suggest tasks for `/active` and `/backlog` plans – complete classification is the goal. The user decides what to act on afterward.
 
@@ -17,11 +17,34 @@ Backlinks:
 
 ## Command sequence (run in order)
 
-1. Confirm repository context (for references only)
+1. Confirm repository context and check git push status
 
 ```bash
 gtimeout 5 git rev-parse --show-toplevel
 ```
+
+Check for unpushed commits and hook-related push blockers:
+
+```bash
+# Check if there are commits ahead of origin
+CURRENT_BRANCH=$(git branch --show-current 2>/dev/null || echo "main")
+UNPUSHED_COUNT=$(git rev-list HEAD...origin/$CURRENT_BRANCH --count 2>/dev/null || echo "0")
+
+# If there are unpushed commits, check if they're blocked by hook errors
+if [ "$UNPUSHED_COUNT" -gt 0 ]; then
+  # Check if pre-commit hooks would fail (dry-run)
+  if command -v pre-commit >/dev/null 2>&1; then
+    pre-commit run --all-files --hook-stage pre-push 2>&1 | grep -q "Failed\|error" && HOOK_ERRORS="yes" || HOOK_ERRORS="no"
+  else
+    HOOK_ERRORS="unknown"
+  fi
+fi
+```
+
+**Report unpushed commits status** in the output:
+- ✅ **No unpushed commits**: All commits are pushed
+- ⚠️ **Unpushed commits (N)**: N commits ahead of origin (not blocked by hooks)
+- ⚠️ **Unpushed commits (N) - blocked by hook errors**: N commits ahead of origin, and pre-commit/pre-push hooks are failing
 
 2. Conversation synthesis (no code changes yet)
 
@@ -39,7 +62,7 @@ gtimeout 5 git rev-parse --show-toplevel
 
 - **Routing and Classification** (see `glossaries/project_management.md` for canonical statuses):
 
-  - **Finished Tasks**: Items that are clearly done (success criteria met) either in this conversation or in existing `finished` plans. Summarize them under **Finished Tasks** so they are not mistaken for active work.
+  - **Finished Tasks**: Items that are clearly done (success criteria met) either in this conversation or in existing `finished` plans. Summarize them under **Finished Tasks** so they are not mistaken for active work. **MUST audit test results, hooks, and test tagging** (verify tests passed, hooks created/updated when needed, and tests properly tagged) for all finished items.
   - **Active Tasks**: Items the conversation clearly committed to, started, or are currently in progress. Recommended for the current active plan.
   - **Prioritized Tasks**: Out-of-scope items that are high-impact, fully defined, and ready to start next. Recommended for `{PLANS_BASE}/prioritized/`.
   - **Blocked Tasks**: Items that cannot proceed due to dependencies, missing info, or external factors.
@@ -54,7 +77,12 @@ gtimeout 5 git rev-parse --show-toplevel
 
 4. Output format (produce this in your message)
 
-- **Conversation Context** (start with this):
+- **Git Push Status** (start with this):
+
+  - **Unpushed Commits**: N
+  - **Status**: ✅ All pushed | ⚠️ N commits ahead (not blocked) | ⚠️ N commits ahead - blocked by hook errors
+
+- **Conversation Context**:
 
   - **Main Objective**: One sentence summary of what the user originally wanted to achieve.
   - **Goals**: 1–3 bullet points listing the key goals of this specific conversation.
@@ -71,7 +99,7 @@ gtimeout 5 git rev-parse --show-toplevel
 
 - **Structure the response with these sections (in this order)**:
 
-  1. **Finished Tasks** (Completed in this or previous sessions; should not be repeated under Active)
+  1. **Finished Tasks** (Completed in this or previous sessions; should not be repeated under Active. **Include explicit test/hooks/tagging evidence** similar to `/chkp_check_pending` output: ✅ evidence | ⚠️ issue | N/A)
   2. **Active Tasks** (Currently being worked on)
   3. **Prioritized Tasks** (Ready to start, waiting for active slot)
   4. **Blocked Tasks** (Cannot proceed due to dependency)
@@ -102,6 +130,11 @@ gtimeout 5 ls -1 "$PLANS_BASE" 2>/dev/null | head -50
 ## Example Output
 
 ```markdown
+**Git Push Status**
+
+**Unpushed Commits**: 2
+- Status: ⚠️ 2 commits ahead - blocked by hook errors (pre-commit validation failing)
+
 **Main Objective**: Refactor the review command to improve clarity and reduce redundancy.
 **Goals**:
 
@@ -113,6 +146,8 @@ gtimeout 5 ls -1 "$PLANS_BASE" 2>/dev/null | head -50
 **Finished Tasks**
 
 1. Move `old_plan.md` to `finished/` – already completed in a previous session
+   - Tests: N/A (explicit: docs-only change)
+   - Hooks: N/A (explicit: docs-only change)
 
 **Active Tasks**
 
@@ -153,7 +188,3 @@ gtimeout 5 ls -1 "$PLANS_BASE" 2>/dev/null | head -50
   - Updates a specific active plan only (`_dev/docs/plans/active/` for -fera repos, `docs/plans/active/` for others).
 
 --- End Command ---
-
-
-
-

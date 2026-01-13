@@ -6,7 +6,7 @@
 Complete and verify ALL active plans with pre-execution validation, completion verification, and overlap/duplication detection.
 
 **Local Reference**: `commands/plca_complete_all_active.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/plca_complete_all_active.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/plca_complete_all_active.md
 
 Backlinks:
 - commands/xect_execute_plan.md
@@ -20,7 +20,7 @@ Orchestrates the entire active plan lifecycle: verify completion, detect overlap
 
 ### When to use in the lifecycle
 
-- Run `/plca_complete_all_active` **after** execution-focused commands like `/xect_execute_plan`, `/next_next_plan_cycle`, or `/xqpa_xqt_plan_all` (the canonical “execute all plans” command; older aliases such as `/xpal_execute_plan_all` have been removed).
+- Run /plca_complete_all_active **after** execution-focused commands like /xect_execute_plan, `/next_next_plan_cycle`, or `/xqpa_xqt_plan_all` (the canonical “execute all plans” command; older aliases such as `/xpal_execute_plan_all` have been removed).
 - Its job is to verify which active plans are truly finished using canonical Status fields (`Status:` / `**Status**:` set to `finished`, `completed`, or `done`) and/or `.completed` markers and then move only those verified plans from `active/` to `finished/` in line with `templates/plan_management_system.md`.
 - Together with `/arch_archive` (and the `/next_next_plan_cycle` double-verification flow), it is one of the only commands explicitly allowed to move completed plans into `finished/`.
 

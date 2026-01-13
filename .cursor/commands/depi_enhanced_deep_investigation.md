@@ -6,12 +6,12 @@
 Deep investigation with active instrumentation and debugging enhancements. This command modifies code to add comprehensive logging, debugging capabilities, and monitoring before attempting to diagnose root cause. Use when surface-level investigation isn't sufficient or when you need to understand system behavior in detail.
 
 **Local Reference**: `commands/depi_enhanced_deep_investigation.md`
-**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/depi_enhanced_deep_investigation.md`
+**Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/depi_enhanced_deep_investigation.md
 
 Backlinks:
 
-- `mini_prompt/lv2/deep_debugging_instrumentation_mini_prompt.md`
-- `commands/rciv_investigate_root_cause.md`
+- mini_prompt/lv2/deep_debugging_instrumentation_mini_prompt.md
+- commands/rciv_investigate_root_cause.md
 - `commands/bdbg_browser_debug.md`
 - `commands/xect_execute_plan.md`
 
