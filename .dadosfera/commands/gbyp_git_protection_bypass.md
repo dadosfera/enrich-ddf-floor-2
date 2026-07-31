@@ -5,10 +5,10 @@ scope: all
 ---
 # /gbyp_git_protection_bypass
 <!-- COMMAND_ID: 023 -->
-<!-- COMMAND_VERSION: 2.4.2 -->
+<!-- COMMAND_VERSION: 2.4.3 -->
 <!-- COMMAND_TYPE: gb_git_protection_bypass -->
 
-Admin-only command for bypassing branch protection in two scenarios: (A) a PR that is blocked from merging into main, and (B) a direct commit blocked from being pushed straight to main. Distinguishes Classic Branch Protection from GitHub Rulesets. Phases 1–3 are read-only and safe to run autonomously. All write phases require explicit user authorization. Phase 7 always performs a partial rollback by default and applies a full rollback to the original posture only when explicitly requested via `REVERT_PROTECTION=1`; otherwise user-scoped allowances are intentionally kept.
+Admin-only command for bypassing branch protection in two scenarios: (A) a PR that is blocked from merging into main, and (B) a direct commit blocked from being pushed straight to main. Distinguishes Classic Branch Protection from GitHub Rulesets. Phases 1–3 are read-only and safe to run autonomously. All write phases require explicit user authorization. Phase 7 always performs a partial rollback by default and applies a full rollback to the original posture only when explicitly requested via `REVERT_PROTECTION=1`; otherwise user-scoped allowances are intentionally kept. Phase 7 verifies the restore by reading protection back and fails loudly if the branch is still relaxed.
 
 **Critical rule**: This command modifies branch protection settings. Read phases (1–3) are safe; write phases (4–6) require explicit user authorization for each step.
 
@@ -35,6 +35,10 @@ Admin-only command for bypassing branch protection in two scenarios: (A) a PR th
 **Critical rule**: A user's authorization to run this command against an already-enumerated set of PRs does NOT automatically extend to a PR the agent itself opened as a byproduct of that work (e.g. a stash-promotion PR, a docs-recovery PR, a review-nits followup PR) — even under a broad "finish everything" instruction that covers the known PR set. Name the byproduct PR by number/title and get separate, explicit merge authorization for it before running phase 6, rather than assuming the original grant covers it.
 
 **Critical rule**: Before any authorized write phase that targets a specific PR, refresh that PR's live state. If it is already `MERGED`, `CLOSED`, or no longer resolvable, treat the prior authorization as stale/consumed and emit an explicit message; do not change protection or attempt an admin merge against a different or already-resolved target.
+
+**Critical rule**: Never print a "restored" / "cleanup complete" message from a write call's exit code alone. Every Phase 7 restore MUST read the protection back and assert the expected value. A relaxation you believe you reverted but did not is the single worst outcome of this command, and the failure is silent: the log says ✅ while the branch stays open.
+
+**Critical rule**: Always derive `OWNER`/`REPO` from `gh repo view --json owner,name` (Phase 1), never from `git remote get-url origin`. A renamed repository keeps the old name in the git remote, and the GitHub API answers **write** calls (`PATCH`/`POST`/`DELETE`) on the stale name with HTTP 307 that `gh api` does **not** follow — while **GET** does follow it. The write silently no-ops and a naive read-back appears to confirm success. `gh repo view` resolves to the canonical name, so Phase 1 is the only safe source. This bit a live sweep on `dadosfera/data-maturity-assessment` → canonical `dadosfera/assessment-ddf`.
 
 **Local Reference**: `commands/gbyp_git_protection_bypass.md`
 **Git URL Reference**: `https://github.com/dadosfera/docs-fera/blob/main/commands/gbyp_git_protection_bypass.md`
@@ -326,11 +330,24 @@ if [ "$REVERT_PROTECTION" != "1" ]; then
   # Default: restore broad protections but keep user-specific allowances.
   echo "ℹ️  REVERT_PROTECTION != 1; performing partial rollback to preserve intended direct-push/bypass-user allowances."
 
-  # 7a. Restore enforce_admins (if it was temporarily disabled)
+  # 7a. Restore enforce_admins (if it was temporarily disabled), then VERIFY the read-back.
   if [ -f .tmp/original_enforce_admins.txt ] && [ "$(cat .tmp/original_enforce_admins.txt)" = "true" ]; then
-    gtimeout 10 gh api -X POST "repos/$OWNER/$REPO/branches/$BRANCH/protection/enforce_admins" >/dev/null
-    echo "✅ Restored enforce_admins=true on $OWNER/$REPO@$BRANCH"
-    echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) gbyp RESTORE enforce_admins repo=$OWNER/$REPO branch=$BRANCH actor=$GITHUB_USERNAME" >> logs/git_sync_operations.log
+    gtimeout 10 gh api -X POST "repos/$OWNER/$REPO/branches/$BRANCH/protection/enforce_admins" >/dev/null 2>&1 || true
+
+    # Never trust the exit code: read the live posture back and assert it.
+    ACTUAL_ENFORCE=$(gtimeout 10 gh api "repos/$OWNER/$REPO/branches/$BRANCH/protection" \
+      --jq '.enforce_admins.enabled' 2>/dev/null || echo "unknown")
+
+    if [ "$ACTUAL_ENFORCE" = "true" ]; then
+      echo "✅ Restored and verified enforce_admins=true on $OWNER/$REPO@$BRANCH"
+      echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) gbyp RESTORE enforce_admins repo=$OWNER/$REPO branch=$BRANCH actor=$GITHUB_USERNAME verified=true" >> logs/git_sync_operations.log
+    else
+      echo "🚨 CLEANUP FAILED: enforce_admins is '$ACTUAL_ENFORCE' (expected true) on $OWNER/$REPO@$BRANCH"
+      echo "🚨 The branch is STILL RELAXED. Do not end the session. Confirm OWNER/REPO came from 'gh repo view'"
+      echo "🚨 (a renamed repo 307s on write and the call silently no-ops), then re-run this phase."
+      echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) gbyp RESTORE_FAILED enforce_admins repo=$OWNER/$REPO branch=$BRANCH actor=$GITHUB_USERNAME actual=$ACTUAL_ENFORCE" >> logs/git_sync_operations.log
+      exit 1
+    fi
   fi
 
   # 7c. Scenario B: restore required_pull_request_reviews if phase 9 removed it
