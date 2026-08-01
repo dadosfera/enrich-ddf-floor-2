@@ -12,6 +12,16 @@ repos:
         language: system
         pass_filenames: false
 
+  # Log size warning (scripts-fera distributed hook)
+  - repo: local
+    hooks:
+      - id: pre-commit-warn-log-size
+        name: Warn about oversized log files / .tmp directory
+        entry: bash scripts/hooks/pre-commit-warn-log-size.sh
+        language: system
+        pass_filenames: false
+        always_run: true
+
   # Python linting and formatting with ruff (replaces Black + isort)
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.2.1

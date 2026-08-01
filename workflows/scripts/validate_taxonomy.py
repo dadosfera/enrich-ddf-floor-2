@@ -65,21 +65,30 @@ if active_dir.is_dir():
     print("   Please move files from active/ to docs/plans/active/")
     sys.exit(1)
 
-# Check for root-level /scripts directory violation
-# Scripts should use the dedicated /scripts/{category}/ layout, not live as loose scripts at the project root.
-# Workflows are responsible for orchestrating scripts from /scripts/{category}/ or from workflow-specific
-# directories under workflows/{category}/{workflow}/.
+# Check for root-level /scripts layout violations.
+# Allowed: scripts/{category}/... (e.g. scripts/hooks/).
+# Forbidden: loose files directly under scripts/ (scripts/*.sh at the root of scripts/).
+# Workflows may also keep cross-repo helpers under workflows/scripts/.
 scripts_dir = Path("scripts")
 if scripts_dir.is_dir():
-    print("❌ Root-level 'scripts/' directory detected.")
-    print(
-        "   Scripts should live under the top-level 'scripts/{category}/' layout, not directly at the project root."
+    loose_files = sorted(
+        p.name
+        for p in scripts_dir.iterdir()
+        if p.is_file() and not p.name.startswith(".")
     )
-    print(
-        "   Workflows should orchestrate scripts from 'scripts/{category}/' or from workflow-specific "
-        "directories (for example, 'workflows/<category>/<workflow>/')."
-    )
-    sys.exit(1)
+    if loose_files:
+        print("❌ Loose files detected directly under scripts/:")
+        for name in loose_files:
+            print(f"   - scripts/{name}")
+        print(
+            "   Scripts should live under the top-level 'scripts/{category}/' layout "
+            "(for example, scripts/hooks/), not as loose files at scripts/."
+        )
+        print(
+            "   Workflows should orchestrate scripts from 'scripts/{category}/' or from "
+            "workflow-specific directories (for example, 'workflows/<category>/<workflow>/')."
+        )
+        sys.exit(1)
 
 # Recursively check all directories in the project
 # Note: We use pathlib.Path().rglob() for cross-platform compatibility
