@@ -17,6 +17,20 @@ Lifecycle folders used by this skill: `active/`, `backlog/`, `finished/`.
 If both trees exist, prefer the class rule above; if only one exists, use that.
 Never invent a third plans root.
 
+## Worktree path lifecycle
+
+SSoT: `standards/git/worktree_naming.md`.
+
+| Path segment | Meaning | Third-party delete? |
+|--------------|---------|---------------------|
+| `-wt-live-` | Active | No |
+| `-wt-park-` | Intentionally retained | No |
+| `-wt-reap-` | Merged + verified | Yes, after double-check |
+| legacy `-wt-<slug>` (no lifecycle) | Treat as live | No |
+
+Before Step 9 remove: `mark … reap` then `check-reapable`. Never remove a
+sibling `-wt-live-` / `-wt-park-` / legacy path belonging to another agent.
+
 ## Anti-loss gates
 
 Run before destructive git operations. Goal: minimize information loss when
@@ -27,6 +41,7 @@ several agents share one git object store via many worktrees.
 - [ ] Confirm you are inside **your** worktree path (`pwd` == recorded path)
 - [ ] Confirm branch name matches the work being integrated
 - [ ] List sibling worktrees (`git worktree list`) and label owners if known
+- [ ] Read `.dadosfera-worktree.json` lifecycle when present
 - [ ] Never run `checkout` / `reset` / `stash -u` / `clean` in a tree you did not create
 
 ### B. Working tree inventory

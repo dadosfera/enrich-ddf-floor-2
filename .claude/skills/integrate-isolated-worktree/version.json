@@ -1,26 +1,32 @@
 {
   "skill": "integrate-isolated-worktree",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "api_version": "1.0",
-  "platforms": ["claude", "cursor", "codex", "dadosfera"],
+  "platforms": [
+    "claude",
+    "cursor",
+    "codex",
+    "dadosfera"
+  ],
   "assets": {
-    "SKILL.md": "End-to-end land of an isolated worktree onto main: gap analysis, execute, plan finish/backlog, PR merge, verify, delete worktree.",
-    "reference.md": "Anti-loss gates, plans-root resolution, merge-blocked recovery with bypass pre-check, verify-no-deploy, abort taxonomy."
+    "SKILL.md": "End-to-end land of an isolated worktree onto main: gap analysis, execute, plan finish/backlog, PR merge, verify, mark reap, delete worktree.",
+    "reference.md": "Anti-loss gates, plans-root resolution, merge-blocked recovery, abort taxonomy."
   },
   "features": [
     "Gap analysis against initial conversation scope with execute/backlog split",
     "Plans root detection: *-fera → _dev/docs/plans, else docs/plans",
     "Finish plan + park out-of-scope items under backlog/",
     "PR create → merge → confirm MERGED → verify on primary main",
-    "Pre-check review-bypass rights before suggesting /gbyp (admin ≠ bypass)",
-    "Verify forbids redeploy/cloud mutate; deploy is a separate authorized step",
-    "Worktree remove only after durability gates pass",
+    "Mark worktree lifecycle reap (path rename + status file) before remove",
+    "Worktree remove only after durability gates + check-reapable pass",
     "Multi-agent anti-loss checklist (status classify, stash backup, pending-to-merge)"
   ],
   "changelog": {
-    "1.1.0": "Step 7: read-only bypass-rights pre-check before suggesting /gbyp Scenario A; decision table for CI/org/CODEOWNERS. Step 8: explicit forbid redeploy/deploy in verify.",
+    "1.1.1": "check-reapable ignores untracked .dadosfera-worktree.json; resolve helper from _dev or scripts/git.",
+    "1.1.0": "Step 9 marks -wt-reap- + .dadosfera-worktree.json before delete; links standards/git/worktree_naming.md.",
     "1.0.1": "Registry hygiene: full distribution.destinations/tool in version.json; indexed in index_skills.yaml.",
-    "1.0.0": "Initial authored skill: integrate isolated worktree into main with plan lifecycle and multi-agent anti-loss gates."
+    "1.0.0": "Initial authored skill: integrate isolated worktree into main with plan lifecycle and multi-agent anti-loss gates.",
+    "1.1.2": "Clarify `/gbyp` slash invocation authorizes Scenario A writes for the named PR; stop requiring a second AUTHORIZE ritual after command attach."
   },
   "distribution": {
     "canonical_source": "<docs-fera>/.cursor/skills/integrate-isolated-worktree/",
@@ -38,7 +44,7 @@
     "using-git-worktrees",
     "finishing-a-development-branch",
     "verification-before-completion",
-    "commands/gbyp_git_protection_bypass.md",
+    "standards/git/worktree_naming.md",
     "guides/collaboration/multi_agent_worktree_workflow.md",
     "guides/collaboration/pending_to_merge_worktree.md",
     "guides/agent_session_closure.md"
