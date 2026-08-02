@@ -28,8 +28,7 @@ this worktree on main."
 
 **Pairs with:** `using-git-worktrees` (create), `finishing-a-development-branch`
 (choose path), `verification-before-completion`, `/gscv_git_sync_conversation`,
-`/chkp_check_pending`, `/arch_archive`, `/gbyp_git_protection_bypass` (blocked
-PR merge only after bypass-rights pre-check + explicit authorization).
+`/chkp_check_pending`, `/arch_archive`, `/merg_merge` / `/gbyp_git_protection_bypass` (slash invocation authorizes Scenario A writes for the named PR).
 
 **SSoT (concurrency):** `guides/collaboration/multi_agent_worktree_workflow.md`
 
@@ -310,13 +309,13 @@ Decision table (report evidence to the user):
 | `USER_HAS_BYPASS=no` and no path to add allowances | Request human review / CODEOWNER — **do not** suggest `/gbyp` |
 | CODEOWNERS required and actor is not a code owner / not on bypass list | Request CODEOWNER review — bypass cannot substitute unless listed |
 
-### 7c. Suggest `/gbyp` only after 7b + explicit authorization
+### 7c. Suggest `/gbyp` only after 7b (slash invocation authorizes writes)
 
 When the table says `/gbyp` is viable:
 
 1. Name the **exact PR number** and say you will follow `/gbyp_git_protection_bypass` Scenario A.
-2. Wait for **explicit** user authorization in this turn (standing “merge when ready” is not enough for protection writes).
-3. Run `/gbyp` (or its command instance) — restore `enforce_admins` / status checks per that command’s Phase 7.
+2. Have the user invoke `/gbyp` / `/gbyp_git_protection_bypass` for that PR (or treat their slash attach in this turn as authorization). Do **not** invent a second `AUTHORIZE gbyp…` ritual after invocation when the PR target is unambiguous.
+3. Run `/gbyp` Scenario A — announce then execute phases 4–7 in the same turn; restore `enforce_admins` per that command’s Phase 7. Force-merge / clearing required status checks still needs separate confirmation.
 4. Do **not** invent a parallel bypass; do not skip the command’s restore/verify read-back.
 
 Also prefer `_dev/docs/plans/template/agent_branch_merge_workflow_template.md` when the repo uses that enterprise merge/rollback template.
@@ -377,18 +376,42 @@ Also confirm:
 
 ---
 
-## Step 9 — Delete worktree
+## Step 9 — Mark `reap`, then delete worktree
 
-Only after Step 8 passes:
+Only after Step 8 passes. Third parties (and future agents) must be able to see
+from the **directory name** that cleanup is safe. SSoT:
+`standards/git/worktree_naming.md`.
 
 ```bash
 cd <primary-checkout>
+MERGED_SHA="$(git rev-parse origin/main)"   # or the merge commit from Step 7
+WT_PATH="<worktree-path>"                  # often …-wt-live-<slug>
+
+# 1) Rename live/park → reap + stamp status (enables third-party double-check)
+WT_LC=""
+for cand in _dev/scripts/git/worktree_lifecycle.sh scripts/git/worktree_lifecycle.sh; do
+  [[ -x "$cand" ]] && WT_LC="$cand" && break
+done
+if [[ -n "$WT_LC" ]]; then
+  # `mark` prints "OK: <new-path> → reap" and renames the directory when needed
+  MARK_OUT=$(bash "$WT_LC" mark "$WT_PATH" reap \
+    --merged-sha "$MERGED_SHA" --pr-url "<pr-url>")
+  echo "$MARK_OUT"
+  WT_PATH=$(echo "$MARK_OUT" | sed -n 's/^OK: \(.*\) → reap$/\1/p')
+  [[ -n "$WT_PATH" ]] || { echo "ERROR: could not parse reap path from mark output"; exit 1; }
+  bash "$WT_LC" check-reapable "$WT_PATH"
+else
+  echo "WARN: worktree_lifecycle.sh missing; apply standards/git/worktree_naming.md manually before remove"
+fi
+
+# 2) Remove only the reap path
 git worktree list
-git worktree remove <worktree-path>
+git worktree remove "$WT_PATH"
 # if remove fails because of leftover dirty files:
 #   1) classify: yours vs other-agent
 #   2) commit/park yours OR route others via pending-to-merge
 #   3) never git clean -fd as first resort
+#   4) never mark reap while dirty
 git worktree prune
 git worktree list
 git branch -d <branch> 2>/dev/null || true   # local branch if still present
@@ -403,7 +426,7 @@ Integrated worktree → main
 - Merge commit: …
 - Plan finished: …
 - Backlog: … | none
-- Worktree removed: …
+- Worktree marked reap then removed: …
 - Verification: <commands + exit evidence>
 ```
 
@@ -426,7 +449,8 @@ Full gate list + recovery: [reference.md](reference.md)
 - Create: `using-git-worktrees`
 - Choose path (options menu): `finishing-a-development-branch`
 - Concurrency SSoT: `guides/collaboration/multi_agent_worktree_workflow.md`
+- Naming / reap double-check: `standards/git/worktree_naming.md`
 - Pending others: `guides/collaboration/pending_to_merge_worktree.md`
 - Closure gates: `guides/agent_session_closure.md`
 - Merge template: `_dev/docs/plans/template/agent_branch_merge_workflow_template.md`
-- Blocked PR merge (authorized): `/gbyp_git_protection_bypass` after Step 7b pre-check
+- Blocked PR merge: `/gbyp_git_protection_bypass` after Step 7b pre-check (slash invocation authorizes Scenario A writes for the named PR)
